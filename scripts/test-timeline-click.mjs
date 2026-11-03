@@ -45,11 +45,18 @@ async function testTimeline() {
     }
 
     console.log('Timeline test complete.');
+    process.exit(0);
   } finally {
-    await browser.close();
-    await localServer.close();
+    await browser?.close().catch(() => {});
+    await localServer?.close().catch(() => {});
   }
 }
+
+// Ensure process exits even if uncaught
+setTimeout(() => {
+  console.error('[test-timeline] Test timed out after 25s');
+  process.exit(1);
+}, 25000).unref();
 
 testTimeline().catch((err) => {
   console.error('Error in testTimeline:', err);

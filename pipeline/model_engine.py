@@ -95,6 +95,8 @@ def process_scored_row(row: dict[str, Any]) -> dict[str, Any]:
     punt_wp = row.get("punt_wp")
     first_down_prob = row.get("first_down_prob")
     fg_make_prob = row.get("fg_make_prob")
+    make_fg_wp = row.get("make_fg_wp")
+    miss_fg_wp = row.get("miss_fg_wp")
     wp_succeed = row.get("wp_succeed")
     wp_fail = row.get("wp_fail")
 
@@ -155,6 +157,14 @@ def process_scored_row(row: dict[str, Any]) -> dict[str, Any]:
         "fg_make_prob": float(fg_make_prob)
         if fg_make_prob is not None
         and not math.isnan(_safe_float(fg_make_prob, float("nan")))
+        else None,
+        "make_fg_wp": float(make_fg_wp)
+        if make_fg_wp is not None
+        and not math.isnan(_safe_float(make_fg_wp, float("nan")))
+        else None,
+        "miss_fg_wp": float(miss_fg_wp)
+        if miss_fg_wp is not None
+        and not math.isnan(_safe_float(miss_fg_wp, float("nan")))
         else None,
         "low_make_probability": low_make_prob,
     }

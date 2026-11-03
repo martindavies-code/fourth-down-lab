@@ -2249,7 +2249,7 @@
         "cost_pp": 0.0,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       },
       {
         "play_id": 1455,
@@ -3725,7 +3725,7 @@
         "cost_pp": 2.708969842682507,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       }
     ],
     "home_wp_lost_pp": 10.9,
@@ -4409,7 +4409,7 @@
         "cost_pp": 2.239286132276619,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       }
     ],
     "home_wp_lost_pp": 3.2,
@@ -4529,7 +4529,7 @@
         "cost_pp": 2.689818880136446,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       },
       {
         "play_id": 2622,
@@ -12641,7 +12641,7 @@
         "cost_pp": 0.6117876622716567,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       },
       {
         "play_id": 1292,
@@ -14681,7 +14681,7 @@
         "cost_pp": 1.955279517359898,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       },
       {
         "play_id": 2128,
@@ -15653,7 +15653,7 @@
         "cost_pp": 0.0,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       },
       {
         "play_id": 4171,
@@ -16361,7 +16361,7 @@
         "cost_pp": 0.07338869722162134,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       },
       {
         "play_id": 333,
@@ -18545,7 +18545,7 @@
         "cost_pp": 0.0,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
-        "tier": "obvious"
+        "tier": "genuine"
       },
       {
         "play_id": 2851,

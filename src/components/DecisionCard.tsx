@@ -122,6 +122,51 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
     return null;
   };
 
+  // Execution outcome badge
+  const getOutcomeExecutionBadge = () => {
+    if (actual_choice === 'go') {
+      if (outcome.converted) {
+        return (
+          <span className="inline-flex items-center gap-1 rounded bg-emerald-500/20 px-2 py-0.5 text-[11px] font-black text-emerald-300 border border-emerald-500/40">
+            <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+            <span>Converted (+{outcome.yards_gained} yds)</span>
+          </span>
+        );
+      }
+      return (
+        <span className="inline-flex items-center gap-1 rounded bg-rose-500/20 px-2 py-0.5 text-[11px] font-black text-rose-300 border border-rose-500/40">
+          <AlertCircle className="h-3 w-3 text-rose-400" />
+          <span>Failed ({outcome.yards_gained} yds — Turnover)</span>
+        </span>
+      );
+    }
+    if (actual_choice === 'field_goal') {
+      if (outcome.field_goal_result === 'made') {
+        return (
+          <span className="inline-flex items-center gap-1 rounded bg-emerald-500/20 px-2 py-0.5 text-[11px] font-black text-emerald-300 border border-emerald-500/40">
+            <CheckCircle2 className="h-3 w-3 text-emerald-400" />
+            <span>{outcome.kick_distance ? `${outcome.kick_distance}-yd ` : ''}Kick Good</span>
+          </span>
+        );
+      }
+      return (
+        <span className="inline-flex items-center gap-1 rounded bg-rose-500/20 px-2 py-0.5 text-[11px] font-black text-rose-300 border border-rose-500/40">
+          <AlertCircle className="h-3 w-3 text-rose-400" />
+          <span>Kick Missed / Blocked</span>
+        </span>
+      );
+    }
+    if (actual_choice === 'punt') {
+      return (
+        <span className="inline-flex items-center gap-1 rounded bg-sky-500/20 px-2 py-0.5 text-[11px] font-black text-sky-300 border border-sky-500/40">
+          <Footprints className="h-3 w-3 text-sky-400" />
+          <span>Punt Executed</span>
+        </span>
+      );
+    }
+    return null;
+  };
+
   const optionList: {
     key: OptionName;
     labelEn: string;
@@ -288,6 +333,80 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                     </div>
                   )}
 
+                  {/* Explicit Breakdown: Chance of Success & WP if Successful / Unsuccessful */}
+                  {opt.status === 'AVAILABLE' && key === 'go' && opt.first_down_prob !== null && opt.first_down_prob !== undefined && (
+                    <div className="mt-2.5 rounded-md border border-slate-800/90 bg-[#070b16] p-2 text-xs">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-1.5 text-[11px]">
+                        <span className="text-slate-400 font-semibold">Chance of Conversion:</span>
+                        <span className="font-black text-amber-300 tabular-nums">
+                          {formatProbability(opt.first_down_prob)}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-[11px]">
+                        <div className="rounded bg-emerald-950/40 p-1.5 border border-emerald-500/20">
+                          <span className="text-slate-400 block text-[10px] font-semibold">If Converted:</span>
+                          <span className="font-black text-emerald-300 tabular-nums text-xs">
+                            {formatProbability(opt.wp_succeed)}
+                          </span>
+                          <span className="text-[10px] text-emerald-400/90 block font-semibold">
+                            {opt.wp && opt.wp_succeed ? `+${((opt.wp_succeed - opt.wp) * 100).toFixed(1)} pp WP` : ''}
+                          </span>
+                        </div>
+                        <div className="rounded bg-rose-950/40 p-1.5 border border-rose-500/20">
+                          <span className="text-slate-400 block text-[10px] font-semibold">If Failed:</span>
+                          <span className="font-black text-rose-300 tabular-nums text-xs">
+                            {formatProbability(opt.wp_fail)}
+                          </span>
+                          <span className="text-[10px] text-rose-400/90 block font-semibold">
+                            {opt.wp && opt.wp_fail ? `${((opt.wp_fail - opt.wp) * 100).toFixed(1)} pp WP` : ''}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {opt.status === 'AVAILABLE' && key === 'field_goal' && opt.fg_make_prob !== null && opt.fg_make_prob !== undefined && (
+                    <div className="mt-2.5 rounded-md border border-slate-800/90 bg-[#070b16] p-2 text-xs">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-1.5 text-[11px]">
+                        <span className="text-slate-400 font-semibold">Chance of Kick Success:</span>
+                        <span className="font-black text-cyan-300 tabular-nums">
+                          {formatProbability(opt.fg_make_prob)}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-[11px]">
+                        <div className="rounded bg-emerald-950/40 p-1.5 border border-emerald-500/20">
+                          <span className="text-slate-400 block text-[10px] font-semibold">If Kick Made:</span>
+                          <span className="font-black text-emerald-300 tabular-nums text-xs">
+                            {formatProbability(opt.make_fg_wp ?? null)}
+                          </span>
+                          <span className="text-[10px] text-emerald-400/90 block font-semibold">
+                            {opt.wp && opt.make_fg_wp ? `+${((opt.make_fg_wp - opt.wp) * 100).toFixed(1)} pp WP` : ''}
+                          </span>
+                        </div>
+                        <div className="rounded bg-rose-950/40 p-1.5 border border-rose-500/20">
+                          <span className="text-slate-400 block text-[10px] font-semibold">If Kick Missed:</span>
+                          <span className="font-black text-rose-300 tabular-nums text-xs">
+                            {formatProbability(opt.miss_fg_wp ?? null)}
+                          </span>
+                          <span className="text-[10px] text-rose-400/90 block font-semibold">
+                            {opt.wp && opt.miss_fg_wp ? `${((opt.miss_fg_wp - opt.wp) * 100).toFixed(1)} pp WP` : ''}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {opt.status === 'AVAILABLE' && key === 'punt' && (
+                    <div className="mt-2 rounded-md border border-slate-800/90 bg-[#070b16] px-2.5 py-1.5 text-xs text-slate-300">
+                      <div className="flex items-center justify-between text-[11px]">
+                        <span className="text-slate-400 font-semibold">Punt Expected Net State:</span>
+                        <span className="font-bold text-indigo-300 tabular-nums">
+                          Opponent pinned deep ({formatProbability(opt.wp)} WP)
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Low make prob note */}
                   {key === 'field_goal' && opt.low_make_probability && (
                     <div className="mt-1 flex items-center gap-1 text-[11px] text-amber-400/90 font-medium">
@@ -314,7 +433,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
               className="flex items-center gap-1 text-xs font-semibold text-slate-400 hover:text-sky-300 transition-colors"
               aria-expanded={isExpanded}
             >
-              <span>{isExpanded ? 'Hide model details' : 'Show model breakdown (P(convert), P(FG), counterfactuals)'}</span>
+              <span>{isExpanded ? 'Hide model details' : 'Show full model breakdown (P(convert), P(FG), counterfactuals)'}</span>
               {isExpanded ? <ChevronUp className="h-3.5 w-3.5 text-sky-400" /> : <ChevronDown className="h-3.5 w-3.5 text-sky-400" />}
             </button>
 
@@ -365,23 +484,28 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
             </div>
 
             {/* Verdict on Decision */}
-            <div className="rounded-lg border border-slate-800 bg-[#0e1424] p-3">
-              <div className="flex items-center justify-between">
+            <div className="rounded-lg border border-slate-800 bg-[#0e1424] p-3 space-y-2.5">
+              <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                   <span className="text-[11px] text-slate-400 block">Actual Team Choice:</span>
-                  <span className="font-extrabold text-white capitalize">{actual_choice}</span>
+                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                    <span className="font-black text-white text-sm capitalize">
+                      {actual_choice === 'go' ? 'Go for it' : actual_choice === 'field_goal' ? 'Field Goal' : 'Punt'}
+                    </span>
+                    {getOutcomeExecutionBadge()}
+                  </div>
                 </div>
                 <div>
                   <span className="text-[11px] text-slate-400 block text-right">Model Verdict:</span>
-                  <div className="flex items-center gap-1 justify-end">
+                  <div className="flex items-center gap-1 justify-end mt-1">
                     {getVerdictBadge()}
                   </div>
                 </div>
               </div>
 
               {/* Cost Difference */}
-              <div className="mt-2.5 flex items-center justify-between border-t border-slate-800/80 pt-2 text-xs">
-                <span className="text-slate-400 font-medium">Estimated Cost of Choice:</span>
+              <div className="flex items-center justify-between border-t border-slate-800/80 pt-2 text-xs">
+                <span className="text-slate-400 font-medium">Pre-Snap Decision Cost:</span>
                 <span className="font-bold tabular-nums text-white">
                   {display_cost_pp !== null ? `${display_cost_pp.toFixed(1)} pp` : 'n/a'}
                   {is_near_boundary && exact_cost_display && (
@@ -395,45 +519,56 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                 </span>
               </div>
               {cost_reason && (
-                <div className="mt-1 text-[11px] italic text-slate-400">
+                <div className="text-[11px] italic text-slate-400">
                   {cost_reason}
                 </div>
               )}
             </div>
 
             {/* Play Outcome Details */}
-            <div className="mt-3 rounded-lg border border-slate-800/80 bg-[#090e19] p-3 text-xs">
-              <div className="text-[11px] font-semibold text-slate-400">Play Description:</div>
-              <p className="mt-1 text-slate-200 line-clamp-3 leading-relaxed">
-                {outcome.desc}
-              </p>
+            <div className="mt-3 rounded-lg border border-slate-800/80 bg-[#090e19] p-3 text-xs space-y-2.5">
+              <div>
+                <span className="text-[11px] font-semibold text-slate-400 block">Play Description:</span>
+                <p className="mt-1 text-slate-200 line-clamp-3 leading-relaxed font-medium">
+                  {outcome.desc}
+                </p>
+              </div>
 
               {outcome.penalty_affected && (
-                <div className="mt-2 inline-flex items-center gap-1 rounded bg-amber-500/10 px-2 py-0.5 text-[11px] text-amber-400 border border-amber-500/20">
+                <div className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-2 py-0.5 text-[11px] text-amber-400 border border-amber-500/20">
                   <AlertCircle className="h-3 w-3" />
                   <span>Penalty affected the outcome of this executed play</span>
                 </div>
               )}
 
-              {/* Realised WPA */}
-              <div className="mt-2.5 flex items-center justify-between border-t border-slate-800/60 pt-2 text-[11px]">
-                <span className="text-slate-400">Realised WPA (nflverse):</span>
-                <span
-                  className={`font-bold tabular-nums ${
-                    outcome.realised_wpa > 0
-                      ? 'text-emerald-400'
-                      : outcome.realised_wpa < 0
-                      ? 'text-rose-400'
-                      : 'text-slate-300'
-                  }`}
-                >
-                  {outcome.realised_wpa > 0 ? '+' : ''}
-                  {(outcome.realised_wpa * 100).toFixed(1)} pp
-                </span>
+              {/* Explicit Realised Win Probability Shift */}
+              <div className="rounded-md border border-slate-800 bg-[#060a14] p-2.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-300">Realised Win Probability Shift:</span>
+                  <span
+                    className={`text-sm font-black tabular-nums ${
+                      outcome.realised_wpa > 0
+                        ? 'text-emerald-400'
+                        : outcome.realised_wpa < 0
+                        ? 'text-rose-400'
+                        : 'text-slate-300'
+                    }`}
+                  >
+                    {outcome.realised_wpa > 0 ? '+' : ''}
+                    {(outcome.realised_wpa * 100).toFixed(1)} pp WPA
+                  </span>
+                </div>
+                <p className="mt-1 text-[11px] text-slate-400 leading-snug">
+                  {outcome.realised_wpa > 0
+                    ? `Execution succeeded: play generated a +${(outcome.realised_wpa * 100).toFixed(1)} pp surge in win probability.`
+                    : outcome.realised_wpa < 0
+                    ? `Execution failed: play resulted in a ${(outcome.realised_wpa * 100).toFixed(1)} pp decline in win probability.`
+                    : `Execution produced no net shift in post-play win probability.`}
+                </p>
+                <div className="mt-1 text-[10px] text-slate-400">
+                  {outcome.realised_wpa_note}
+                </div>
               </div>
-              <p className="mt-0.5 text-[10px] text-slate-400">
-                {outcome.realised_wpa_note}
-              </p>
             </div>
           </div>
         </div>

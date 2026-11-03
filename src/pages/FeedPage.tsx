@@ -120,14 +120,14 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
       {/* Anime Hero Banner (Eyeshield 21 Style) */}
-      <section className="mb-6 overflow-hidden rounded-2xl border-2 border-sky-500/40 bg-gradient-to-r from-[#070b14] via-[#0d1629] to-[#070b14] shadow-2xl relative anime-card-glow">
+      <section className="mb-6 overflow-hidden rounded-2xl border-2 border-sky-500/40 bg-[#070b14] shadow-2xl relative anime-card-glow">
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-screen pointer-events-none"
+          className="absolute inset-0 bg-cover bg-right sm:bg-center opacity-35 mix-blend-screen pointer-events-none"
           style={{ backgroundImage: `url('assets/anime-hero-banner.jpg')` }}
         />
-        <div className="relative p-5 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="max-w-2xl space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-500/10 px-3 py-1 text-xs font-black text-amber-300">
+        <div className="relative p-4 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="max-w-2xl space-y-3 text-center md:text-left rounded-xl bg-[#090e1c]/90 backdrop-blur-md p-5 sm:p-6 border border-slate-700/70 shadow-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-500/15 px-3 py-1 text-xs font-black text-amber-300">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
@@ -137,26 +137,26 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
             <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white flex flex-col sm:flex-row items-center sm:items-baseline gap-2">
               <span>勝利へのギャンブルか、堅実な陣地戦か！？</span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+            <p className="text-sm sm:text-base text-white leading-relaxed font-semibold drop-shadow-sm">
               Every authentic NFL 4th down decision tracked, simulated, and audited. 
               Mathematically evaluating the win probability of Go, Field Goal, and Punt from the exact same pre-snap moment.
             </p>
-            <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-2">
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-300 bg-sky-950/70 px-2.5 py-1 rounded border border-sky-400/40">
+            <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-2.5">
+              <span className="inline-flex items-center gap-1.5 text-xs font-black text-sky-200 bg-sky-950/90 px-3 py-1.5 rounded-lg border border-sky-400/50 shadow-sm">
                 ⚡ Gamble = 4th Down Go Attempt
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-950/70 px-2.5 py-1 rounded border border-emerald-400/40">
+              <span className="inline-flex items-center gap-1.5 text-xs font-black text-emerald-200 bg-emerald-950/90 px-3 py-1.5 rounded-lg border border-emerald-400/50 shadow-sm">
                 🎯 Reasonable = Sound Call
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-300 bg-rose-950/70 px-2.5 py-1 rounded border border-rose-400/40">
+              <span className="inline-flex items-center gap-1.5 text-xs font-black text-rose-200 bg-rose-950/90 px-3 py-1.5 rounded-lg border border-rose-400/50 shadow-sm">
                 ☠ Suboptimal = Costly Choice
               </span>
             </div>
           </div>
-          <div className="hidden lg:flex flex-col items-center justify-center p-3 rounded-xl bg-slate-900/90 border border-sky-400/40 shrink-0 shadow-lg">
+          <div className="hidden lg:flex flex-col items-center justify-center p-4 rounded-xl bg-slate-900/95 border border-sky-400/50 shrink-0 shadow-2xl backdrop-blur-md">
             <BlitzMascot className="h-20 w-20" mood="intense" />
-            <span className="mt-1 text-[11px] font-black text-sky-300">ブリッツ君 (Blitz-kun)</span>
-            <span className="text-[9px] text-slate-400 font-bold">Chief Model Analyst</span>
+            <span className="mt-1.5 text-xs font-black text-sky-300">ブリッツ君 (Blitz-kun)</span>
+            <span className="text-[10px] text-slate-300 font-bold">Chief Model Analyst</span>
           </div>
         </div>
       </section>

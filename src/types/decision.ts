@@ -25,6 +25,8 @@ export interface OptionDetails {
   wp_succeed?: number | null;
   wp_fail?: number | null;
   fg_make_prob?: number | null;
+  make_fg_wp?: number | null;
+  miss_fg_wp?: number | null;
   low_make_probability?: boolean;
 }
 
