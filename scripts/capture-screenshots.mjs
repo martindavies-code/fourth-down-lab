@@ -2,11 +2,9 @@ import puppeteer from 'puppeteer-core';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { spawn } from 'node:child_process';
-import http from 'node:http';
+import { startLocalServer, ROOT_DIR } from './local-server.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT_DIR = path.resolve(__dirname, '..');
 const ARTIFACT_DIR = 'C:\\Users\\Martin\\.gemini\\antigravity\\brain\\e8449929-3890-40d8-ae5d-8a2754980a7c';
 const SCREENSHOTS_DIR = path.join(ROOT_DIR, 'screenshots');
 
@@ -15,43 +13,10 @@ if (!fs.existsSync(ARTIFACT_DIR)) fs.mkdirSync(ARTIFACT_DIR, { recursive: true }
 
 const CHROME_PATH = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
 
-async function isServerUp(url) {
-  return new Promise((resolve) => {
-    try {
-      const u = new URL(url);
-      const req = http.get(
-        { hostname: u.hostname, port: u.port || 80, path: u.pathname, timeout: 1000 },
-        (res) => resolve(Boolean(res.statusCode && res.statusCode >= 200 && res.statusCode < 500))
-      );
-      req.on('error', () => resolve(false));
-      req.on('timeout', () => { req.destroy(); resolve(false); });
-    } catch {
-      resolve(false);
-    }
-  });
-}
-
 async function main() {
   console.log('Starting screenshot runner...');
-  const targetUrl = 'http://localhost:5174/';
-
-  let spawnedServer = null;
-  if (!(await isServerUp(targetUrl))) {
-    console.log('Launching preview server on port 5174...');
-    const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-    spawnedServer = spawn(`${npmCmd} run preview -- --port 5174`, {
-      cwd: ROOT_DIR,
-      stdio: 'ignore',
-      shell: true,
-    });
-    for (let i = 0; i < 20; i++) {
-      await new Promise((r) => setTimeout(r, 500));
-      if (await isServerUp(targetUrl)) {
-        console.log('Preview server ready.');
-        break;
-      }
-    }
-  }
+  const localServer = await startLocalServer();
+  const targetUrl = localServer.url;
 
   const browser = await puppeteer.launch({
     executablePath: CHROME_PATH,
@@ -185,7 +150,7 @@ async function main() {
     console.log('\nAll screenshots captured successfully!');
   } finally {
     await browser.close();
-    if (spawnedServer) spawnedServer.kill('SIGTERM');
+    await localServer.close();
   }
 }
 
