@@ -1,0 +1,51 @@
+{
+  "title": "Fourth Down Lab",
+  "build_time": "2026-11-03T14:20:41.796279+00:00",
+  "data_source": "nflverse play-by-play (2026)",
+  "data_as_of": "2026-11-03",
+  "data_licence": "CC-BY 4.0 (Creative Commons Attribution 4.0 International)",
+  "model_route": "Route A (sportsdataverse 0.1.4 / nfl4th)",
+  "season": 2026,
+  "weeks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "total_games": 121,
+  "counts": {
+    "total_fourth_down_rows": 1867,
+    "executed_snaps": 1718,
+    "cancelled_snaps": 148,
+    "cancelled_replayed": 110,
+    "cancelled_not_replayed": 38,
+    "excluded_snaps": 1
+  },
+  "thresholds": {
+    "toss_up_pp": 1.0,
+    "genuine_gap_pp": 3.0,
+    "clear_go_gap_pp": 3.0
+  },
+  "credits": [
+    {
+      "entity": "nflverse",
+      "details": "Play-by-play data and win probability models",
+      "licence": "CC-BY 4.0"
+    },
+    {
+      "entity": "nfl4th (Ben Baldwin)",
+      "details": "Reference 4th down decision surface",
+      "licence": "MIT"
+    },
+    {
+      "entity": "sportsdataverse (Saiem Gilani)",
+      "details": "Python nfl4th port and model artifacts",
+      "licence": "MIT"
+    }
+  ],
+  "validation_summary": "Validated against 2020 NFC Championship published benchmark, strict [0, 1] probability constraints, and physical monotonicity checks."
+}

@@ -1,0 +1,25 @@
+# Node dependencies
+node_modules/
+.npm
+
+# Build outputs
+dist/
+dist-ssr/
+*.local
+
+# Python caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Scratch & temporary models/parquets
+scratch/
+*.parquet
+*.ubj
+
+# Environment variables & system files
+.DS_Store
+Thumbs.db
