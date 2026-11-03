@@ -4,10 +4,11 @@ import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../
 import {
   formatDownAndDistance,
   formatProbability,
-  formatScoreDifferential,
   formatTimeRemaining,
-  formatYardline,
+  getFieldPositionInfo,
+  getScoreDifferentialBadge,
 } from '../utils/formatting';
+import { TimeoutPips } from './TimeoutPips';
 import {
   ChevronDown,
   ChevronUp,
@@ -19,6 +20,9 @@ import {
   Footprints,
   Crosshair,
   Flame,
+  Clock,
+  MapPin,
+  Timer,
 } from 'lucide-react';
 
 interface DecisionCardProps {
@@ -58,6 +62,10 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
   const isPartial = decision.is_partial_comparison || (decision.yardline_100 < 31 && decision.options.punt.status === 'UNMODELLED');
   const suffix = isPartial ? ' (best among modelled options)' : '';
   const suffixLeaned = isPartial ? ' (among modelled options)' : '';
+  const fieldPos = getFieldPositionInfo(yardline_100, posteam, defteam);
+  const scoreDiffBadge = getScoreDifferentialBadge(score_differential, posteam);
+  const isOvertime = Boolean(decision.is_overtime || qtr >= 5);
+  const isTwoMinDrill = qtr === 4 && quarter_seconds_remaining <= 120 && quarter_seconds_remaining > 0;
 
   // Verdict style & icon (clean English inside boxes, P0-3 honest partial labelling)
   const getVerdictBadge = () => {
@@ -199,71 +207,179 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
       className="group relative rounded-xl border border-slate-800 bg-[#0d121e] shadow-lg transition-all duration-300 hover:border-sky-500/50 anime-card-glow scroll-mt-24"
       aria-label={`4th down decision for ${posteam} against ${defteam}`}
     >
-      {/* Card Header: Matchup & Situation */}
-      <div className="border-b border-slate-800/80 bg-[#101728] px-4 py-3 sm:px-5">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          {/* Teams & Logos */}
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center gap-1.5">
-              <img
-                src={getTeamLogoUrl(posteam)}
-                alt={getTeamName(posteam)}
-                className={`h-7 w-7 object-contain ${isDarkLogo(posteam) ? 'team-logo-dark-outline' : ''}`}
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = getTeamFallbackSvg(posteam);
-                }}
-              />
-              <span className="font-bold text-white">{posteam}</span>
-              <span className="text-xs text-slate-400 font-bold">vs</span>
-              <span className="text-xs font-semibold text-slate-300">{defteam}</span>
-            </div>
-
-            {/* Matchup & Week Context (P1-5) */}
-            <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
-              <span className="rounded bg-slate-800/80 px-1.5 py-0.5 text-[10px] font-semibold text-slate-300 border border-slate-700/60">
-                Wk {decision.week} • {decision.away_team} at {decision.home_team}
-              </span>
-            </div>
-
-            {/* Score & Timeouts */}
-            <div className="flex items-center gap-1 text-xs tabular-nums text-slate-300">
-              <span className="font-semibold text-white">{posteam_score}</span>
-              <span className="text-slate-500">-</span>
-              <span className="font-semibold text-white">{defteam_score}</span>
-              <span className="ml-1 text-[11px] text-slate-400">
-                ({formatScoreDifferential(score_differential, posteam, defteam)})
-              </span>
-            </div>
-          </div>
-
-          {/* Situation Badges */}
-          <div className="flex items-center gap-2">
-            {(decision.is_overtime || qtr >= 5) && (
-              <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] font-black text-purple-300 border border-purple-400/40 shadow-sm" title="Overtime play — outside validated regular-season model domain">
-                OT
+      {/* ======================================================== */}
+      {/* BROADCAST GAME STATE HUD & SCOREBUG (P0 / UX UPGRADE)     */}
+      {/* ======================================================== */}
+      <div className="border-b border-slate-800/90 bg-[#0d1424] p-3.5 sm:p-4">
+        {/* Context Bar: Week, Matchup, Special Situations */}
+        <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/60 pb-2 text-xs">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded bg-slate-800/90 px-2 py-0.5 text-[11px] font-bold text-slate-300 border border-slate-700/60">
+              Wk {decision.week} • {decision.away_team} at {decision.home_team}
+            </span>
+            {isOvertime && (
+              <span className="rounded bg-purple-500/20 px-2 py-0.5 text-[10px] font-black text-purple-300 border border-purple-400/50 shadow-sm" title="Overtime play — outside validated regular-season model domain">
+                OT (Sudden Death)
               </span>
             )}
+            {isTwoMinDrill && (
+              <span className="animate-pulse rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-black text-amber-300 border border-amber-400/50 flex items-center gap-1">
+                <Timer className="h-3 w-3" />
+                <span>2-Min Drill</span>
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
             {tier === 'clear_go' && (
               <span className="inline-flex items-center gap-1 rounded bg-amber-500/15 px-2 py-0.5 text-[11px] font-black text-amber-300 border border-amber-500/40">
                 <Flame className="h-3 w-3 text-amber-400" />
-                <span>Clear Go (+{decision.go_boost ? decision.go_boost.toFixed(1) : ''} pp vs Alternative)</span>
+                <span>Clear Go (+{decision.go_boost ? decision.go_boost.toFixed(1) : ''} pp vs 2nd Best)</span>
               </span>
             )}
             {tier === 'obvious' && (
               <span className="rounded bg-slate-800/80 px-2 py-0.5 text-[11px] font-medium text-slate-400">
-                Obvious
+                Obvious Call
               </span>
             )}
-            <div className="rounded bg-slate-800 px-2 py-0.5 text-xs font-bold text-sky-400 tabular-nums">
-              {formatDownAndDistance(down, ydstogo, yardline_100)}
+          </div>
+        </div>
+
+        {/* Main Broadcast HUD Grid */}
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-12 lg:items-center">
+          {/* Cluster 1: The Scoreboard & Possession Bug (7 Cols on Desktop) */}
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-800/90 bg-[#070b16] p-3 shadow-inner lg:col-span-7">
+            {/* Possession Team */}
+            <div className="flex items-center gap-2.5">
+              <div className="relative">
+                <img
+                  src={getTeamLogoUrl(posteam)}
+                  alt={getTeamName(posteam)}
+                  className={`h-9 w-9 sm:h-10 sm:w-10 object-contain ${isDarkLogo(posteam) ? 'team-logo-dark-outline' : ''}`}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = getTeamFallbackSvg(posteam);
+                  }}
+                />
+                {/* Possession Football Badge */}
+                <span
+                  className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[10px] shadow-[0_0_8px_rgba(245,158,11,0.9)] border border-amber-300"
+                  title={`${posteam} has possession of the ball`}
+                  aria-label={`${posteam} in possession`}
+                >
+                  🏈
+                </span>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-base sm:text-lg font-black text-white">{posteam}</span>
+                  <span className="rounded bg-amber-500/25 px-1 py-0.2 text-[9px] font-black uppercase text-amber-300 border border-amber-400/50">
+                    POSS
+                  </span>
+                </div>
+                <TimeoutPips timeouts={posteam_timeouts_remaining} teamAbbr={posteam} className="mt-0.5" />
+              </div>
             </div>
-            <div className="text-xs font-medium text-slate-400">
-              at {formatYardline(yardline_100, posteam, defteam)}
+
+            {/* Prominent Scoreboard Digits & Differential */}
+            <div className="flex flex-col items-center px-1">
+              <div className="flex items-center gap-1.5">
+                <div
+                  className="flex h-9 w-10 sm:h-10 sm:w-12 items-center justify-center rounded-lg bg-slate-900 border border-slate-700/80 font-mono text-xl sm:text-2xl font-black text-white shadow-inner tabular-nums"
+                  aria-label={`${posteam} score: ${posteam_score}`}
+                >
+                  {posteam_score}
+                </div>
+                <span className="text-xs font-black text-slate-500">:</span>
+                <div
+                  className="flex h-9 w-10 sm:h-10 sm:w-12 items-center justify-center rounded-lg bg-slate-900 border border-slate-700/80 font-mono text-xl sm:text-2xl font-black text-white shadow-inner tabular-nums"
+                  aria-label={`${defteam} score: ${defteam_score}`}
+                >
+                  {defteam_score}
+                </div>
+              </div>
+
+              {/* Dynamic Game Margin Badge */}
+              <div className="mt-1">
+                {scoreDiffBadge.type === 'leading' ? (
+                  <span className="inline-block rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-black text-emerald-300 border border-emerald-500/40">
+                    {scoreDiffBadge.label}
+                  </span>
+                ) : scoreDiffBadge.type === 'trailing' ? (
+                  <span className="inline-block rounded bg-rose-500/20 px-2 py-0.5 text-[10px] font-black text-rose-300 border border-rose-500/40">
+                    {scoreDiffBadge.label}
+                  </span>
+                ) : (
+                  <span className="inline-block rounded bg-slate-800 px-2 py-0.5 text-[10px] font-bold text-slate-300 border border-slate-700/50">
+                    Tied Game
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="text-xs text-slate-500 tabular-nums">
-              • {formatTimeRemaining(qtr, quarter_seconds_remaining)}
+
+            {/* Defense Team */}
+            <div className="flex items-center gap-2.5">
+              <div className="text-right">
+                <span className="text-base sm:text-lg font-black text-white block">{defteam}</span>
+                <TimeoutPips timeouts={defteam_timeouts_remaining} teamAbbr={defteam} align="right" className="mt-0.5" />
+              </div>
+
+              <img
+                src={getTeamLogoUrl(defteam)}
+                alt={getTeamName(defteam)}
+                className={`h-9 w-9 sm:h-10 sm:w-10 object-contain ${isDarkLogo(defteam) ? 'team-logo-dark-outline' : ''}`}
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getTeamFallbackSvg(defteam);
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Cluster 2: 4th Down Situation, Field Position, & Clock (5 Cols on Desktop) */}
+          <div className="flex flex-wrap items-center justify-between sm:justify-end gap-3 rounded-xl border border-slate-800/90 bg-[#070b16] p-3 shadow-inner lg:col-span-5">
+            {/* Down & Distance Hero Badge */}
+            <div className="rounded-xl bg-gradient-to-r from-sky-500/25 via-cyan-500/20 to-sky-600/25 border-2 border-sky-400/80 px-3.5 py-2 shadow-[0_0_15px_rgba(56,189,248,0.25)]">
+              <span className="block text-[10px] font-extrabold uppercase tracking-wider text-sky-400">
+                Decision Point
+              </span>
+              <span className="text-base sm:text-lg font-black tracking-wide text-white uppercase tabular-nums drop-shadow-sm">
+                {formatDownAndDistance(down, ydstogo, yardline_100)}
+              </span>
+            </div>
+
+            {/* Field Position & Clock HUD Stack */}
+            <div className="flex flex-col items-end gap-1 text-right">
+              {/* Field Location with Territory & Red Zone Indicator */}
+              <div className="flex items-center gap-1.5 text-xs">
+                <MapPin className="h-3.5 w-3.5 text-amber-400 shrink-0" />
+                <span className="font-extrabold text-white">
+                  at {fieldPos.yardlineText}
+                </span>
+                {fieldPos.isRedZone ? (
+                  <span className="rounded bg-rose-500/25 px-1.5 py-0.5 text-[10px] font-black text-rose-300 border border-rose-500/50 shadow-sm animate-pulse">
+                    RED ZONE ({fieldPos.yardsToGoal} yds)
+                  </span>
+                ) : (
+                  <span className="text-[11px] text-slate-400 font-semibold">
+                    ({fieldPos.territoryText} • {fieldPos.yardsToGoal} yds to EZ)
+                  </span>
+                )}
+              </div>
+
+              {/* Game Clock & Quarter */}
+              <div className="flex items-center gap-1.5 text-xs">
+                <Clock className="h-3.5 w-3.5 text-cyan-400 shrink-0" />
+                <span className="font-mono text-xs sm:text-sm font-black text-sky-200 tracking-wide tabular-nums">
+                  {formatTimeRemaining(qtr, quarter_seconds_remaining)}
+                </span>
+                <span className="text-[11px] text-slate-400 font-medium">
+                  ({Math.round(decision.game_seconds_remaining / 60)}m left in game)
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -282,8 +398,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                   : '1. Before the Snap: 3 Choices'}
               </h3>
             </div>
-            <div className="text-[11px] text-slate-400 tabular-nums">
-              Timeouts: <span className="font-semibold text-white">{posteam} {posteam_timeouts_remaining}</span>, {defteam} {defteam_timeouts_remaining}
+            <div className="text-[11px] text-slate-400 tabular-nums font-semibold">
+              Pre-Snap Model Expectations
             </div>
           </div>
 

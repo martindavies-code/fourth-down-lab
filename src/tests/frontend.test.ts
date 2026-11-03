@@ -10,6 +10,8 @@ import {
   formatScoreDifferential,
   formatTimeRemaining,
   formatYardline,
+  getFieldPositionInfo,
+  getScoreDifferentialBadge,
 } from '../utils/formatting.ts';
 import {
   getTeamLogoUrl,
@@ -143,3 +145,55 @@ test('Guard Against Stale-Stat Regressions (P2-5)', () => {
   assert.ok(!content.includes('44.2 pp of win probability'), 'Must not hardcode 44.2 pp');
   assert.ok(!content.includes('13 / 14 non-toss-ups'), 'Must not hardcode 13 / 14');
 });
+
+test('Game State HUD Helpers: Field Position & Red Zone Detection', () => {
+  // Own territory
+  const ownPos = getFieldPositionInfo(63, 'SEA', 'CHI');
+  assert.equal(ownPos.yardlineText, 'SEA 37');
+  assert.equal(ownPos.territoryText, 'Own 37');
+  assert.equal(ownPos.yardsToGoal, 63);
+  assert.equal(ownPos.isRedZone, false);
+
+  // Midfield 50
+  const midPos = getFieldPositionInfo(50, 'SEA', 'CHI');
+  assert.equal(midPos.yardlineText, '50');
+  assert.equal(midPos.territoryText, 'Midfield (50)');
+  assert.equal(midPos.yardsToGoal, 50);
+  assert.equal(midPos.isRedZone, false);
+
+  // Opponent territory outside red zone
+  const oppPos = getFieldPositionInfo(35, 'SEA', 'CHI');
+  assert.equal(oppPos.yardlineText, 'CHI 35');
+  assert.equal(oppPos.territoryText, 'Opponent 35');
+  assert.equal(oppPos.yardsToGoal, 35);
+  assert.equal(oppPos.isRedZone, false);
+
+  // Red Zone (<= 20)
+  const rzPos = getFieldPositionInfo(18, 'SEA', 'CHI');
+  assert.equal(rzPos.yardlineText, 'CHI 18');
+  assert.equal(rzPos.territoryText, 'Opponent 18');
+  assert.equal(rzPos.yardsToGoal, 18);
+  assert.equal(rzPos.isRedZone, true);
+
+  // Goal line (1 yd to goal)
+  const glPos = getFieldPositionInfo(1, 'SEA', 'CHI');
+  assert.equal(glPos.yardlineText, 'CHI 1');
+  assert.equal(glPos.isRedZone, true);
+});
+
+test('Game State HUD Helpers: Score Differential Badges', () => {
+  const tied = getScoreDifferentialBadge(0, 'SEA');
+  assert.equal(tied.type, 'tied');
+  assert.equal(tied.shortLabel, 'TIED');
+
+  const leading = getScoreDifferentialBadge(7, 'SEA');
+  assert.equal(leading.type, 'leading');
+  assert.equal(leading.label, 'SEA +7');
+  assert.equal(leading.shortLabel, '+7');
+
+  const trailing = getScoreDifferentialBadge(-10, 'SEA');
+  assert.equal(trailing.type, 'trailing');
+  assert.equal(trailing.label, 'SEA -10');
+  assert.equal(trailing.shortLabel, '-10');
+});
+
