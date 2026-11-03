@@ -87,20 +87,32 @@ async function main() {
       await save(page, 'card-expanded-desktop-1280.png');
     }
 
-    // Teams Desktop
+    // Teams Desktop - Rankings Tab
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll('button'));
       const teamsTab = btns.find((b) => b.textContent?.toUpperCase().includes('TEAMS'));
       teamsTab?.click();
+      window.scrollTo(0, 0);
     });
     await new Promise((r) => setTimeout(r, 500));
     await save(page, 'teams-desktop-1280.png');
+
+    // Teams Desktop - Analysis Tab
+    await page.evaluate(() => {
+      const btns = Array.from(document.querySelectorAll('button'));
+      const analysisBtn = btns.find((b) => b.textContent?.includes('Season Editorial Analysis'));
+      analysisBtn?.click();
+      window.scrollTo(0, 0);
+    });
+    await new Promise((r) => setTimeout(r, 500));
+    await save(page, 'teams-analysis-desktop-1280.png');
 
     // Games Desktop
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll('button'));
       const gamesTab = btns.find((b) => b.textContent?.toUpperCase().includes('GAMES'));
       gamesTab?.click();
+      window.scrollTo(0, 0);
     });
     await new Promise((r) => setTimeout(r, 500));
     await save(page, 'games-desktop-1280.png');
@@ -110,6 +122,7 @@ async function main() {
       const btns = Array.from(document.querySelectorAll('button'));
       const methodTab = btns.find((b) => b.textContent?.toUpperCase().includes('METHOD'));
       methodTab?.click();
+      window.scrollTo(0, 0);
     });
     await new Promise((r) => setTimeout(r, 500));
     await save(page, 'method-desktop-1280.png');
