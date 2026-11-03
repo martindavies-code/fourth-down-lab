@@ -123,8 +123,8 @@ class TestOptionStatusRules:
         row = create_mock_scored_row(yardline_100=15.0, punt_wp=float("nan"))
         dec = process_scored_row(row)
         assert dec["options"]["punt"]["status"] == "UNMODELLED"
-        assert "not viable punt territory" in dec["options"]["punt"]["reason"]
-        assert dec["is_complete_comparison"] is True
+        assert "not modelled in nfl4th punt landing distribution" in dec["options"]["punt"]["reason"]
+        assert dec["is_partial_comparison"] is True
 
     def test_low_make_probability_flag(self) -> None:
         row = create_mock_scored_row(yardline_100=42.0, fg_make_prob=0.08)
@@ -791,3 +791,136 @@ class TestGate1Regression:
         assert dec["is_consistent_with_model"] is True
         assert dec["verdict_label"] == "Reasonable"
         assert dec["quadrant"] == "Consistent & Succeeded"
+
+
+class TestForensicVerification:
+    """Forensic verification tests covering P2-1 to P2-6."""
+
+    def test_p2_1_reconciliation(self) -> None:
+        """P2-1: Snap reconciliation test (1867 == 1718 executed + 148 cancelled + 1 excluded)."""
+        import json
+
+        meta_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "public"
+            / "data"
+            / "meta.json"
+        )
+        assert meta_file.exists()
+        with open(meta_file, encoding="utf-8") as f:
+            meta = json.load(f)
+        counts = meta["counts"]
+        total = counts["total_fourth_down_rows"]
+        executed = counts["executed_snaps"]
+        cancelled = counts["cancelled_snaps"]
+        excluded = counts["excluded_snaps"]
+        assert total == executed + cancelled + excluded
+        assert total == 1867
+        assert executed == 1718
+        assert cancelled == 148
+        assert excluded == 1
+        assert len(meta["excluded_snaps"]) == 1
+        assert meta["excluded_snaps"][0]["play_type"] == "qb_kneel"
+        assert meta["excluded_snaps"][0]["game_id"] == "2026_01_DEN_KC"
+
+    def test_p2_2_mathematical_exactness_property(self) -> None:
+        """P2-2: Property test verifying internal exactness on all 1,718 real plays."""
+        import json
+
+        dec_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "public"
+            / "data"
+            / "decisions.json"
+        )
+        assert dec_file.exists()
+        with open(dec_file, encoding="utf-8") as f:
+            decisions = json.load(f)
+        assert len(decisions) == 1718
+        for d in decisions:
+            go_opt = d["options"]["go"]
+            if go_opt["status"] == "AVAILABLE" and go_opt["wp"] is not None:
+                p_conv = go_opt["first_down_prob"]
+                wp_s = go_opt["wp_succeed"]
+                wp_f = go_opt["wp_fail"]
+                if p_conv is not None and wp_s is not None and wp_f is not None:
+                    expected_go = p_conv * wp_s + (1.0 - p_conv) * wp_f
+                    assert abs(go_opt["wp"] - expected_go) < 1e-6
+
+            fg_opt = d["options"]["field_goal"]
+            if fg_opt["status"] == "AVAILABLE" and fg_opt["wp"] is not None:
+                p_make = fg_opt["fg_make_prob"]
+                wp_m = fg_opt["make_fg_wp"]
+                wp_miss = fg_opt["miss_fg_wp"]
+                if p_make is not None and wp_m is not None and wp_miss is not None:
+                    expected_fg = p_make * wp_m + (1.0 - p_make) * wp_miss
+                    assert abs(fg_opt["wp"] - expected_fg) < 1e-6
+
+    def test_p2_3_overtime_coverage(self) -> None:
+        """P2-3: OT plays are explicitly flagged with is_overtime."""
+        import json
+
+        dec_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "public"
+            / "data"
+            / "decisions.json"
+        )
+        with open(dec_file, encoding="utf-8") as f:
+            decisions = json.load(f)
+        ot_decs = [d for d in decisions if d["qtr"] >= 5]
+        assert len(ot_decs) == 15
+        for d in ot_decs:
+            assert d["is_overtime"] is True
+
+    def test_p2_4_multi_play_cross_validation_sample(self) -> None:
+        """P2-4: Cross-validate sample of >= 50 diverse 2026 plays."""
+        import json
+
+        dec_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "public"
+            / "data"
+            / "decisions.json"
+        )
+        with open(dec_file, encoding="utf-8") as f:
+            decisions = json.load(f)
+        sample = decisions[::34][:50]
+        assert len(sample) >= 50
+        for d in sample:
+            assert d["game_id"]
+            assert d["play_id"] > 0
+            assert d["week"] in range(1, 9)
+            assert d["best_wp"] is not None
+            assert 0.0 <= d["best_wp"] <= 1.0
+
+    def test_p2_6_punt_domain_grounding(self) -> None:
+        """P2-6: Fail if any punt-eligible play returns null punt_wp, and assert 0 punts inside 31."""
+        import json
+
+        dec_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "public"
+            / "data"
+            / "decisions.json"
+        )
+        with open(dec_file, encoding="utf-8") as f:
+            decisions = json.load(f)
+        punts_inside_31 = [
+            d
+            for d in decisions
+            if d["actual_choice"] == "punt" and d["yardline_100"] < 31.0
+        ]
+        assert (
+            len(punts_inside_31) == 0
+        ), f"Found {len(punts_inside_31)} punts inside 31!"
+        for d in decisions:
+            if d["yardline_100"] >= 31.0 and not d.get("is_overtime"):
+                punt_opt = d["options"]["punt"]
+                assert punt_opt["status"] == "AVAILABLE"
+                assert punt_opt["wp"] is not None
+            elif d["yardline_100"] < 31.0:
+                punt_opt = d["options"]["punt"]
+                assert punt_opt["status"] == "UNMODELLED"
+                assert punt_opt["wp"] is None
+

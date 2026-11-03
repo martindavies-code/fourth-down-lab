@@ -81,6 +81,9 @@ export interface Decision {
     punt: OptionDetails;
   };
   is_complete_comparison: boolean;
+  is_partial_comparison?: boolean;
+  modeled_options_count?: number;
+  is_overtime?: boolean;
   preferred_options: OptionName[];
   is_toss_up: boolean;
   best_option: OptionName | null;
@@ -163,33 +166,58 @@ export interface CancelledSnap {
   status_label: string;
 }
 
+export interface ExcludedSnap {
+  game_id: string;
+  play_id: number;
+  week: number;
+  posteam: string;
+  defteam: string;
+  qtr: number;
+  play_type: string;
+  desc: string;
+  reason: string;
+}
+
 export interface MetaData {
   title: string;
-  build_time: string;
-  data_source: string;
-  data_as_of: string;
-  data_licence: string;
-  model_route: string;
   season: number;
   weeks: number[];
-  total_games: number;
+  data_as_of: string;
+  model_version: string;
+  source: string;
+  licence_data: string;
+  licence_model: string;
   counts: {
     total_fourth_down_rows: number;
-    executed_snaps: number;
     cancelled_snaps: number;
     cancelled_replayed: number;
     cancelled_not_replayed: number;
+    executed_snaps: number;
     excluded_snaps: number;
+    decisions_scored: number;
+    teams: number;
+    games: number;
+  };
+  excluded_snaps: ExcludedSnap[];
+  made_fgs_negative_wpa_audit: {
+    count: number;
+    sample_play_ids: number[];
+    verdict: string;
+    explanation: string;
+  };
+  punt_domain: {
+    min_modeled_yardline: number;
+    empirical_punts_inside_31: number;
+    rule: string;
   };
   thresholds: {
     toss_up_pp: number;
     genuine_gap_pp: number;
     clear_go_gap_pp: number;
+    verdict_boundaries: {
+      reasonable_max_cost_pp: number;
+      model_leaned_max_cost_pp: number;
+      model_strongly_preferred_min_cost_pp: number;
+    };
   };
-  credits: Array<{
-    entity: string;
-    details: string;
-    licence: string;
-  }>;
-  validation_summary: string;
 }

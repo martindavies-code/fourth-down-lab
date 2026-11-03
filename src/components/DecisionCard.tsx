@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Decision, OptionName } from '../types/decision';
-import { getTeamLogoUrl, isDarkLogo, getTeamName } from '../utils/teamLogos';
+import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
 import {
   formatDownAndDistance,
   formatProbability,
@@ -55,29 +55,33 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
     quadrant,
   } = decision;
 
-  // Verdict style & icon (clean English inside boxes)
+  const isPartial = decision.is_partial_comparison || (decision.yardline_100 < 31 && decision.options.punt.status === 'UNMODELLED');
+  const suffix = isPartial ? ' (best among modelled options)' : '';
+  const suffixLeaned = isPartial ? ' (among modelled options)' : '';
+
+  // Verdict style & icon (clean English inside boxes, P0-3 honest partial labelling)
   const getVerdictBadge = () => {
-    if (verdict_label === 'Reasonable') {
+    if (verdict_label.startsWith('Reasonable')) {
       return (
         <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-bold text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/10">
           <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-          <span>Reasonable</span>
+          <span>Reasonable{suffix}</span>
         </span>
       );
     }
-    if (verdict_label === 'Model leaned the other way') {
+    if (verdict_label.startsWith('Model leaned')) {
       return (
         <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-bold text-amber-300 border border-amber-500/40 shadow-sm shadow-amber-500/10">
           <AlertCircle className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
-          <span>Model Leaned</span>
+          <span>Model Leaned{suffixLeaned}</span>
         </span>
       );
     }
-    if (verdict_label === 'Model strongly preferred another option') {
+    if (verdict_label.startsWith('Model strongly preferred')) {
       return (
         <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/15 px-2 py-0.5 text-xs font-bold text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-500/10">
           <AlertCircle className="h-3.5 w-3.5 text-rose-400" aria-hidden="true" />
-          <span>Strongly Preferred Alternative</span>
+          <span>Strongly Preferred Alternative{suffixLeaned}</span>
         </span>
       );
     }
@@ -208,12 +212,19 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                 loading="lazy"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = getTeamLogoUrl('NFL');
+                  e.currentTarget.src = getTeamFallbackSvg(posteam);
                 }}
               />
               <span className="font-bold text-white">{posteam}</span>
               <span className="text-xs text-slate-400 font-bold">vs</span>
               <span className="text-xs font-semibold text-slate-300">{defteam}</span>
+            </div>
+
+            {/* Matchup & Week Context (P1-5) */}
+            <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
+              <span className="rounded bg-slate-800/80 px-1.5 py-0.5 text-[10px] font-semibold text-slate-300 border border-slate-700/60">
+                Wk {decision.week} • {decision.away_team} at {decision.home_team}
+              </span>
             </div>
 
             {/* Score & Timeouts */}
@@ -229,10 +240,15 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
 
           {/* Situation Badges */}
           <div className="flex items-center gap-2">
+            {(decision.is_overtime || qtr >= 5) && (
+              <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] font-black text-purple-300 border border-purple-400/40 shadow-sm" title="Overtime play — outside validated regular-season model domain">
+                OT
+              </span>
+            )}
             {tier === 'clear_go' && (
               <span className="inline-flex items-center gap-1 rounded bg-amber-500/15 px-2 py-0.5 text-[11px] font-black text-amber-300 border border-amber-500/40">
                 <Flame className="h-3 w-3 text-amber-400" />
-                <span>Clear Go (+{decision.go_boost ? decision.go_boost.toFixed(1) : ''} pp)</span>
+                <span>Clear Go (+{decision.go_boost ? decision.go_boost.toFixed(1) : ''} pp vs Alternative)</span>
               </span>
             )}
             {tier === 'obvious' && (
@@ -261,7 +277,9 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
             <div className="flex items-center gap-1.5">
               <TrendingUp className="h-4 w-4 text-sky-400" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                1. Before the Snap: 3 Choices
+                {isPartial
+                  ? '1. Before the Snap: 2 of 3 Options Modelled (Punt unmodelled inside opp 31)'
+                  : '1. Before the Snap: 3 Choices'}
               </h3>
             </div>
             <div className="text-[11px] text-slate-400 tabular-nums">
@@ -333,32 +351,33 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                     </div>
                   )}
 
-                  {/* Explicit Breakdown: Chance of Success & WP if Successful / Unsuccessful */}
+                  {/* Explicit Breakdown: Chance of Success & Absolute Conditional WPs (P0-1) */}
                   {opt.status === 'AVAILABLE' && key === 'go' && opt.first_down_prob !== null && opt.first_down_prob !== undefined && (
                     <div className="mt-2.5 rounded-md border border-slate-800/90 bg-[#070b16] p-2 text-xs">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-1.5 text-[11px]">
                         <span className="text-slate-400 font-semibold">Chance of Conversion:</span>
-                        <span className="font-black text-amber-300 tabular-nums">
-                          {formatProbability(opt.first_down_prob)}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-black text-amber-300 tabular-nums">
+                            {formatProbability(opt.first_down_prob)}
+                          </span>
+                          {decision.best_wp !== null && opt.wp !== null && (decision.best_wp - opt.wp) > 0.001 && (
+                            <span className="text-[10px] font-semibold text-rose-400/90 tabular-nums">
+                              (-{((decision.best_wp - opt.wp) * 100).toFixed(1)} pp vs Best)
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-[11px]">
                         <div className="rounded bg-emerald-950/40 p-1.5 border border-emerald-500/20">
-                          <span className="text-slate-400 block text-[10px] font-semibold">If Converted:</span>
+                          <span className="text-slate-400 block text-[10px] font-semibold">WP if Converted:</span>
                           <span className="font-black text-emerald-300 tabular-nums text-xs">
                             {formatProbability(opt.wp_succeed)}
                           </span>
-                          <span className="text-[10px] text-emerald-400/90 block font-semibold">
-                            {opt.wp && opt.wp_succeed ? `+${((opt.wp_succeed - opt.wp) * 100).toFixed(1)} pp WP` : ''}
-                          </span>
                         </div>
                         <div className="rounded bg-rose-950/40 p-1.5 border border-rose-500/20">
-                          <span className="text-slate-400 block text-[10px] font-semibold">If Failed:</span>
+                          <span className="text-slate-400 block text-[10px] font-semibold">WP if Failed:</span>
                           <span className="font-black text-rose-300 tabular-nums text-xs">
                             {formatProbability(opt.wp_fail)}
-                          </span>
-                          <span className="text-[10px] text-rose-400/90 block font-semibold">
-                            {opt.wp && opt.wp_fail ? `${((opt.wp_fail - opt.wp) * 100).toFixed(1)} pp WP` : ''}
                           </span>
                         </div>
                       </div>
@@ -369,27 +388,28 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                     <div className="mt-2.5 rounded-md border border-slate-800/90 bg-[#070b16] p-2 text-xs">
                       <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-1.5 text-[11px]">
                         <span className="text-slate-400 font-semibold">Chance of Kick Success:</span>
-                        <span className="font-black text-cyan-300 tabular-nums">
-                          {formatProbability(opt.fg_make_prob)}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-black text-cyan-300 tabular-nums">
+                            {formatProbability(opt.fg_make_prob)}
+                          </span>
+                          {decision.best_wp !== null && opt.wp !== null && (decision.best_wp - opt.wp) > 0.001 && (
+                            <span className="text-[10px] font-semibold text-rose-400/90 tabular-nums">
+                              (-{((decision.best_wp - opt.wp) * 100).toFixed(1)} pp vs Best)
+                            </span>
+                          )}
+                        </div>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-[11px]">
                         <div className="rounded bg-emerald-950/40 p-1.5 border border-emerald-500/20">
-                          <span className="text-slate-400 block text-[10px] font-semibold">If Kick Made:</span>
+                          <span className="text-slate-400 block text-[10px] font-semibold">WP if Kick Made:</span>
                           <span className="font-black text-emerald-300 tabular-nums text-xs">
                             {formatProbability(opt.make_fg_wp ?? null)}
                           </span>
-                          <span className="text-[10px] text-emerald-400/90 block font-semibold">
-                            {opt.wp && opt.make_fg_wp ? `+${((opt.make_fg_wp - opt.wp) * 100).toFixed(1)} pp WP` : ''}
-                          </span>
                         </div>
                         <div className="rounded bg-rose-950/40 p-1.5 border border-rose-500/20">
-                          <span className="text-slate-400 block text-[10px] font-semibold">If Kick Missed:</span>
+                          <span className="text-slate-400 block text-[10px] font-semibold">WP if Kick Missed:</span>
                           <span className="font-black text-rose-300 tabular-nums text-xs">
                             {formatProbability(opt.miss_fg_wp ?? null)}
-                          </span>
-                          <span className="text-[10px] text-rose-400/90 block font-semibold">
-                            {opt.wp && opt.miss_fg_wp ? `${((opt.miss_fg_wp - opt.wp) * 100).toFixed(1)} pp WP` : ''}
                           </span>
                         </div>
                       </div>
@@ -399,9 +419,9 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                   {opt.status === 'AVAILABLE' && key === 'punt' && (
                     <div className="mt-2 rounded-md border border-slate-800/90 bg-[#070b16] px-2.5 py-1.5 text-xs text-slate-300">
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="text-slate-400 font-semibold">Punt Expected Net State:</span>
+                        <span className="text-slate-400 font-semibold">Punt Net Expected State:</span>
                         <span className="font-bold text-indigo-300 tabular-nums">
-                          Opponent pinned deep ({formatProbability(opt.wp)} WP)
+                          Expected post-punt state from the punt model ({formatProbability(opt.wp)} WP)
                         </span>
                       </div>
                     </div>
@@ -558,12 +578,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                     {(outcome.realised_wpa * 100).toFixed(1)} pp WPA
                   </span>
                 </div>
-                <p className="mt-1 text-[11px] text-slate-400 leading-snug">
-                  {outcome.realised_wpa > 0
-                    ? `Execution succeeded: play generated a +${(outcome.realised_wpa * 100).toFixed(1)} pp surge in win probability.`
-                    : outcome.realised_wpa < 0
-                    ? `Execution failed: play resulted in a ${(outcome.realised_wpa * 100).toFixed(1)} pp decline in win probability.`
-                    : `Execution produced no net shift in post-play win probability.`}
+                <p className="mt-1 text-[11px] text-slate-300 leading-snug">
+                  Post-play win probability moved {outcome.realised_wpa > 0 ? '+' : ''}{(outcome.realised_wpa * 100).toFixed(1)} pp (nflverse WPA model).
                 </p>
                 <div className="mt-1 text-[10px] text-slate-400">
                   {outcome.realised_wpa_note}

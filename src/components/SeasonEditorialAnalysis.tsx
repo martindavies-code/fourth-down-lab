@@ -1,8 +1,80 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import type { Decision, MetaData, TeamSummary } from '../types/decision';
+import { getTeamName } from '../utils/teamLogos';
+import { formatProbability } from '../utils/formatting';
 import { Flame, ShieldAlert, Award, Compass, TrendingDown, CheckCircle2 } from 'lucide-react';
 import { MangaStamp } from './AnimeMascots';
 
-export const SeasonEditorialAnalysis: React.FC = () => {
+interface SeasonEditorialAnalysisProps {
+  decisions: Decision[];
+  teams: TeamSummary[];
+  meta: MetaData | null;
+}
+
+export const SeasonEditorialAnalysis: React.FC<SeasonEditorialAnalysisProps> = ({
+  decisions,
+  teams,
+  meta,
+}) => {
+  // 1. Costliest Single Decision of Season
+  const costliestCall = useMemo(() => {
+    return [...decisions]
+      .filter((d) => d.cost_pp !== null)
+      .sort((a, b) => (b.cost_pp ?? 0) - (a.cost_pp ?? 0))[0] || null;
+  }, [decisions]);
+
+  // 2. Adherence Leader (excluding low sample warning)
+  const adherenceLeader = useMemo(() => {
+    return [...teams]
+      .filter((t) => !t.low_sample_warning && t.adherence_pct !== null)
+      .sort((a, b) => (b.adherence_pct ?? 0) - (a.adherence_pct ?? 0))[0] || null;
+  }, [teams]);
+
+  // 3. Second Place Adherent Team
+  const adherenceRunnerUp = useMemo(() => {
+    const valid = [...teams]
+      .filter((t) => !t.low_sample_warning && t.adherence_pct !== null)
+      .sort((a, b) => (b.adherence_pct ?? 0) - (a.adherence_pct ?? 0));
+    return valid.length > 1 ? valid[1] : null;
+  }, [teams]);
+
+  // 4. Most Punts on Clear Go Situations
+  const clearGoPuntsTeam = useMemo(() => {
+    return [...teams].sort((a, b) => b.punted_on_clear_go - a.punted_on_clear_go)[0] || null;
+  }, [teams]);
+
+  // 5. Over-Aggressive Calls (> 3.0 pp cost on Go attempts)
+  const overAggressiveCalls = useMemo(() => {
+    return decisions.filter((d) => d.actual_choice === 'go' && (d.cost_pp ?? 0) > 3.0);
+  }, [decisions]);
+
+  // 6. Total Go Attempts and Total Plays
+  const totalGoAttempts = useMemo(() => {
+    return decisions.filter((d) => d.actual_choice === 'go').length;
+  }, [decisions]);
+
+  const totalDecisionsCount = decisions.length;
+
+  // 7. Lowest & Highest Cumulative Cost Teams
+  const lowestCostTeam = useMemo(() => {
+    return [...teams]
+      .filter((t) => !t.low_sample_warning)
+      .sort((a, b) => a.total_wp_lost_pp - b.total_wp_lost_pp)[0] || null;
+  }, [teams]);
+
+  const highestCostTeam = useMemo(() => {
+    return [...teams].sort((a, b) => b.total_wp_lost_pp - a.total_wp_lost_pp)[0] || null;
+  }, [teams]);
+
+  // 8. Max Week and Timestamp
+  const maxWeek = useMemo(() => {
+    if (meta?.weeks?.length) return Math.max(...meta.weeks);
+    if (decisions.length > 0) return Math.max(...decisions.map((d) => d.week));
+    return 8;
+  }, [meta, decisions]);
+
+  const dataAsOf = meta?.data_as_of || '2026-11-03';
+
   return (
     <section className="mb-8 rounded-2xl border border-slate-800 bg-[#0c1222] p-5 sm:p-7 shadow-2xl relative overflow-hidden anime-card-glow">
       {/* Background Graphic Watermark */}
@@ -20,21 +92,25 @@ export const SeasonEditorialAnalysis: React.FC = () => {
             <MangaStamp kanji="激闘" subtext="ANALYSIS" variant="hissho" className="scale-75 hidden sm:inline-flex" />
           </div>
           <p className="text-xs sm:text-sm text-slate-300 font-medium mt-1">
-            Editorial deep-dive into Weeks 1–8: uncovering the costliest tactical calls, the myth of over-aggression, and the NFL coaching divide.
+            Editorial deep-dive across Weeks 1–{maxWeek} (data refreshed {dataAsOf}): uncovering the costliest tactical calls, the myth of over-aggression, and the NFL coaching divide.
           </p>
         </div>
       </div>
 
-      {/* Key Metric Highlights Grid (All English boxes) */}
+      {/* Key Metric Highlights Grid (All English boxes, dynamically computed) */}
       <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-xl border border-rose-500/30 bg-rose-950/20 p-3.5 shadow-sm">
           <div className="flex items-center gap-1.5 text-rose-400 text-xs font-bold">
             <Flame className="h-4 w-4" />
             <span>Costliest Call</span>
           </div>
-          <div className="mt-2 text-2xl font-black text-white tabular-nums">9.8 pp</div>
+          <div className="mt-2 text-2xl font-black text-white tabular-nums">
+            {costliestCall?.cost_pp ? `${costliestCall.cost_pp.toFixed(1)} pp` : 'n/a'}
+          </div>
           <p className="mt-1 text-[11px] text-slate-300">
-            JAX 60-yd FG vs HOU (Week 6, Q4 2:00)
+            {costliestCall
+              ? `${costliestCall.posteam} ${costliestCall.actual_choice === 'field_goal' ? `${costliestCall.outcome.kick_distance || ''}-yd FG` : costliestCall.actual_choice} vs ${costliestCall.defteam} (Wk ${costliestCall.week})`
+              : 'Calculating...'}
           </p>
         </div>
 
@@ -43,9 +119,15 @@ export const SeasonEditorialAnalysis: React.FC = () => {
             <Award className="h-4 w-4" />
             <span>Adherence Leader</span>
           </div>
-          <div className="mt-2 text-2xl font-black text-white tabular-nums">92.9%</div>
+          <div className="mt-2 text-2xl font-black text-white tabular-nums">
+            {adherenceLeader?.adherence_pct !== null && adherenceLeader?.adherence_pct !== undefined
+              ? `${adherenceLeader.adherence_pct.toFixed(1)}%`
+              : 'n/a'}
+          </div>
           <p className="mt-1 text-[11px] text-slate-300">
-            Miami Dolphins (13 / 14 non-toss-ups)
+            {adherenceLeader
+              ? `${getTeamName(adherenceLeader.team)} (${adherenceLeader.adherent_count}/${adherenceLeader.non_toss_up_genuine} non-toss-ups)`
+              : 'Calculating...'}
           </p>
         </div>
 
@@ -54,9 +136,11 @@ export const SeasonEditorialAnalysis: React.FC = () => {
             <ShieldAlert className="h-4 w-4" />
             <span>Clear Go Punts</span>
           </div>
-          <div className="mt-2 text-2xl font-black text-white tabular-nums">4 Punts</div>
+          <div className="mt-2 text-2xl font-black text-white tabular-nums">
+            {clearGoPuntsTeam ? `${clearGoPuntsTeam.punted_on_clear_go} Punts` : '0 Punts'}
+          </div>
           <p className="mt-1 text-[11px] text-slate-300">
-            Baltimore Ravens (NFL High)
+            {clearGoPuntsTeam ? `${getTeamName(clearGoPuntsTeam.team)} (NFL High)` : 'Calculating...'}
           </p>
         </div>
 
@@ -65,9 +149,13 @@ export const SeasonEditorialAnalysis: React.FC = () => {
             <Compass className="h-4 w-4" />
             <span>Over-Aggressive Calls</span>
           </div>
-          <div className="mt-2 text-2xl font-black text-white tabular-nums">0 Calls</div>
+          <div className="mt-2 text-2xl font-black text-white tabular-nums">
+            {overAggressiveCalls.length} Calls
+          </div>
           <p className="mt-1 text-[11px] text-slate-300">
-            Zero costly gambles across 1,718 snaps
+            {overAggressiveCalls.length === 0
+              ? `Zero costly gambles across ${totalDecisionsCount.toLocaleString()} snaps`
+              : `${overAggressiveCalls.length} costly gambles across ${totalDecisionsCount.toLocaleString()} snaps`}
           </p>
         </div>
       </div>
@@ -85,7 +173,7 @@ export const SeasonEditorialAnalysis: React.FC = () => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
               <span className="text-[11px] font-black text-amber-300 tracking-wider uppercase">
-                Case Study: The 60-Yard Gamble
+                Case Study: The Costliest Call
               </span>
             </div>
           </div>
@@ -96,26 +184,31 @@ export const SeasonEditorialAnalysis: React.FC = () => {
                 <TrendingDown className="h-3.5 w-3.5" />
                 <span>The Costliest Tactical Call of 2026</span>
               </div>
-              <h3 className="text-base sm:text-lg font-black text-white mt-2">
-                Week 6: Jacksonville Jaguars vs Houston Texans (4th & 4 on HOU 42, Q4 2:00)
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 font-normal">
-                Trailing 17-20 with exactly two minutes remaining, Jacksonville faced 4th & 4 at the Houston 42-yard line. 
-                The mathematical win probability model strongly urged going for it (<strong className="text-emerald-400">Go WP: 35.7%</strong> vs <strong className="text-rose-400">Field Goal WP: 25.9%</strong>), 
-                calculating a massive penalty of <strong className="text-white">9.8 percentage points</strong> for attempting a kick.
-              </p>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 font-normal">
-                Kicker Cam Little stepped up and astonishingly booted a 60-yard field goal right through the uprights. 
-                Under conventional broadcast commentary, this was hailed as "brilliant coaching." 
-                Yet under genuine decision theory, this was a severe tactical error bailed out by outlier kicker execution. 
-                A made 60-yard kick only ties the game, whereas converting 4th & 4 puts Jacksonville in prime position to score a game-winning touchdown while draining the remaining clock.
-              </p>
+              {costliestCall ? (
+                <>
+                  <h3 className="text-base sm:text-lg font-black text-white mt-2">
+                    Week {costliestCall.week}: {getTeamName(costliestCall.posteam)} vs {getTeamName(costliestCall.defteam)} (4th & {Math.round(costliestCall.ydstogo)} on {costliestCall.yardline_100 < 50 ? `${costliestCall.defteam} ${Math.round(costliestCall.yardline_100)}` : `${costliestCall.posteam} ${Math.round(100 - costliestCall.yardline_100)}`}, Q{costliestCall.qtr} {Math.floor(costliestCall.quarter_seconds_remaining / 60)}:{(Math.floor(costliestCall.quarter_seconds_remaining % 60)).toString().padStart(2, '0')})
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 font-normal">
+                    {costliestCall.posteam} faced 4th & {Math.round(costliestCall.ydstogo)} trailing {costliestCall.posteam_score}–{costliestCall.defteam_score}. 
+                    The mathematical win probability model strongly urged going for it (<strong className="text-emerald-400">Go WP: {formatProbability(costliestCall.options.go.wp)}</strong> vs <strong className="text-rose-400">Field Goal WP: {formatProbability(costliestCall.options.field_goal.wp)}</strong>), 
+                    calculating a deficit of <strong className="text-white">{costliestCall.cost_pp ? `${costliestCall.cost_pp.toFixed(1)} percentage points` : ''}</strong> for attempting a kick.
+                  </p>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 font-normal">
+                    {costliestCall.outcome.desc} Under conventional commentary, converting an improbable kick can be celebrated as a bold success, but decision theory distinguishes the sound call from the athletic bailout.
+                  </p>
+                </>
+              ) : (
+                <p className="text-xs sm:text-sm text-slate-300 mt-2">Loading decision data...</p>
+              )}
             </div>
 
-            <div className="rounded-lg bg-[#0e1628] p-3 border border-slate-800 text-xs flex flex-wrap items-center justify-between gap-2">
-              <span className="text-slate-400">Pre-Snap Model Verdict: <strong className="text-rose-400">Strongly Preferred Alternative (9.8 pp deficit)</strong></span>
-              <span className="text-slate-400">Post-Snap Outcome: <strong className="text-emerald-400">Against Model & Succeeded (Bailed Out)</strong></span>
-            </div>
+            {costliestCall && (
+              <div className="rounded-lg bg-[#0e1628] p-3 border border-slate-800 text-xs flex flex-wrap items-center justify-between gap-2">
+                <span className="text-slate-400">Pre-Snap Model Verdict: <strong className="text-rose-400">{costliestCall.verdict_label} ({costliestCall.cost_pp?.toFixed(1)} pp deficit)</strong></span>
+                <span className="text-slate-400">Post-Snap Outcome: <strong className="text-emerald-400">{costliestCall.quadrant}</strong></span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -132,12 +225,12 @@ export const SeasonEditorialAnalysis: React.FC = () => {
               </h3>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 font-normal">
                 Whenever a team fails on fourth down, critics routinely claim coaches have become "blind slaves to spreadsheets." 
-                However, empirical tracking across all 1,718 fourth downs in 2026 reveals a stark reality: 
+                However, empirical tracking across all {totalDecisionsCount.toLocaleString()} fourth downs in 2026 reveals a stark reality: 
                 <strong className="text-white"> NFL head coaches never over-gamble.</strong>
               </p>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed mt-2 font-normal">
-                Out of 345 fourth-down go attempts across Weeks 1–8, there was <em>not a single instance</em> where a team attempted a conversion that cost more than 3.0 percentage points compared to a punt or field goal. 
-                Every substantial coaching mistake in the 2026 season was an act of <strong className="text-amber-400">excessive conservatism</strong>—punting on 4th & 1 near midfield or attempting low-percentage 55+ yard kicks instead of trusting the offense.
+                Out of {totalGoAttempts} fourth-down go attempts across Weeks 1–{maxWeek}, there were <strong className="text-emerald-400">{overAggressiveCalls.length} instances</strong> where a team attempted a conversion that cost more than 3.0 percentage points compared to a punt or field goal. 
+                Substantial coaching mistakes in the 2026 season were overwhelmingly acts of <strong className="text-amber-400">excessive conservatism</strong>—punting on 4th & short near midfield or attempting low-percentage 55+ yard kicks instead of trusting the offense.
               </p>
             </div>
 
@@ -193,24 +286,40 @@ export const SeasonEditorialAnalysis: React.FC = () => {
                 The 2026 season shows a widening philosophical gulf between coaching staffs:
               </p>
               <ul className="mt-2 space-y-1.5 text-xs sm:text-sm text-slate-300">
-                <li className="flex items-start gap-2">
-                  <span className="text-emerald-400 font-bold">•</span>
-                  <span><strong className="text-white">Miami Dolphins (Mike McDaniel)</strong>: The benchmark for modern game theory. Achieving a league-best <strong className="text-emerald-400">92.9% adherence</strong>, surrendering only 3.9 pp of win probability all season, and committing zero punts on Clear Go situations.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-cyan-400 font-bold">•</span>
-                  <span><strong className="text-white">Buffalo Bills (Sean McDermott)</strong>: Close behind at <strong className="text-cyan-400">84.2% adherence</strong> with only 8.4 pp lost across 19 decisions.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-rose-400 font-bold">•</span>
-                  <span><strong className="text-white">Baltimore Ravens & Denver Broncos</strong>: Denver surrendered a league-worst <strong className="text-rose-400">44.2 pp of win probability</strong> due to repeated conservative choices, while Baltimore committed <strong className="text-rose-400">4 punts on Clear Go situations</strong>—the most of any team in the NFL.</span>
-                </li>
+                {adherenceLeader && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-emerald-400 font-bold">•</span>
+                    <span>
+                      <strong className="text-white">{getTeamName(adherenceLeader.team)}</strong>: Benchmark for modern game theory, achieving a league-best <strong className="text-emerald-400">{adherenceLeader.adherence_pct?.toFixed(1)}% adherence</strong> ({adherenceLeader.adherent_count} of {adherenceLeader.non_toss_up_genuine} non-toss-ups), surrendering only {adherenceLeader.total_wp_lost_pp.toFixed(1)} pp of win probability all season, and committing {adherenceLeader.punted_on_clear_go} punts on Clear Go situations.
+                    </span>
+                  </li>
+                )}
+                {adherenceRunnerUp && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-cyan-400 font-bold">•</span>
+                    <span>
+                      <strong className="text-white">{getTeamName(adherenceRunnerUp.team)}</strong>: Close behind at <strong className="text-cyan-400">{adherenceRunnerUp.adherence_pct?.toFixed(1)}% adherence</strong> with only {adherenceRunnerUp.total_wp_lost_pp.toFixed(1)} pp lost across {adherenceRunnerUp.non_toss_up_genuine} decisions.
+                    </span>
+                  </li>
+                )}
+                {highestCostTeam && clearGoPuntsTeam && (
+                  <li className="flex items-start gap-2">
+                    <span className="text-rose-400 font-bold">•</span>
+                    <span>
+                      <strong className="text-white">{getTeamName(highestCostTeam.team)} & {getTeamName(clearGoPuntsTeam.team)}</strong>: {getTeamName(highestCostTeam.team)} surrendered a league-worst <strong className="text-rose-400">{highestCostTeam.total_wp_lost_pp.toFixed(1)} pp of win probability</strong> due to repeated conservative choices, while {getTeamName(clearGoPuntsTeam.team)} committed <strong className="text-rose-400">{clearGoPuntsTeam.punted_on_clear_go} punts on Clear Go situations</strong>—the most of any team in the NFL.
+                    </span>
+                  </li>
+                )}
               </ul>
             </div>
 
             <div className="rounded-lg bg-[#0e1628] p-3 border border-slate-800 text-xs flex flex-wrap items-center justify-between gap-2">
-              <span className="text-slate-400">Lowest Cumulative Cost: <strong className="text-emerald-400">Miami Dolphins (3.9 pp lost)</strong></span>
-              <span className="text-slate-400">Highest Cumulative Cost: <strong className="text-rose-400">Denver Broncos (44.2 pp lost)</strong></span>
+              <span className="text-slate-400">
+                Lowest Cumulative Cost: <strong className="text-emerald-400">{lowestCostTeam ? `${getTeamName(lowestCostTeam.team)} (${lowestCostTeam.total_wp_lost_pp.toFixed(1)} pp lost)` : 'n/a'}</strong>
+              </span>
+              <span className="text-slate-400">
+                Highest Cumulative Cost: <strong className="text-rose-400">{highestCostTeam ? `${getTeamName(highestCostTeam.team)} (${highestCostTeam.total_wp_lost_pp.toFixed(1)} pp lost)` : 'n/a'}</strong>
+              </span>
             </div>
           </div>
         </div>

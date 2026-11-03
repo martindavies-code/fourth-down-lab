@@ -29,8 +29,8 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, dataAsOf
                   <rt className="text-[8px] sm:text-[9px] text-sky-400 font-bold tracking-widest">FOURTH DOWN LAB</rt>
                 </ruby>
               </h1>
-              <span className="rounded bg-amber-500/15 px-1 py-0.5 text-[8px] sm:text-[9px] font-black text-amber-300 border border-amber-500/40 uppercase tracking-wider">
-                公式 PROD
+              <span className="rounded bg-sky-500/15 px-1 py-0.5 text-[8px] sm:text-[9px] font-black text-sky-300 border border-sky-500/40 uppercase tracking-wider">
+                INDIE ANALYTICS
               </span>
             </div>
             <p className="text-[10px] sm:text-xs text-slate-300 truncate font-medium">
@@ -110,9 +110,9 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, dataAsOf
       {/* Secondary Bar: Data Freshness with Manga Badge */}
       <div className="border-t border-slate-800/60 bg-[#0a0f1d] px-3 py-1 text-center text-[11px] text-slate-300 sm:px-6 flex items-center justify-center gap-2">
         <span className="rounded bg-sky-500/20 px-1 py-0.2 text-[9px] font-extrabold text-sky-300 border border-sky-400/30">
-          公式記録 OFFICIAL
+          UNOFFICIAL
         </span>
-        <span className="truncate">Historical Decision Log • nflverse 2026 (Weeks 1–8) • Data refreshed {dataAsOf}</span>
+        <span className="truncate">Unofficial analytics on nflverse play-by-play (CC-BY 4.0) • Data refreshed {dataAsOf}</span>
       </div>
     </header>
   );

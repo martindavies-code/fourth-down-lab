@@ -24,7 +24,7 @@ TOSS_UP_PP: float = 1.0
 GENUINE_GAP_PP: float = 3.0
 CLEAR_GO_GAP_PP: float = 3.0
 LOW_MAKE_PROB_THRESHOLD: float = 0.10
-PUNT_MIN_YARDLINE: float = 31.0  # inside opponent 31, punting is unmodelled in nfl4th
+PUNT_MIN_YARDLINE: float = 31.0  # inside opponent 31, punting is unmodelled in nfl4th empirical table (0 punts in 2026 dataset)
 EPS: float = (
     1e-9  # numerical precision tolerance to prevent floating point boundary noise
 )
@@ -76,19 +76,24 @@ def process_scored_row(row: dict[str, Any]) -> dict[str, Any]:
     # 1. Option Status Assignment
     go_status = "AVAILABLE"
     go_reason = "Standard fourth down go option"
+    is_overtime = qtr >= 5
     if game_sec < 0 or qtr > 5:
         go_status = "UNSUPPORTED"
-        go_reason = "Overtime or invalid game clock state"
+        go_reason = "Invalid game clock state"
+    elif is_overtime:
+        go_reason = "Overtime play (outside validated regulation model domain)"
 
     fg_status = "AVAILABLE"
     fg_reason = "Field goal attempt is possible"
 
     punt_status = "AVAILABLE"
     punt_reason = "Standard punt territory"
-    if yl < PUNT_MIN_YARDLINE:
-        # Punting inside opponent's 31 is unmodelled in nfl4th
+    is_partial_comparison = yl < PUNT_MIN_YARDLINE
+    modeled_options_count = 2 if is_partial_comparison else 3
+    if is_partial_comparison:
+        # Punting inside opponent's 31 has zero support in nfl4th empirical tables (0 punts in 2026 data)
         punt_status = "UNMODELLED"
-        punt_reason = f"Inside opponent {int(PUNT_MIN_YARDLINE)}-yard line (yardline_100 = {int(yl)}); not viable punt territory"
+        punt_reason = f"Inside opponent {int(PUNT_MIN_YARDLINE)}-yard line (yardline_100 = {int(yl)}); not modelled in nfl4th punt landing distribution (0 punts in 2026 dataset)"
 
     go_wp = row.get("go_wp")
     fg_wp = row.get("fg_wp")
@@ -425,6 +430,9 @@ def process_scored_row(row: dict[str, Any]) -> dict[str, Any]:
         # Decision comparison (Before the snap)
         "options": options,
         "is_complete_comparison": is_complete_comparison,
+        "is_partial_comparison": is_partial_comparison,
+        "modeled_options_count": modeled_options_count,
+        "is_overtime": is_overtime,
         "preferred_options": preferred_options,
         "is_toss_up": is_toss_up,
         "best_option": best_option,

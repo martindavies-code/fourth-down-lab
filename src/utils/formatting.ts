@@ -31,6 +31,10 @@ export function formatDownAndDistance(_down: number, ydstogo: number, yardline10
 
 export function formatProbability(prob: number | null | undefined): string {
   if (prob === null || prob === undefined || isNaN(prob)) return 'n/a';
+  if (prob === 0) return '0%';
+  if (prob > 0 && prob < 0.001) return '<0.1%';
+  if (prob >= 0.999 && prob < 1) return '>99.9%';
+  if (prob === 1) return '100%';
   return `${(prob * 100).toFixed(1)}%`;
 }
 

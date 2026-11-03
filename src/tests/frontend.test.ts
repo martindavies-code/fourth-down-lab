@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import { MOCK_DECISIONS_FIXTURE, MOCK_TEAMS_FIXTURE } from './fixtures.ts';
 import {
   formatDownAndDistance,
@@ -11,6 +13,7 @@ import {
 } from '../utils/formatting.ts';
 import {
   getTeamLogoUrl,
+  getTeamFallbackSvg,
   getTeamName,
   isDarkLogo,
   NFL_TEAMS,
@@ -79,9 +82,13 @@ test('Formatting Helpers: formatDownAndDistance', () => {
   assert.equal(formatDownAndDistance(4, 2, 45), '4th & 2');
 });
 
-test('Formatting Helpers: formatProbability', () => {
+test('Formatting Helpers: formatProbability (P1-1)', () => {
+  assert.equal(formatProbability(0.0), '0%');
+  assert.equal(formatProbability(0.0005), '<0.1%');
   assert.equal(formatProbability(0.122), '12.2%');
-  assert.equal(formatProbability(1.0), '100.0%');
+  assert.equal(formatProbability(0.55), '55.0%');
+  assert.equal(formatProbability(0.9995), '>99.9%');
+  assert.equal(formatProbability(1.0), '100%');
   assert.equal(formatProbability(null), 'n/a');
   assert.equal(formatProbability(undefined), 'n/a');
   assert.equal(formatProbability(NaN), 'n/a');
@@ -102,7 +109,7 @@ test('Formatting Helpers: formatScoreDifferential', () => {
   assert.equal(formatScoreDifferential(-8, 'GB'), 'GB trailing by 8');
 });
 
-test('Team Logo Helpers', () => {
+test('Team Logo Helpers (P1-4)', () => {
   assert.equal(
     getTeamLogoUrl('GB'),
     'https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png'
@@ -119,4 +126,20 @@ test('Team Logo Helpers', () => {
   assert.equal(isDarkLogo('PIT'), true);
   assert.equal(isDarkLogo('GB'), false);
   assert.equal(Object.keys(NFL_TEAMS).length, 32);
+
+  const fallback = getTeamFallbackSvg('MIA');
+  assert.ok(fallback.startsWith('data:image/svg+xml;utf8,'));
+  assert.ok(fallback.includes('MIA'));
+});
+
+test('Guard Against Stale-Stat Regressions (P2-5)', () => {
+  // Ensure that no numeric season statistics live as hardcoded literals in SeasonEditorialAnalysis.tsx
+  const componentPath = path.resolve('src/components/SeasonEditorialAnalysis.tsx');
+  const content = fs.readFileSync(componentPath, 'utf-8');
+
+  assert.ok(!content.includes('92.9%'), 'Must not hardcode 92.9%');
+  assert.ok(!content.includes('1,718 snaps'), 'Must not hardcode 1,718 snaps');
+  assert.ok(!content.includes('345 fourth-down'), 'Must not hardcode 345 fourth-down');
+  assert.ok(!content.includes('44.2 pp of win probability'), 'Must not hardcode 44.2 pp');
+  assert.ok(!content.includes('13 / 14 non-toss-ups'), 'Must not hardcode 13 / 14');
 });

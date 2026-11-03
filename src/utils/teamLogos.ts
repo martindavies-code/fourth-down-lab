@@ -48,8 +48,19 @@ export function getTeamLogoUrl(abbr: string): string {
   if (clean === 'NFL') {
     return 'https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nfl.png';
   }
-  // ESPN scoreboard logo CDN
-  return `https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/${clean.toLowerCase()}.png`;
+  // ESPN uses 'wsh' for Washington
+  const espnSlug = clean === 'WAS' ? 'wsh' : clean.toLowerCase();
+  return `https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/${espnSlug}.png`;
+}
+
+export function getTeamFallbackSvg(abbr: string): string {
+  const clean = abbr?.toUpperCase().trim() || 'NFL';
+  const team = NFL_TEAMS[clean] || { primaryColor: '#1e293b', secondaryColor: '#94a3b8' };
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+    <circle cx="50" cy="50" r="46" fill="${team.primaryColor}" stroke="${team.secondaryColor}" stroke-width="4"/>
+    <text x="50" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="${clean.length > 3 ? '22' : '28'}" font-weight="900" fill="#ffffff" text-anchor="middle">${clean}</text>
+  </svg>`;
+  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }
 
 export function isDarkLogo(abbr: string): boolean {

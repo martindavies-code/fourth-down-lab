@@ -1,19 +1,26 @@
 import React, { useState, useMemo } from 'react';
-import type { TeamSummary } from '../types/decision';
-import { getTeamLogoUrl, isDarkLogo, getTeamName } from '../utils/teamLogos';
+import type { Decision, MetaData, TeamSummary } from '../types/decision';
+import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
 import { AlertTriangle, ArrowUpDown, Table, Sparkles } from 'lucide-react';
 import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 import { SeasonEditorialAnalysis } from '../components/SeasonEditorialAnalysis';
 
 interface TeamsPageProps {
   teams: TeamSummary[];
+  decisions?: Decision[];
+  meta?: MetaData | null;
   loading: boolean;
 }
 
 type SortField = 'adherence_pct' | 'total_wp_lost_pp' | 'genuine_count' | 'toss_up_count' | 'punted_on_clear_go' | 'team';
 type TeamsTab = 'rankings' | 'analysis';
 
-export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
+export const TeamsPage: React.FC<TeamsPageProps> = ({
+  teams,
+  decisions = [],
+  meta = null,
+  loading,
+}) => {
   const [activeTab, setActiveTab] = useState<TeamsTab>('rankings');
   const [sortField, setSortField] = useState<SortField>('adherence_pct');
   const [sortAsc, setSortAsc] = useState<boolean>(false);
@@ -94,12 +101,22 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
         </div>
 
         <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
-          <span className="font-semibold text-slate-300">Weeks 1–8:</span> 1,718 Snaps Audited
+          <span className="font-semibold text-slate-300">
+            Weeks 1–{meta?.weeks?.length ? Math.max(...meta.weeks) : 8}:
+          </span>{' '}
+          {meta?.counts?.executed_snaps
+            ? meta.counts.executed_snaps.toLocaleString()
+            : decisions.length
+            ? decisions.length.toLocaleString()
+            : '1,718'}{' '}
+          Snaps Audited
         </div>
       </div>
 
       {/* Tab 1: Season Editorial Analysis */}
-      {activeTab === 'analysis' && <SeasonEditorialAnalysis />}
+      {activeTab === 'analysis' && (
+        <SeasonEditorialAnalysis decisions={decisions} teams={teams} meta={meta} />
+      )}
 
       {/* Tab 2: Team Rankings & Tables */}
       {activeTab === 'rankings' && (
@@ -204,7 +221,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
                             loading="lazy"
                             onError={(e) => {
                               e.currentTarget.onerror = null;
-                              e.currentTarget.src = getTeamLogoUrl('NFL');
+                              e.currentTarget.src = getTeamFallbackSvg(team.team);
                             }}
                           />
                           <div>

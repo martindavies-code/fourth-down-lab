@@ -4,13 +4,14 @@ import { FeedPage } from './pages/FeedPage';
 import { TeamsPage } from './pages/TeamsPage';
 import { GamesPage } from './pages/GamesPage';
 import { MethodPage } from './pages/MethodPage';
-import type { Decision, GameSummary, MetaData, TeamSummary } from './types/decision';
+import type { CancelledSnap, Decision, GameSummary, MetaData, TeamSummary } from './types/decision';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('feed');
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [teams, setTeams] = useState<TeamSummary[]>([]);
   const [games, setGames] = useState<GameSummary[]>([]);
+  const [cancelledSnaps, setCancelledSnaps] = useState<CancelledSnap[]>([]);
   const [meta, setMeta] = useState<MetaData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,12 +22,13 @@ export const App: React.FC = () => {
         setLoading(true);
         setError(null);
 
-        // Fetch decisions, teams, games, and meta
-        const [decisionsRes, teamsRes, gamesRes, metaRes] = await Promise.all([
+        // Fetch decisions, teams, games, meta, and cancelled snaps audit
+        const [decisionsRes, teamsRes, gamesRes, metaRes, auditRes] = await Promise.all([
           fetch('./data/decisions.json'),
           fetch('./data/teams_summary.json'),
           fetch('./data/games_summary.json'),
           fetch('./data/meta.json'),
+          fetch('./data/audit_cancelled_snaps.json'),
         ]);
 
         if (!decisionsRes.ok) throw new Error(`Failed to load decisions: HTTP ${decisionsRes.status}`);
@@ -37,11 +39,13 @@ export const App: React.FC = () => {
         const teamsData = await teamsRes.json();
         const gamesData = await gamesRes.json();
         const metaData = metaRes.ok ? await metaRes.json() : null;
+        const auditData = auditRes.ok ? await auditRes.json() : [];
 
         setDecisions(decisionsData);
         setTeams(teamsData);
         setGames(gamesData);
         setMeta(metaData);
+        setCancelledSnaps(auditData);
       } catch (err: unknown) {
         console.error('Data load error:', err);
         setError(err instanceof Error ? err.message : 'Unknown data loading error');
@@ -73,13 +77,30 @@ export const App: React.FC = () => {
       {/* Main Content Area */}
       <main id="main-content" className="flex-1 pb-16">
         {activeTab === 'feed' && (
-          <FeedPage decisions={decisions} loading={loading} error={error} />
+          <FeedPage
+            decisions={decisions}
+            cancelledSnaps={cancelledSnaps}
+            meta={meta}
+            loading={loading}
+            error={error}
+          />
         )}
         {activeTab === 'teams' && (
-          <TeamsPage teams={teams} loading={loading} />
+          <TeamsPage
+            teams={teams}
+            decisions={decisions}
+            meta={meta}
+            loading={loading}
+          />
         )}
         {activeTab === 'games' && (
-          <GamesPage games={games} decisions={decisions} loading={loading} />
+          <GamesPage
+            games={games}
+            decisions={decisions}
+            cancelledSnaps={cancelledSnaps}
+            meta={meta}
+            loading={loading}
+          />
         )}
         {activeTab === 'method' && (
           <MethodPage meta={meta} />

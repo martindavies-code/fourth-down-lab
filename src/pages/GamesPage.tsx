@@ -1,13 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import type { Decision, GameSummary } from '../types/decision';
+import type { CancelledSnap, Decision, GameSummary, MetaData } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
-import { getTeamLogoUrl, isDarkLogo, getTeamName } from '../utils/teamLogos';
-import { Compass, Calendar, Zap, ArrowRight } from 'lucide-react';
+import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
+import { Compass, Calendar, Zap, ArrowRight, ShieldAlert } from 'lucide-react';
 import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 
 interface GamesPageProps {
   games: GameSummary[];
   decisions: Decision[];
+  cancelledSnaps?: CancelledSnap[];
+  meta?: MetaData | null;
   loading: boolean;
 }
 
@@ -18,7 +20,13 @@ const formatChoiceName = (opt?: string | null) => {
   return opt || 'n/a';
 };
 
-export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading }) => {
+export const GamesPage: React.FC<GamesPageProps> = ({
+  games,
+  decisions,
+  cancelledSnaps = [],
+  meta = null,
+  loading,
+}) => {
   const weeks = useMemo(() => {
     const set = new Set(games.map((g) => g.week));
     return Array.from(set).sort((a, b) => b - a);
@@ -67,10 +75,20 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
       .sort((a, b) => a.play_id - b.play_id); // Chronological order
   }, [decisions, activeGame]);
 
+  const gameCancelledSnaps = useMemo(() => {
+    if (!activeGame) return [];
+    return (cancelledSnaps || []).filter((s) => s.game_id === activeGame.game_id);
+  }, [cancelledSnaps, activeGame]);
+
+  const gameExcludedSnaps = useMemo(() => {
+    if (!activeGame) return [];
+    return (meta?.excluded_snaps || []).filter((s) => s.game_id === activeGame.game_id);
+  }, [meta, activeGame]);
+
   const gameSummaryData = useMemo(() => {
     if (!activeGame || gameDecisions.length === 0) return null;
 
-    // Highest cost decision (Turning point)
+    // Highest cost decision
     const costliestPlay = [...gameDecisions]
       .filter((d) => (d.cost_pp ?? 0) > 0)
       .sort((a, b) => (b.cost_pp ?? 0) - (a.cost_pp ?? 0))[0] || null;
@@ -84,14 +102,18 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
 
     const awayCost = activeGame.away_wp_lost_pp;
     const homeCost = activeGame.home_wp_lost_pp;
-    let coachingVerdict = 'Both coaching staffs followed model recommendations closely.';
-    if (Math.abs(awayCost - homeCost) >= 1.0) {
+    const diff = Math.abs(awayCost - homeCost);
+    let coachingVerdict = `Both teams had comparable decision equity: total model cost differed by ${diff.toFixed(1)} pp across ${gameDecisions.length} fourth-down decisions.`;
+    if (diff >= 1.0) {
       if (awayCost > homeCost) {
-        coachingVerdict = `${activeGame.home_team} gained a +${(awayCost - homeCost).toFixed(1)} pp equity advantage over ${activeGame.away_team} from superior fourth-down management.`;
+        coachingVerdict = `${activeGame.home_team} surrendered an estimated ${diff.toFixed(1)} pp less model-valued win probability than ${activeGame.away_team} across ${gameDecisions.length} fourth-down decisions.`;
       } else {
-        coachingVerdict = `${activeGame.away_team} gained a +${(homeCost - awayCost).toFixed(1)} pp equity advantage over ${activeGame.home_team} from superior fourth-down management.`;
+        coachingVerdict = `${activeGame.away_team} surrendered an estimated ${diff.toFixed(1)} pp less model-valued win probability than ${activeGame.home_team} across ${gameDecisions.length} fourth-down decisions.`;
       }
     }
+
+    const allWithinTolerance = gameDecisions.every((d) => (d.cost_pp ?? 0) <= 1.0);
+    const hasStronglyPreferredBlunder = costliestPlay && (costliestPlay.cost_pp ?? 0) > 3.0;
 
     return {
       totalSnaps: gameDecisions.length,
@@ -102,6 +124,8 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
       suboptimalCount: suboptimalCalls.length,
       costliestPlay,
       coachingVerdict,
+      allWithinTolerance,
+      hasStronglyPreferredBlunder,
     };
   }, [activeGame, gameDecisions]);
 
@@ -203,7 +227,7 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
                     className={`h-10 w-10 sm:h-12 sm:w-12 object-contain ${isDarkLogo(activeGame.away_team) ? 'team-logo-dark-outline' : ''}`}
                     onError={(e) => {
                       e.currentTarget.onerror = null;
-                      e.currentTarget.src = getTeamLogoUrl('NFL');
+                      e.currentTarget.src = getTeamFallbackSvg(activeGame.away_team);
                     }}
                   />
                   <div>
@@ -227,7 +251,7 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
                     className={`h-10 w-10 sm:h-12 sm:w-12 object-contain ${isDarkLogo(activeGame.home_team) ? 'team-logo-dark-outline' : ''}`}
                     onError={(e) => {
                       e.currentTarget.onerror = null;
-                      e.currentTarget.src = getTeamLogoUrl('NFL');
+                      e.currentTarget.src = getTeamFallbackSvg(activeGame.home_team);
                     }}
                   />
                   <div>
@@ -298,16 +322,18 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
                     </div>
                   </div>
 
-                  {/* Turning Point Callout */}
+                  {/* Turning Point Callout (P0-8) */}
                   <div className="md:col-span-5 rounded-lg border border-slate-800 bg-[#0b101c] p-3 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-amber-400">
-                        <span>Crucial Turning Point</span>
+                        <span>{gameSummaryData.hasStronglyPreferredBlunder ? 'Crucial Turning Point' : 'Largest Single Decision Cost'}</span>
                         {gameSummaryData.costliestPlay && (
-                          <span className="text-rose-400 font-extrabold">-{gameSummaryData.costliestPlay.cost_pp?.toFixed(1)} pp</span>
+                          <span className={`${gameSummaryData.hasStronglyPreferredBlunder ? 'text-rose-400' : 'text-amber-400'} font-extrabold tabular-nums`}>
+                            -{gameSummaryData.costliestPlay.cost_pp?.toFixed(1)} pp
+                          </span>
                         )}
                       </div>
-                      {gameSummaryData.costliestPlay ? (
+                      {gameSummaryData.costliestPlay && (gameSummaryData.hasStronglyPreferredBlunder || !gameSummaryData.allWithinTolerance) ? (
                         <p className="mt-1 text-slate-300 text-[11px] leading-snug line-clamp-2">
                           Play #{gameDecisions.findIndex((d) => d.play_id === gameSummaryData.costliestPlay?.play_id) + 1} (Q{gameSummaryData.costliestPlay.qtr}): {gameSummaryData.costliestPlay.posteam} chose{' '}
                           <strong className="text-white">{formatChoiceName(gameSummaryData.costliestPlay.actual_choice)}</strong> over preferred{' '}
@@ -315,7 +341,7 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
                         </p>
                       ) : (
                         <p className="mt-1 text-slate-400 text-[11px] leading-snug">
-                          No major equity blunders in this matchup; both teams adhered to model guidelines.
+                          Every decision in this matchup was within the model's 1.0 pp tolerance.
                         </p>
                       )}
                     </div>
@@ -347,7 +373,7 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
                 </span>
               </div>
 
-              {/* Visual Strip with Interactive Click */}
+              {/* Visual Strip with Interactive Click (P1-8 accessible timeline) */}
               <div className="flex h-7 w-full items-center gap-1 overflow-x-auto rounded-lg bg-[#070b14] p-1 border border-slate-800">
                 {gameDecisions.map((d, index) => {
                   const cost = d.cost_pp ?? 0;
@@ -360,15 +386,66 @@ export const GamesPage: React.FC<GamesPageProps> = ({ games, decisions, loading 
                       key={d.play_id}
                       type="button"
                       onClick={() => scrollToDecision(d.play_id)}
-                      className={`h-full flex-1 min-w-[20px] rounded transition-all hover:scale-y-125 hover:brightness-125 focus:outline-none focus:ring-2 focus:ring-sky-400 cursor-pointer ${bg}`}
+                      className={`h-full flex-1 min-w-[20px] rounded transition-all hover:scale-y-125 hover:brightness-125 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-1 focus:ring-offset-slate-900 cursor-pointer ${bg}`}
                       title={`Play #${index + 1} (${d.posteam}, Q${d.qtr}): ${d.actual_choice.toUpperCase()} • Cost: ${cost.toFixed(1)} pp • ${d.verdict_label} — Click to inspect`}
-                      aria-label={`Jump to decision for Play ${index + 1}: ${d.posteam} ${d.actual_choice}`}
+                      aria-label={`Play ${index + 1}, Q${d.qtr}, ${d.posteam} chose ${formatChoiceName(d.actual_choice)}, cost ${cost.toFixed(1)} pp`}
                     />
                   );
                 })}
               </div>
             </div>
           </div>
+
+          {/* Audited Non-Executed Snaps for this Game (P1-10) */}
+          {(gameCancelledSnaps.length > 0 || gameExcludedSnaps.length > 0) && (
+            <div className="rounded-xl border border-slate-800 bg-[#0a0f1d] p-4 text-xs">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-3">
+                <div className="flex items-center gap-2">
+                  <ShieldAlert className="h-4 w-4 text-amber-400" />
+                  <h4 className="font-bold text-white uppercase tracking-wider text-xs">
+                    Audited Non-Executed Snaps in this Matchup ({gameCancelledSnaps.length + gameExcludedSnaps.length} Snaps)
+                  </h4>
+                </div>
+                <span className="text-[11px] text-slate-400">
+                  Excluded from decision model (penalty / victory formation)
+                </span>
+              </div>
+              <div className="space-y-2">
+                {gameCancelledSnaps.map((cs) => (
+                  <div key={cs.play_id} className="rounded-lg border border-slate-800/80 bg-[#070b14] p-2.5 text-[11px]">
+                    <div className="flex flex-wrap items-center justify-between gap-1">
+                      <span className="font-bold text-amber-300">
+                        Play #{cs.play_id} • Q{cs.qtr} • {cs.posteam} ({cs.status_label})
+                      </span>
+                      {cs.replayed_on_fourth_down ? (
+                        <span className="rounded bg-sky-500/15 px-1.5 py-0.5 text-[10px] text-sky-300 font-semibold border border-sky-500/30">
+                          Replayed on 4th Down (Play #{cs.replayed_details?.next_play_id})
+                        </span>
+                      ) : (
+                        <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] text-slate-400">
+                          Resulted in 1st Down / Turnover / End of Half
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 text-slate-300 font-normal">{cs.desc}</p>
+                  </div>
+                ))}
+                {gameExcludedSnaps.map((es) => (
+                  <div key={es.play_id} className="rounded-lg border border-purple-500/30 bg-purple-950/15 p-2.5 text-[11px]">
+                    <div className="flex flex-wrap items-center justify-between gap-1">
+                      <span className="font-bold text-purple-300">
+                        Play #{es.play_id} • Q{es.qtr} • {es.posteam} ({es.reason})
+                      </span>
+                      <span className="rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] text-purple-300 font-semibold border border-purple-500/40">
+                        Victory Formation Kneel
+                      </span>
+                    </div>
+                    <p className="mt-1 text-slate-300 font-normal">{es.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Chronological List of Decision Cards */}
           <div className="space-y-4">
