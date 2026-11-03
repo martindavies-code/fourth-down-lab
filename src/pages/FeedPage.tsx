@@ -3,6 +3,7 @@ import type { Decision } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
 import { NFL_TEAMS } from '../utils/teamLogos';
 import { Filter, RotateCcw, Eye, EyeOff, Search } from 'lucide-react';
+import { BlitzMascot, RefereeMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 
 interface FeedPageProps {
   decisions: Decision[];
@@ -118,12 +119,57 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      {/* Anime Hero Banner (Eyeshield 21 Style) */}
+      <section className="mb-6 overflow-hidden rounded-2xl border-2 border-sky-500/40 bg-gradient-to-r from-[#070b14] via-[#0d1629] to-[#070b14] shadow-2xl relative anime-card-glow">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30 mix-blend-screen pointer-events-none"
+          style={{ backgroundImage: `url('assets/anime-hero-banner.jpg')` }}
+        />
+        <div className="relative p-5 sm:p-7 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="max-w-2xl space-y-2 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-500/10 px-3 py-1 text-xs font-black text-amber-300">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
+              </span>
+              <span>激闘！2026シーズン 第1週〜第8週 全1,867プレー完全解析</span>
+            </div>
+            <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white flex flex-col sm:flex-row items-center sm:items-baseline gap-2">
+              <span>勝利へのギャンブルか、堅実な陣地戦か！？</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-medium">
+              Every authentic NFL 4th down decision tracked, simulated, and audited. 
+              Mathematically evaluating the win probability of Go, Field Goal, and Punt from the exact same pre-snap moment.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-2">
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-300 bg-sky-950/70 px-2.5 py-1 rounded border border-sky-400/40">
+                ⚡ ギャンブル = 4th Down Go Attempt
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-950/70 px-2.5 py-1 rounded border border-emerald-400/40">
+                🎯 的確 = Sound Call
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-300 bg-rose-950/70 px-2.5 py-1 rounded border border-rose-400/40">
+                ☠ 大爆死 = Suboptimal Failure
+              </span>
+            </div>
+          </div>
+          <div className="hidden lg:flex flex-col items-center justify-center p-3 rounded-xl bg-slate-900/90 border border-sky-400/40 shrink-0 shadow-lg">
+            <BlitzMascot className="h-20 w-20" mood="intense" />
+            <span className="mt-1 text-[11px] font-black text-sky-300">ブリッツ君 (Blitz-kun)</span>
+            <span className="text-[9px] text-slate-400 font-bold">Chief Model Analyst</span>
+          </div>
+        </div>
+      </section>
+
       {/* Controls & Filter Bar */}
-      <section className="mb-6 rounded-xl border border-slate-800 bg-[#0c1220] p-4 shadow-lg" aria-label="Filters">
+      <section className="mb-6 rounded-xl border border-slate-800 bg-[#0c1220] p-4 shadow-lg anime-card-glow" aria-label="Filters">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-sky-400" />
-            <h2 className="text-sm font-bold text-white">Decision Filter & Search</h2>
+            <h2 className="text-sm font-bold text-white flex items-center gap-2">
+              <span>【 絞り込み検索 】Decision Filter & Search</span>
+              <MangaSoundEffect sound="ズバッ！" english="filter" className="text-sky-400 hidden sm:inline-flex" />
+            </h2>
           </div>
 
           <div className="flex items-center gap-3">
@@ -134,21 +180,74 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
 
             <button
               onClick={resetFilters}
-              className="flex items-center gap-1 rounded bg-slate-800 px-2 py-1 text-xs font-medium text-slate-300 hover:bg-slate-700 transition-colors"
+              className="flex items-center gap-1 rounded bg-slate-800 px-2.5 py-1.5 text-xs font-bold text-slate-300 hover:bg-slate-700 transition-colors"
               title="Reset all filters"
             >
               <RotateCcw className="h-3 w-3" />
-              <span>Reset</span>
+              <span>リセット Reset</span>
             </button>
           </div>
         </div>
 
-        {/* Dropdowns & Inputs */}
-        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+        {/* Tier Selector Buttons (Polish Dashboard Stage 5: Balanced Grid on Mobile, No Cut-Off Filters) */}
+        <div className="mt-3">
+          <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-2">
+            【戦術区分】Decision Tier Filter
+          </label>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button
+              onClick={() => { setSelectedTier('genuine'); setPage(1); }}
+              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                selectedTier === 'genuine'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-400/50 shadow-sm shadow-amber-500/10'
+                  : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
+              }`}
+            >
+              <MangaStamp kanji="必勝" subtext="GENUINE" variant="hissho" className="scale-75 -my-1" />
+              <span>Genuine (≤3.0 pp)</span>
+            </button>
+            <button
+              onClick={() => { setSelectedTier('clear_go'); setPage(1); }}
+              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                selectedTier === 'clear_go'
+                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 shadow-sm shadow-cyan-500/10'
+                  : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
+              }`}
+            >
+              <MangaStamp kanji="決行" subtext="CLEAR GO" variant="kekkoh" className="scale-75 -my-1" />
+              <span>Clear Go (&gt;3.0 pp)</span>
+            </button>
+            <button
+              onClick={() => { setSelectedTier('all'); setPage(1); }}
+              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                selectedTier === 'all'
+                  ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-400/50 shadow-sm shadow-indigo-500/10'
+                  : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
+              }`}
+            >
+              <MangaStamp kanji="全撃" subtext="ALL SNAPS" variant="teppeki" className="scale-75 -my-1" />
+              <span>All Snaps</span>
+            </button>
+            <button
+              onClick={() => { setSelectedTier('incomplete'); setPage(1); }}
+              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+                selectedTier === 'incomplete'
+                  ? 'bg-rose-500/20 text-rose-300 border border-rose-400/50 shadow-sm shadow-rose-500/10'
+                  : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
+              }`}
+            >
+              <MangaStamp kanji="審議" subtext="AUDIT" variant="haran" className="scale-75 -my-1" />
+              <span>Incomplete</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Dropdowns & Search */}
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
           {/* Week Filter */}
           <div>
             <label htmlFor="filter-week" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              Week
+              第N週 (Week)
             </label>
             <select
               id="filter-week"
@@ -157,12 +256,12 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
                 setSelectedWeek(e.target.value);
                 setPage(1);
               }}
-              className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 text-xs text-white focus:border-sky-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
             >
               <option value="ALL">All Weeks (1–{weeks.length ? Math.max(...weeks) : 8})</option>
               {weeks.map((w) => (
                 <option key={w} value={w}>
-                  Week {w}
+                  第{w}週 Week {w}
                 </option>
               ))}
             </select>
@@ -171,7 +270,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
           {/* Team Filter */}
           <div>
             <label htmlFor="filter-team" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              Team
+              チーム (Team)
             </label>
             <select
               id="filter-team"
@@ -180,9 +279,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
                 setSelectedTeam(e.target.value);
                 setPage(1);
               }}
-              className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 text-xs text-white focus:border-sky-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
             >
-              <option value="ALL">All 32 Teams</option>
+              <option value="ALL">All 32 Teams (全32球団)</option>
               {teams.map((t) => (
                 <option key={t} value={t}>
                   {t} - {NFL_TEAMS[t]?.name}
@@ -191,31 +290,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
             </select>
           </div>
 
-          {/* Decision Tier */}
-          <div>
-            <label htmlFor="filter-tier" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              Decision Tier
-            </label>
-            <select
-              id="filter-tier"
-              value={selectedTier}
-              onChange={(e) => {
-                setSelectedTier(e.target.value);
-                setPage(1);
-              }}
-              className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 text-xs text-white focus:border-sky-500 focus:outline-none"
-            >
-              <option value="genuine">Genuine Decisions (Gap ≤ 3.0 pp)</option>
-              <option value="clear_go">Clear Go Decisions (&gt; 3.0 pp)</option>
-              <option value="all">All Snaps (incl. Obvious)</option>
-              <option value="incomplete">Incomplete Comparisons Only</option>
-            </select>
-          </div>
-
           {/* Verdict Filter */}
           <div>
             <label htmlFor="filter-verdict" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              Model Verdict
+              モデル判定 (Model Verdict)
             </label>
             <select
               id="filter-verdict"
@@ -224,40 +302,40 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
                 setSelectedVerdict(e.target.value);
                 setPage(1);
               }}
-              className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 text-xs text-white focus:border-sky-500 focus:outline-none"
+              className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
             >
-              <option value="ALL">All Verdicts</option>
-              <option value="Reasonable">Reasonable (Cost ≤ 1.0 pp)</option>
-              <option value="Model leaned the other way">Model leaned other way (1.0–3.0 pp)</option>
-              <option value="Model strongly preferred another option">Model strongly preferred (&gt; 3.0 pp)</option>
+              <option value="ALL">All Verdicts (すべての判定)</option>
+              <option value="Reasonable">【 的確 】Reasonable (Cost ≤ 1.0 pp)</option>
+              <option value="Model leaned the other way">【 逆張り 】Model Leaned (1.0–3.0 pp)</option>
+              <option value="Model strongly preferred another option">【 大波乱 】Strongly Preferred (&gt; 3.0 pp)</option>
             </select>
           </div>
 
           {/* Search Input */}
-          <div className="sm:col-span-2 md:col-span-4 lg:col-span-1">
+          <div>
             <label htmlFor="filter-search" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              Search Plays
+              テキスト検索 (Search Plays)
             </label>
             <div className="relative">
               <input
                 id="filter-search"
                 type="text"
-                placeholder="Team, player, desc..."
+                placeholder="Team, player, action..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   setPage(1);
                 }}
-                className="w-full rounded-lg border border-slate-700 bg-[#111827] pl-8 pr-2.5 py-1.5 text-xs text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none"
+                className="w-full rounded-lg border border-slate-700 bg-[#111827] pl-8 pr-2.5 py-2 text-xs text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none min-h-[40px]"
               />
-              <Search className="absolute left-2.5 top-2 h-3.5 w-3.5 text-slate-400" />
+              <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-slate-400" />
             </div>
           </div>
         </div>
 
         {/* Toggles Row */}
         <div className="mt-3 flex flex-wrap items-center gap-4 border-t border-slate-800/80 pt-3 text-xs">
-          <label className="flex items-center gap-2 cursor-pointer select-none text-slate-300 hover:text-white">
+          <label className="flex items-center gap-2 cursor-pointer select-none text-slate-300 hover:text-white min-h-[36px]">
             <input
               type="checkbox"
               checked={showObvious}
@@ -268,10 +346,10 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-sky-500 focus:ring-sky-500"
             />
             {showObvious ? <Eye className="h-3.5 w-3.5 text-sky-400" /> : <EyeOff className="h-3.5 w-3.5 text-slate-500" />}
-            <span>Show obvious punts & kicks (hidden by default)</span>
+            <span>定石判定を含める Show obvious punts & kicks</span>
           </label>
 
-          <label className="flex items-center gap-2 cursor-pointer select-none text-slate-300 hover:text-white">
+          <label className="flex items-center gap-2 cursor-pointer select-none text-slate-300 hover:text-white min-h-[36px]">
             <input
               type="checkbox"
               checked={onlyAgainstModel}
@@ -281,7 +359,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               }}
               className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-sky-500 focus:ring-sky-500"
             />
-            <span>Went against model recommendation only</span>
+            <span>モデルの推奨に背いたプレーのみ Went against model</span>
           </label>
         </div>
       </section>
@@ -293,16 +371,20 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
         ))}
 
         {filteredDecisions.length === 0 && (
-          <div className="rounded-xl border border-slate-800 bg-[#0c1220] p-12 text-center">
-            <h3 className="text-base font-bold text-slate-300">No decisions match your current filters</h3>
-            <p className="mt-1 text-xs text-slate-400">
-              Try resetting your filters or enabling "Show obvious punts and kicks".
+          <div className="rounded-xl border border-slate-800 bg-[#0c1220] p-8 sm:p-12 text-center flex flex-col items-center justify-center anime-card-glow">
+            <RefereeMascot className="h-20 w-20 mb-3" />
+            <span className="text-amber-400 font-extrabold text-sm uppercase tracking-wider">
+              【 審判の笛・該当なし 】
+            </span>
+            <h3 className="text-base font-bold text-white mt-1">No decisions match your current filters</h3>
+            <p className="mt-1 text-xs text-slate-400 max-w-md">
+              条件に一致するプレーが見つかりませんでした。フィルターをリセットするか「定石判定を含める (Show obvious)」をお試しください。
             </p>
             <button
               onClick={resetFilters}
-              className="mt-4 rounded-lg bg-sky-500 px-4 py-2 text-xs font-bold text-white hover:bg-sky-400"
+              className="mt-4 rounded-lg bg-sky-500 px-5 py-2.5 text-xs font-bold text-white hover:bg-sky-400 transition-colors shadow-md min-h-[44px]"
             >
-              Reset Filters
+              フィルター解除 Reset Filters
             </button>
           </div>
         )}
@@ -311,9 +393,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
           <div className="pt-4 text-center">
             <button
               onClick={() => setPage((prev) => prev + 1)}
-              className="rounded-xl border border-sky-500/30 bg-sky-500/10 px-6 py-3 text-xs font-bold text-sky-400 hover:bg-sky-500/20 transition-all shadow-md"
+              className="rounded-xl border border-sky-400/50 bg-sky-500/15 px-8 py-3 text-xs font-black text-sky-300 hover:bg-sky-500/25 transition-all shadow-md min-h-[44px]"
             >
-              Load More Decisions ({displayedDecisions.length} of {filteredDecisions.length})
+              さらに読み込む Load More Decisions ({displayedDecisions.length} of {filteredDecisions.length})
             </button>
           </div>
         )}

@@ -90,16 +90,25 @@ async function main() {
     // Teams Desktop
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll('button'));
-      const teamsTab = btns.find((b) => b.textContent?.includes('Teams'));
+      const teamsTab = btns.find((b) => b.textContent?.toUpperCase().includes('TEAMS'));
       teamsTab?.click();
     });
     await new Promise((r) => setTimeout(r, 500));
     await save(page, 'teams-desktop-1280.png');
 
+    // Games Desktop
+    await page.evaluate(() => {
+      const btns = Array.from(document.querySelectorAll('button'));
+      const gamesTab = btns.find((b) => b.textContent?.toUpperCase().includes('GAMES'));
+      gamesTab?.click();
+    });
+    await new Promise((r) => setTimeout(r, 500));
+    await save(page, 'games-desktop-1280.png');
+
     // Method Desktop
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll('button'));
-      const methodTab = btns.find((b) => b.textContent?.includes('Method'));
+      const methodTab = btns.find((b) => b.textContent?.toUpperCase().includes('METHOD'));
       methodTab?.click();
     });
     await new Promise((r) => setTimeout(r, 500));
@@ -112,7 +121,7 @@ async function main() {
     // Switch back to Feed
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll('button'));
-      const feedTab = btns.find((b) => b.textContent?.includes('Feed'));
+      const feedTab = btns.find((b) => b.textContent?.toUpperCase().includes('FEED'));
       feedTab?.click();
     });
     await new Promise((r) => setTimeout(r, 500));
@@ -133,17 +142,27 @@ async function main() {
     // Teams Mobile
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll('button'));
-      const teamsTab = btns.find((b) => b.textContent?.includes('Teams'));
+      const teamsTab = btns.find((b) => b.textContent?.toUpperCase().includes('TEAMS'));
       teamsTab?.click();
     });
     await new Promise((r) => setTimeout(r, 500));
     await page.evaluate(() => window.scrollTo(0, 0));
     await save(page, 'teams-mobile-390.png');
 
+    // Games Mobile
+    await page.evaluate(() => {
+      const btns = Array.from(document.querySelectorAll('button'));
+      const gamesTab = btns.find((b) => b.textContent?.toUpperCase().includes('GAMES'));
+      gamesTab?.click();
+    });
+    await new Promise((r) => setTimeout(r, 500));
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await save(page, 'games-mobile-390.png');
+
     // Method Mobile
     await page.evaluate(() => {
       const btns = Array.from(document.querySelectorAll('button'));
-      const methodTab = btns.find((b) => b.textContent?.includes('Method'));
+      const methodTab = btns.find((b) => b.textContent?.toUpperCase().includes('METHOD'));
       methodTab?.click();
     });
     await new Promise((r) => setTimeout(r, 500));

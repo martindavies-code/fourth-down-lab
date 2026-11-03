@@ -1,6 +1,36 @@
-# Fourth Down Lab 🏈📊
+# Fourth Down Lab (第四ダウン研究所) 🏈⚡🇯🇵
 
-**Fourth Down Lab** is a standalone static analytical website that tracks genuine NFL fourth-down coaching decisions, computes counterfactual win probabilities (WP) for every available option from identical pre-snap states, evaluates coaching adherence, and tracks real-world execution outcomes without outcome bias.
+**Fourth Down Lab (第四ダウン研究所)** is a standalone static analytical website that tracks genuine NFL fourth-down coaching decisions, computes counterfactual win probabilities (WP) for every available option from identical pre-snap states, evaluates coaching adherence, and tracks real-world execution outcomes without outcome bias.
+
+Styled in a vibrant Japanese anime / shonen manga aesthetic inspired by *Eyeshield 21*, it pairs rigorous analytical data visualization with authentic Japanese football terminology, custom vector chibi mascots, dynamic manga stamps, and dual Japanese/British English typography.
+
+---
+
+## 🎨 Anime Design & Dashboard Polish (Polish-Dashboard Protocol)
+
+- **Authentic Japanese Terminology:**
+  - **4th Down Go Attempt:** `ギャンブル` (Gamble - official Japanese term used in NFL broadcasts and manga) / `ギャンブル決行！`
+  - **Field Goal:** `フィールドゴール` / `狙撃キック (3-PTS)`
+  - **Punt:** `パント` / `陣地挽回 (Defense / Territory)`
+  - **Turnover on Downs:** `攻守交代`
+  - **Decision Verdicts:**
+    - `【 的確 】Reasonable` (Decision within 1.0 pp of optimal)
+    - `【 逆張り 】Model Leaned` (Model leaned 1.0–3.0 pp towards another choice)
+    - `【 大波乱 】Strongly Preferred` (Model favored alternative by > 3.0 pp)
+  - **The 2x2 Outcome Matrix:**
+    - `完全勝利 ★ Consistent & Succeeded` (Sound decision, positive outcome)
+    - `惜敗の涙 ✕ Consistent & Failed (Unlucky)` (Sound decision, bad bounce/unlucky execution)
+    - `奇跡生還 ⚡ Against Model & Succeeded (Bailed Out)` (Suboptimal risk, bailed out by athletic heroics)
+    - `大爆死 ☠ Against Model & Failed` (Unrecommended gamble, catastrophic turnover)
+- **Vector Anime Mascots & Stamps (`src/components/AnimeMascots.tsx`):**
+  - **ブリッツ君 (Blitz-kun):** Fiery chibi quarterback analyst mascot with lightning aura, reflective visor sheen, and anime football.
+  - **審判ゼブラ先生 (Referee Sensei):** Chibi anime referee throwing penalty flag with shock sweatdrops.
+  - **Hanko Stamps (判子):** Vector stamps (`必勝`, `決行`, `的確`, `波乱`, `鉄壁`, `全撃`, `審議`, `伯仲`).
+- **Dashboard Polish Standards:**
+  - Maximum 4 font sizes, fluid responsive typography, and strict spacing scale.
+  - `font-variant-numeric: tabular-nums` across all statistical columns and probabilities for vertical alignment.
+  - Electric manga cyan accessibility focus ring (`:focus-visible: 3px solid #74d4ff`).
+  - **Containment & Touch Parity:** Verified 0px horizontal scroll (`scrollWidth <= innerWidth`) across `320px`, `390px`, `768px`, `1280px`, and `1920px`. Minimum 44px hit areas on touch viewports. Segmented tier buttons arranged in a responsive mobile grid (`grid-cols-2 sm:grid-cols-4`) to eliminate the "cut-off filter" overflow anti-pattern.
 
 ---
 

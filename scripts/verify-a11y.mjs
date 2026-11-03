@@ -51,43 +51,73 @@ async function verifyA11y() {
   try {
     const page = await browser.newPage();
 
-    // Test at 320px (iPhone SE narrow)
-    await page.setViewport({ width: 320, height: 600 });
+    async function checkOverflow(width, height, label) {
+      await page.setViewport({ width, height });
+      await new Promise((r) => setTimeout(r, 400));
+      const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      const innerWidth = await page.evaluate(() => window.innerWidth);
+      console.log(`${label} (${width}px): scrollWidth=${scrollWidth}, innerWidth=${innerWidth}`);
+      if (scrollWidth > innerWidth) {
+        console.warn(`WARNING: Horizontal scroll detected at ${width}px: ${scrollWidth} > ${innerWidth}`);
+        const culprits = await page.evaluate((w) => {
+          const res = [];
+          for (const el of document.querySelectorAll('*')) {
+            const r = el.getBoundingClientRect();
+            if (r.right > w + 1 || r.width > w + 1) {
+              res.push({
+                tag: el.tagName,
+                id: el.id,
+                className: typeof el.className === 'string' ? el.className.substring(0, 60) : '',
+                text: el.innerText ? el.innerText.substring(0, 30).replace(/\n/g, ' ') : '',
+                width: Math.round(r.width),
+                right: Math.round(r.right),
+              });
+            }
+          }
+          return res.slice(0, 8);
+        }, width);
+        console.log(`Culprits at ${width}px:`, culprits);
+      } else {
+        console.log(`✔ No horizontal overflow at ${width}px`);
+      }
+    }
+
+    // 1. 320px (Ultra-narrow Mobile)
     await page.goto(targetUrl, { waitUntil: 'networkidle0' });
     await new Promise((r) => setTimeout(r, 800));
+    await checkOverflow(320, 600, '320px Viewport');
 
-    const scrollWidth320 = await page.evaluate(() => document.documentElement.scrollWidth);
-    const innerWidth320 = await page.evaluate(() => window.innerWidth);
-    console.log(`320px Viewport: scrollWidth=${scrollWidth320}, innerWidth=${innerWidth320}`);
-    if (scrollWidth320 > innerWidth320) {
-      console.warn(`WARNING: Horizontal scroll detected at 320px: ${scrollWidth320} > ${innerWidth320}`);
-      const culprits = await page.evaluate(() => {
-        const docWidth = window.innerWidth;
-        const res = [];
-        for (const el of document.querySelectorAll('*')) {
-          const r = el.getBoundingClientRect();
-          if (r.right > docWidth + 1 || r.width > docWidth + 1) {
-            res.push({ tag: el.tagName, className: el.className, text: el.innerText ? el.innerText.substring(0, 30) : '' });
-          }
-        }
-        return res.slice(0, 5);
-      });
-      console.log('Culprits at 320px:', culprits);
-    } else {
-      console.log(`✔ No horizontal overflow at 320px`);
-    }
+    // 2. 390px (Mobile Standard)
+    await checkOverflow(390, 844, '390px Viewport');
 
-    // Test at 390px (iPhone 12/13/14)
+    // 3. 768px (Tablet)
+    await checkOverflow(768, 1024, '768px Viewport');
+
+    // 4. 1280px (Desktop)
+    await checkOverflow(1280, 900, '1280px Viewport');
+
+    // 5. 1920px (Widescreen)
+    await checkOverflow(1920, 1080, '1920px Viewport');
+
+    // Audit Polish Dashboard Stage 5: No clipped toolbars or filter buttons on mobile
     await page.setViewport({ width: 390, height: 844 });
     await new Promise((r) => setTimeout(r, 400));
-    const scrollWidth390 = await page.evaluate(() => document.documentElement.scrollWidth);
-    const innerWidth390 = await page.evaluate(() => window.innerWidth);
-    console.log(`390px Viewport: scrollWidth=${scrollWidth390}, innerWidth=${innerWidth390}`);
-    if (scrollWidth390 > innerWidth390) {
-      console.warn(`WARNING: Horizontal scroll detected at 390px: ${scrollWidth390} > ${innerWidth390}`);
-    } else {
-      console.log(`✔ No horizontal overflow at 390px`);
-    }
+    const filterAudit = await page.evaluate(() => {
+      const toolbars = document.querySelectorAll('[role="tablist"], [role="group"], .filter-bar, section[aria-label="Filters"]');
+      const violations = [];
+      toolbars.forEach(tb => {
+        const isOverflowing = tb.scrollWidth > tb.clientWidth;
+        const hasClippedChildren = Array.from(tb.querySelectorAll('button')).some(child => {
+          const r = child.getBoundingClientRect();
+          return r.right > window.innerWidth || r.left < 0;
+        });
+        if (isOverflowing || hasClippedChildren) {
+          violations.push({ isOverflowing, hasClippedChildren });
+        }
+      });
+      return violations;
+    });
+    console.log('Filter bar clipped violations:', filterAudit.length === 0 ? '✔ None (all filters cleanly contained)' : filterAudit);
 
     // Verify focus ring presence
     const focusRingStyle = await page.evaluate(() => {

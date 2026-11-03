@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import type { TeamSummary } from '../types/decision';
 import { getTeamLogoUrl, isDarkLogo, getTeamName } from '../utils/teamLogos';
-import { ShieldCheck, AlertTriangle, ArrowUpDown } from 'lucide-react';
+import { AlertTriangle, ArrowUpDown } from 'lucide-react';
+import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 
 interface TeamsPageProps {
   teams: TeamSummary[];
@@ -59,70 +60,82 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
-      {/* Page Header */}
-      <div className="mb-6 rounded-xl border border-slate-800 bg-[#0c1220] p-5 shadow-lg">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-400">
-            <ShieldCheck className="h-5 w-5" />
+      {/* Page Header with Anime Mascot & Kanji Banner */}
+      <div className="mb-6 rounded-xl border border-slate-800 bg-[#0c1220] p-5 shadow-lg anime-card-glow">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/20 to-sky-500/20 border border-emerald-500/40 text-emerald-400 p-1 shadow-md">
+              <BlitzMascot className="h-10 w-10" mood="happy" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-black text-white sm:text-xl">
+                  【全32軍団番付】NFL Team 4th-Down Adherence & Cost
+                </h2>
+                <MangaSoundEffect sound="ドドンッ！" english="rank" className="text-emerald-400 hidden sm:inline-flex" />
+              </div>
+              <p className="text-xs text-slate-300 font-medium">
+                Measuring coaching decision alignment with the mathematical win probability model on genuine 4th-down situations (Weeks 1–8).
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-lg font-bold text-white sm:text-xl">NFL Team 4th-Down Adherence & Cost Table</h2>
-            <p className="text-xs text-slate-400">
-              Measuring coaching decision alignment with the mathematical win probability model on genuine 4th-down situations (Weeks 1–8).
-            </p>
+
+          <div className="flex items-center gap-2">
+            <MangaStamp kanji="番付" subtext="RANKING" variant="teki" />
+            <MangaStamp kanji="鉄壁" subtext="DEFENSE" variant="teppeki" />
           </div>
         </div>
 
         {/* Methodology Clarification Note */}
-        <div className="mt-4 rounded-lg border border-slate-800/80 bg-[#080d19] p-3 text-xs text-slate-300">
+        <div className="mt-4 rounded-lg border border-slate-800/80 bg-[#080d19] p-3 text-xs text-slate-300 leading-relaxed">
           <p>
-            <strong className="text-sky-400">Adherence Definition:</strong> Share of <em>non-toss-up genuine decisions</em> where the team’s actual play was the model’s single preferred choice. Toss-ups (options within 1.0 pp of each other) are reported separately and explicitly excluded from the denominator.
+            <strong className="text-sky-400">【的確率 Adherence Definition】:</strong> Share of <em>non-toss-up genuine decisions</em> where the team’s actual play was the model’s single preferred choice. Toss-ups (options within 1.0 pp of each other) are reported separately and explicitly excluded from the denominator.
           </p>
           <p className="mt-1 text-slate-400 text-[11px]">
-            * Total WP given up is the arithmetic sum of estimated option deficits (cost) across all plays, presented as a model estimate.
+            * Total WP given up (喪失期待値) is the arithmetic sum of estimated option deficits (cost) across all plays, presented as a model estimate.
           </p>
         </div>
       </div>
 
-      {/* Teams Table */}
-      <div className="overflow-hidden rounded-xl border border-slate-800 bg-[#0c1220] shadow-lg">
+      {/* Teams Table with Sticky Left Column */}
+      <div className="overflow-hidden rounded-xl border border-slate-800 bg-[#0c1220] shadow-lg anime-card-glow">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs" aria-label="Team Fourth Down Adherence">
             <thead className="border-b border-slate-800 bg-[#101729] text-[11px] font-bold uppercase tracking-wider text-slate-400">
               <tr>
-                <th scope="col" className="px-4 py-3.5">
+                <th scope="col" className="sticky left-0 bg-[#101729] px-4 py-3.5 z-10 shadow-[1px_0_0_0_rgba(51,65,85,0.4)]">
                   <button onClick={() => handleSort('team')} className="flex items-center gap-1 hover:text-white">
-                    <span>Team</span>
+                    <span>軍団 Team</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('genuine_count')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>Genuine Decisions</span>
+                    <span>激戦 Genuine</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('toss_up_count')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>Toss-Ups</span>
+                    <span>伯仲 Toss-Up</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('adherence_pct')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>Adherence (Non-Toss-Up)</span>
+                    <span>的確率 Adherence</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('punted_on_clear_go')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>Punted on "Clear Go"</span>
+                    <span>痛恨パント Punted on "Clear Go"</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-right">
                   <button onClick={() => handleSort('total_wp_lost_pp')} className="flex items-center gap-1 ml-auto hover:text-white">
-                    <span>Est. WP Given Up*</span>
+                    <span>喪失期待値 Est. WP Given Up*</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
@@ -132,10 +145,10 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
               {sortedTeams.map((team, idx) => (
                 <tr
                   key={team.team}
-                  className="transition-colors hover:bg-slate-800/30"
+                  className="transition-colors hover:bg-slate-800/40"
                 >
-                  {/* Team Identity */}
-                  <td className="px-4 py-3 font-medium text-white">
+                  {/* Team Identity - Sticky on horizontal scroll */}
+                  <td className="sticky left-0 bg-[#0c1220] px-4 py-3 font-medium text-white z-10 shadow-[1px_0_0_0_rgba(51,65,85,0.4)]">
                     <div className="flex items-center gap-2.5">
                       <span className="text-[11px] font-bold text-slate-400 tabular-nums w-4">
                         {idx + 1}
@@ -169,7 +182,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
                   </td>
 
                   {/* Genuine Decisions Count */}
-                  <td className="px-4 py-3 text-center tabular-nums text-slate-200">
+                  <td className="px-4 py-3 text-center tabular-nums text-slate-200 font-semibold">
                     {team.genuine_count}
                   </td>
 
@@ -183,7 +196,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
                     {team.adherence_pct !== null ? (
                       <div>
                         <span
-                          className={`font-bold text-sm ${
+                          className={`font-black text-sm ${
                             team.adherence_pct >= 70
                               ? 'text-emerald-400'
                               : team.adherence_pct >= 50
@@ -205,8 +218,8 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
                   {/* Punted on Clear Go */}
                   <td className="px-4 py-3 text-center tabular-nums">
                     {team.punted_on_clear_go > 0 ? (
-                      <span className="inline-block rounded bg-rose-500/10 px-2 py-0.5 font-bold text-rose-400 border border-rose-500/20">
-                        {team.punted_on_clear_go}
+                      <span className="inline-block rounded bg-rose-500/15 px-2 py-0.5 font-bold text-rose-300 border border-rose-500/30">
+                        {team.punted_on_clear_go}回
                       </span>
                     ) : (
                       <span className="text-slate-400">0</span>
@@ -214,7 +227,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
                   </td>
 
                   {/* Total WP Lost */}
-                  <td className="px-4 py-3 text-right tabular-nums font-semibold text-slate-200">
+                  <td className="px-4 py-3 text-right tabular-nums font-bold text-slate-200">
                     {team.total_wp_lost_pp.toFixed(1)} pp
                   </td>
                 </tr>
@@ -226,3 +239,4 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
     </div>
   );
 };
+
