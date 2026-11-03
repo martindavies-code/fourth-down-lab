@@ -3,7 +3,7 @@ import type { Decision } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
 import { NFL_TEAMS } from '../utils/teamLogos';
 import { Filter, RotateCcw, Eye, EyeOff, Search } from 'lucide-react';
-import { BlitzMascot, RefereeMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
+import { BlitzMascot, RefereeMascot } from '../components/AnimeMascots';
 
 interface FeedPageProps {
   decisions: Decision[];
@@ -143,13 +143,13 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-2">
               <span className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-300 bg-sky-950/70 px-2.5 py-1 rounded border border-sky-400/40">
-                ⚡ ギャンブル = 4th Down Go Attempt
+                ⚡ Gamble = 4th Down Go Attempt
               </span>
               <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-300 bg-emerald-950/70 px-2.5 py-1 rounded border border-emerald-400/40">
-                🎯 的確 = Sound Call
+                🎯 Reasonable = Sound Call
               </span>
               <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-300 bg-rose-950/70 px-2.5 py-1 rounded border border-rose-400/40">
-                ☠ 大爆死 = Suboptimal Failure
+                ☠ Suboptimal = Costly Choice
               </span>
             </div>
           </div>
@@ -167,8 +167,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-sky-400" />
             <h2 className="text-sm font-bold text-white flex items-center gap-2">
-              <span>【 絞り込み検索 】Decision Filter & Search</span>
-              <MangaSoundEffect sound="ズバッ！" english="filter" className="text-sky-400 hidden sm:inline-flex" />
+              <span>Decision Filter & Search</span>
             </h2>
           </div>
 
@@ -184,59 +183,55 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               title="Reset all filters"
             >
               <RotateCcw className="h-3 w-3" />
-              <span>リセット Reset</span>
+              <span>Reset</span>
             </button>
           </div>
         </div>
 
-        {/* Tier Selector Buttons (Polish Dashboard Stage 5: Balanced Grid on Mobile, No Cut-Off Filters) */}
+        {/* Tier Selector Buttons */}
         <div className="mt-3">
           <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-300 mb-2">
-            【戦術区分】Decision Tier Filter
+            Decision Tier Filter
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
             <button
               onClick={() => { setSelectedTier('genuine'); setPage(1); }}
-              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`min-h-[44px] flex items-center justify-center px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                 selectedTier === 'genuine'
                   ? 'bg-amber-500/20 text-amber-300 border border-amber-400/50 shadow-sm shadow-amber-500/10'
                   : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
               }`}
             >
-              <MangaStamp kanji="必勝" subtext="GENUINE" variant="hissho" className="scale-75 -my-1" />
               <span>Genuine (≤3.0 pp)</span>
             </button>
             <button
               onClick={() => { setSelectedTier('clear_go'); setPage(1); }}
-              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`min-h-[44px] flex items-center justify-center px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                 selectedTier === 'clear_go'
                   ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 shadow-sm shadow-cyan-500/10'
                   : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
               }`}
             >
-              <MangaStamp kanji="決行" subtext="CLEAR GO" variant="kekkoh" className="scale-75 -my-1" />
               <span>Clear Go (&gt;3.0 pp)</span>
             </button>
             <button
               onClick={() => { setSelectedTier('all'); setPage(1); }}
-              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`min-h-[44px] flex items-center justify-center px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                 selectedTier === 'all'
                   ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-400/50 shadow-sm shadow-indigo-500/10'
                   : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
               }`}
             >
-              <MangaStamp kanji="全撃" subtext="ALL SNAPS" variant="teppeki" className="scale-75 -my-1" />
               <span>All Snaps</span>
             </button>
             <button
               onClick={() => { setSelectedTier('incomplete'); setPage(1); }}
-              className={`min-h-[44px] flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all ${
+              className={`min-h-[44px] flex items-center justify-center px-3 py-2 rounded-lg text-xs font-bold transition-all ${
                 selectedTier === 'incomplete'
                   ? 'bg-rose-500/20 text-rose-300 border border-rose-400/50 shadow-sm shadow-rose-500/10'
                   : 'bg-[#111827] text-slate-400 hover:text-white border border-slate-800'
               }`}
             >
-              <MangaStamp kanji="審議" subtext="AUDIT" variant="haran" className="scale-75 -my-1" />
               <span>Incomplete</span>
             </button>
           </div>
@@ -247,7 +242,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
           {/* Week Filter */}
           <div>
             <label htmlFor="filter-week" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              第N週 (Week)
+              Week
             </label>
             <select
               id="filter-week"
@@ -261,7 +256,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               <option value="ALL">All Weeks (1–{weeks.length ? Math.max(...weeks) : 8})</option>
               {weeks.map((w) => (
                 <option key={w} value={w}>
-                  第{w}週 Week {w}
+                  Week {w}
                 </option>
               ))}
             </select>
@@ -270,7 +265,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
           {/* Team Filter */}
           <div>
             <label htmlFor="filter-team" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              チーム (Team)
+              Team
             </label>
             <select
               id="filter-team"
@@ -281,7 +276,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               }}
               className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
             >
-              <option value="ALL">All 32 Teams (全32球団)</option>
+              <option value="ALL">All 32 Teams</option>
               {teams.map((t) => (
                 <option key={t} value={t}>
                   {t} - {NFL_TEAMS[t]?.name}
@@ -293,7 +288,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
           {/* Verdict Filter */}
           <div>
             <label htmlFor="filter-verdict" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              モデル判定 (Model Verdict)
+              Model Verdict
             </label>
             <select
               id="filter-verdict"
@@ -304,17 +299,17 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               }}
               className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
             >
-              <option value="ALL">All Verdicts (すべての判定)</option>
-              <option value="Reasonable">【 的確 】Reasonable (Cost ≤ 1.0 pp)</option>
-              <option value="Model leaned the other way">【 逆張り 】Model Leaned (1.0–3.0 pp)</option>
-              <option value="Model strongly preferred another option">【 大波乱 】Strongly Preferred (&gt; 3.0 pp)</option>
+              <option value="ALL">All Verdicts</option>
+              <option value="Reasonable">Reasonable (Cost ≤ 1.0 pp)</option>
+              <option value="Model leaned the other way">Model Leaned (1.0–3.0 pp)</option>
+              <option value="Model strongly preferred another option">Strongly Preferred Alternative (&gt; 3.0 pp)</option>
             </select>
           </div>
 
           {/* Search Input */}
           <div>
             <label htmlFor="filter-search" className="block text-[11px] font-semibold text-slate-400 mb-1">
-              テキスト検索 (Search Plays)
+              Search Plays
             </label>
             <div className="relative">
               <input
@@ -346,7 +341,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-sky-500 focus:ring-sky-500"
             />
             {showObvious ? <Eye className="h-3.5 w-3.5 text-sky-400" /> : <EyeOff className="h-3.5 w-3.5 text-slate-500" />}
-            <span>定石判定を含める Show obvious punts & kicks</span>
+            <span>Show obvious punts & kicks</span>
           </label>
 
           <label className="flex items-center gap-2 cursor-pointer select-none text-slate-300 hover:text-white min-h-[36px]">
@@ -359,7 +354,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({ decisions, loading, error })
               }}
               className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-sky-500 focus:ring-sky-500"
             />
-            <span>モデルの推奨に背いたプレーのみ Went against model</span>
+            <span>Only show calls against model</span>
           </label>
         </div>
       </section>

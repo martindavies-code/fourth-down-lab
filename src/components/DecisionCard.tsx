@@ -20,7 +20,6 @@ import {
   Crosshair,
   Flame,
 } from 'lucide-react';
-import { MangaStamp } from './AnimeMascots';
 
 interface DecisionCardProps {
   decision: Decision;
@@ -56,13 +55,13 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
     quadrant,
   } = decision;
 
-  // Verdict style & icon with authentic Japanese manga stamps
+  // Verdict style & icon (clean English inside boxes)
   const getVerdictBadge = () => {
     if (verdict_label === 'Reasonable') {
       return (
         <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-xs font-bold text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/10">
           <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" />
-          <span>【 的確 】Reasonable</span>
+          <span>Reasonable</span>
         </span>
       );
     }
@@ -70,7 +69,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
       return (
         <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-bold text-amber-300 border border-amber-500/40 shadow-sm shadow-amber-500/10">
           <AlertCircle className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" />
-          <span>【 逆張り 】Model Leaned</span>
+          <span>Model Leaned</span>
         </span>
       );
     }
@@ -78,7 +77,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
       return (
         <span className="inline-flex items-center gap-1 rounded-md bg-rose-500/15 px-2 py-0.5 text-xs font-bold text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-500/10">
           <AlertCircle className="h-3.5 w-3.5 text-rose-400" aria-hidden="true" />
-          <span>【 大波乱 】Strongly Preferred</span>
+          <span>Strongly Preferred Alternative</span>
         </span>
       );
     }
@@ -90,33 +89,33 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
     );
   };
 
-  // Quadrant pill with Japanese labels
+  // Quadrant pill in clean English
   const getQuadrantBadge = () => {
     if (quadrant === 'Consistent & Succeeded') {
       return (
         <span className="rounded bg-emerald-950/60 px-2 py-0.5 text-[11px] font-bold text-emerald-300 border border-emerald-500/30">
-          完全勝利 ★ Consistent & Succeeded
+          Consistent & Succeeded
         </span>
       );
     }
     if (quadrant === 'Consistent & Failed') {
       return (
         <span className="rounded bg-sky-950/60 px-2 py-0.5 text-[11px] font-bold text-sky-300 border border-sky-500/30">
-          惜敗の涙 ✕ Consistent & Failed (Unlucky)
+          Consistent & Failed
         </span>
       );
     }
     if (quadrant === 'Against Model & Succeeded') {
       return (
         <span className="rounded bg-amber-950/60 px-2 py-0.5 text-[11px] font-bold text-amber-300 border border-amber-500/30">
-          奇跡生還 ⚡ Against Model & Succeeded (Bailed Out)
+          Against Model & Succeeded
         </span>
       );
     }
     if (quadrant === 'Against Model & Failed') {
       return (
         <span className="rounded bg-rose-950/60 px-2 py-0.5 text-[11px] font-bold text-rose-300 border border-rose-500/30">
-          大爆死 ☠ Against Model & Failed
+          Against Model & Failed
         </span>
       );
     }
@@ -126,44 +125,29 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
   const optionList: {
     key: OptionName;
     labelEn: string;
-    labelJp: string;
-    stampKanji: string;
-    stampSubtext: string;
-    stampVariant: 'hissho' | 'kekkoh' | 'teki' | 'haran' | 'teppeki';
     icon: React.ReactNode;
   }[] = [
     {
       key: 'go',
       labelEn: 'Go for it',
-      labelJp: 'ギャンブル決行',
-      stampKanji: '決行',
-      stampSubtext: 'GAMBLE',
-      stampVariant: 'hissho',
       icon: <Flame className="h-3.5 w-3.5 text-amber-400" />,
     },
     {
       key: 'field_goal',
       labelEn: 'Field Goal',
-      labelJp: '狙撃キック',
-      stampKanji: '狙撃',
-      stampSubtext: '3-PTS',
-      stampVariant: 'kekkoh',
       icon: <Crosshair className="h-3.5 w-3.5 text-cyan-400" />,
     },
     {
       key: 'punt',
       labelEn: 'Punt',
-      labelJp: '陣地挽回パント',
-      stampKanji: '陣地',
-      stampSubtext: 'PUNT',
-      stampVariant: 'teppeki',
       icon: <Footprints className="h-3.5 w-3.5 text-indigo-400" />,
     },
   ];
 
   return (
     <article
-      className="group relative rounded-xl border border-slate-800 bg-[#0d121e] shadow-lg transition-all hover:border-sky-500/50 anime-card-glow"
+      id={`decision-${decision.play_id}`}
+      className="group relative rounded-xl border border-slate-800 bg-[#0d121e] shadow-lg transition-all duration-300 hover:border-sky-500/50 anime-card-glow scroll-mt-24"
       aria-label={`4th down decision for ${posteam} against ${defteam}`}
     >
       {/* Card Header: Matchup & Situation */}
@@ -203,12 +187,12 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
             {tier === 'clear_go' && (
               <span className="inline-flex items-center gap-1 rounded bg-amber-500/15 px-2 py-0.5 text-[11px] font-black text-amber-300 border border-amber-500/40">
                 <Flame className="h-3 w-3 text-amber-400" />
-                <span>【 決行推奨 】Clear Go (+{decision.go_boost ? decision.go_boost.toFixed(1) : ''} pp)</span>
+                <span>Clear Go (+{decision.go_boost ? decision.go_boost.toFixed(1) : ''} pp)</span>
               </span>
             )}
             {tier === 'obvious' && (
               <span className="rounded bg-slate-800/80 px-2 py-0.5 text-[11px] font-medium text-slate-400">
-                定石判定 Obvious
+                Obvious
               </span>
             )}
             <div className="rounded bg-slate-800 px-2 py-0.5 text-xs font-bold text-sky-400 tabular-nums">
@@ -232,7 +216,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
             <div className="flex items-center gap-1.5">
               <TrendingUp className="h-4 w-4 text-sky-400" />
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                1. 【スナップ前】運命の三択 (Before the Snap: 3 Choices)
+                1. Before the Snap: 3 Choices
               </h3>
             </div>
             <div className="text-[11px] text-slate-400 tabular-nums">
@@ -242,7 +226,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
 
           {/* Options Comparison Table */}
           <div className="space-y-2.5" role="table" aria-label="Fourth down options comparison">
-            {optionList.map(({ key, labelEn, labelJp, stampKanji, stampSubtext, stampVariant, icon }) => {
+            {optionList.map(({ key, labelEn, icon }) => {
               const opt = options[key];
               const isPreferred = preferred_options.includes(key);
               const isActual = actual_choice === key;
@@ -261,23 +245,18 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2">
                       <span className="text-slate-400">{icon}</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-extrabold text-white">{labelEn}</span>
-                        <span className="text-[11px] text-slate-400 font-semibold">({labelJp})</span>
-                      </div>
+                      <span className="font-extrabold text-white">{labelEn}</span>
 
-                      {/* Explicit Hanko Stamp for Preferred Options */}
+                      {/* Clean Badge for Preferred Options */}
                       {isPreferred && (
-                        <MangaStamp
-                          kanji={is_toss_up ? '伯仲' : stampKanji}
-                          subtext={is_toss_up ? 'TOSS-UP' : stampSubtext}
-                          variant={stampVariant}
-                        />
+                        <span className="rounded bg-sky-500/20 px-1.5 py-0.5 text-[10px] font-bold text-sky-300 border border-sky-400/30">
+                          {is_toss_up ? 'Toss-Up' : 'Model Preferred'}
+                        </span>
                       )}
 
                       {isActual && (
-                        <span className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold text-amber-300 border border-slate-700">
-                          【 決断 】Team Took This
+                        <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-400/30">
+                          Team Took This
                         </span>
                       )}
                     </div>
@@ -380,7 +359,7 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
           <div>
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-200">
-                2. 【激闘の結果】審判の判定 (What Happened: Result)
+                2. What Happened: Result
               </h3>
               {getQuadrantBadge()}
             </div>

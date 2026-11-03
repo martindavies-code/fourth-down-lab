@@ -54,31 +54,31 @@ export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
           </p>
           <ul className="mt-2 list-disc list-inside space-y-1.5 text-slate-300 pl-2">
             <li>
-              <strong className="text-white">1. 【スナップ前】Before the Snap:</strong> Pre-play win probability (WP) of each legally and practically feasible choice (Go, Field Goal, Punt), evaluated from the identical pre-snap situation using the same machine learning model.
+              <strong className="text-white">1. Before the Snap:</strong> Pre-play win probability (WP) of each legally and practically feasible choice (Go, Field Goal, Punt), evaluated from the identical pre-snap situation using the same machine learning model.
             </li>
             <li>
-              <strong className="text-white">2. 【激闘の結果】What Happened:</strong> The action the team executed, followed by the real-world outcome and realized win probability change (WPA).
+              <strong className="text-white">2. What Happened:</strong> The action the team executed, followed by the real-world outcome and realized win probability change (WPA).
             </li>
           </ul>
 
           <div className="mt-4 rounded-lg border border-slate-800 bg-[#080d19] p-3 text-xs">
-            <span className="font-bold text-amber-300 block mb-1">【四象限の審判】The 2x2 Outcome Matrix:</span>
+            <span className="font-bold text-amber-300 block mb-1">The 2x2 Decision-vs-Outcome Matrix:</span>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
               <div className="rounded border border-emerald-500/30 bg-emerald-950/20 p-2">
-                <span className="font-black text-emerald-300 block">完全勝利 ★ Consistent & Succeeded</span>
+                <span className="font-black text-emerald-300 block">Consistent & Succeeded</span>
                 <span className="text-[11px] text-slate-300">Model preferred it, and the team converted or scored.</span>
               </div>
               <div className="rounded border border-sky-500/30 bg-sky-950/20 p-2">
-                <span className="font-black text-sky-300 block">惜敗の涙 ✕ Consistent & Failed (Unlucky)</span>
+                <span className="font-black text-sky-300 block">Consistent & Failed (Unlucky)</span>
                 <span className="text-[11px] text-slate-300">Statistically sound call, but denied by bad luck or defensive play.</span>
               </div>
               <div className="rounded border border-amber-500/30 bg-amber-950/20 p-2">
-                <span className="font-black text-amber-300 block">奇跡生還 ⚡ Against Model & Succeeded (Bailed Out)</span>
+                <span className="font-black text-amber-300 block">Against Model & Succeeded (Bailed Out)</span>
                 <span className="text-[11px] text-slate-300">Suboptimal risk, bailed out by individual player heroics.</span>
               </div>
               <div className="rounded border border-rose-500/30 bg-rose-950/20 p-2">
-                <span className="font-black text-rose-300 block">大爆死 ☠ Against Model & Failed</span>
-                <span className="text-[11px] text-slate-300">Costly unrecommended gamble that resulted in catastrophic turnover.</span>
+                <span className="font-black text-rose-300 block">Against Model & Failed</span>
+                <span className="text-[11px] text-slate-300">Costly unrecommended call that resulted in turnover or stopped play.</span>
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@ import type { TeamSummary } from '../types/decision';
 import { getTeamLogoUrl, isDarkLogo, getTeamName } from '../utils/teamLogos';
 import { AlertTriangle, ArrowUpDown } from 'lucide-react';
 import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
+import { SeasonEditorialAnalysis } from '../components/SeasonEditorialAnalysis';
 
 interface TeamsPageProps {
   teams: TeamSummary[];
@@ -60,6 +61,9 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+      {/* Season Editorial Analysis Feature */}
+      <SeasonEditorialAnalysis />
+
       {/* Page Header with Anime Mascot & Kanji Banner */}
       <div className="mb-6 rounded-xl border border-slate-800 bg-[#0c1220] p-5 shadow-lg anime-card-glow">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -70,7 +74,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-black text-white sm:text-xl">
-                  【全32軍団番付】NFL Team 4th-Down Adherence & Cost
+                  【全32軍団番付】NFL Team 4th-Down Adherence & Cost Table
                 </h2>
                 <MangaSoundEffect sound="ドドンッ！" english="rank" className="text-emerald-400 hidden sm:inline-flex" />
               </div>
@@ -89,10 +93,10 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
         {/* Methodology Clarification Note */}
         <div className="mt-4 rounded-lg border border-slate-800/80 bg-[#080d19] p-3 text-xs text-slate-300 leading-relaxed">
           <p>
-            <strong className="text-sky-400">【的確率 Adherence Definition】:</strong> Share of <em>non-toss-up genuine decisions</em> where the team’s actual play was the model’s single preferred choice. Toss-ups (options within 1.0 pp of each other) are reported separately and explicitly excluded from the denominator.
+            <strong className="text-sky-400">Adherence Definition:</strong> Share of <em>non-toss-up genuine decisions</em> where the team’s actual play was the model’s single preferred choice. Toss-ups (options within 1.0 pp of each other) are reported separately and explicitly excluded from the denominator.
           </p>
           <p className="mt-1 text-slate-400 text-[11px]">
-            * Total WP given up (喪失期待値) is the arithmetic sum of estimated option deficits (cost) across all plays, presented as a model estimate.
+            * Total WP given up is the arithmetic sum of estimated option deficits (cost) across all plays, presented as a model estimate.
           </p>
         </div>
       </div>
@@ -105,37 +109,37 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
               <tr>
                 <th scope="col" className="sticky left-0 bg-[#101729] px-4 py-3.5 z-10 shadow-[1px_0_0_0_rgba(51,65,85,0.4)]">
                   <button onClick={() => handleSort('team')} className="flex items-center gap-1 hover:text-white">
-                    <span>軍団 Team</span>
+                    <span>Team</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('genuine_count')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>激戦 Genuine</span>
+                    <span>Genuine Decisions</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('toss_up_count')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>伯仲 Toss-Up</span>
+                    <span>Toss-Ups</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('adherence_pct')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>的確率 Adherence</span>
+                    <span>Adherence</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-center">
                   <button onClick={() => handleSort('punted_on_clear_go')} className="flex items-center gap-1 mx-auto hover:text-white">
-                    <span>痛恨パント Punted on "Clear Go"</span>
+                    <span>Punted on Clear Go</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
                 <th scope="col" className="px-4 py-3.5 text-right">
                   <button onClick={() => handleSort('total_wp_lost_pp')} className="flex items-center gap-1 ml-auto hover:text-white">
-                    <span>喪失期待値 Est. WP Given Up*</span>
+                    <span>Est. WP Given Up*</span>
                     <ArrowUpDown className="h-3 w-3" />
                   </button>
                 </th>
@@ -219,7 +223,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({ teams, loading }) => {
                   <td className="px-4 py-3 text-center tabular-nums">
                     {team.punted_on_clear_go > 0 ? (
                       <span className="inline-block rounded bg-rose-500/15 px-2 py-0.5 font-bold text-rose-300 border border-rose-500/30">
-                        {team.punted_on_clear_go}回
+                        {team.punted_on_clear_go}
                       </span>
                     ) : (
                       <span className="text-slate-400">0</span>
