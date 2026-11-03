@@ -8,78 +8,76 @@ snaps, generates team adherence summaries, and writes optimised static JSON file
 from __future__ import annotations
 
 import json
-import os
+import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
-import numpy as np
-import pandas as pd
 import polars as pl
-from sportsdataverse.nfl.nfl_fourth_down import get_4th_down_probs
-
 from model_engine import (
     CLEAR_GO_GAP_PP,
     GENUINE_GAP_PP,
     TOSS_UP_PP,
     process_scored_row,
 )
+from sportsdataverse.nfl.nfl_fourth_down import get_4th_down_probs  # type: ignore[import-untyped]
 
 PBP_URL = "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet"
 CACHE_DIR = Path(__file__).resolve().parent.parent / "scratch"
 OUTPUT_DIR = Path(__file__).resolve().parent.parent / "public" / "data"
 
 
-def fetch_or_load_pbp() -> pl.DataFrame:
-    """Retrieves 2026 play-by-play data, caching locally."""
-    CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    local_pbp = CACHE_DIR / "play_by_play_2026.parquet"
+def fetch_or_load_pbp(
+    pbp_url: str = PBP_URL, cache_dir: Path = CACHE_DIR
+) -> pl.DataFrame:
+    """Retrieves 2026 play-by-play data, caching locally with strict URL validation."""
+    parsed = urllib.parse.urlparse(pbp_url)
+    if parsed.scheme != "https":
+        raise ValueError(f"Insecure URL scheme: {parsed.scheme}")
+    if not (
+        parsed.netloc.endswith("github.com")
+        or parsed.netloc.endswith("githubusercontent.com")
+    ):
+        raise ValueError(f"Untrusted download host: {parsed.netloc}")
 
-    # Also check the conversation scratch directory if already downloaded
-    global_scratch_file = Path("C:/Users/Martin/.gemini/antigravity/brain/e8449929-3890-40d8-ae5d-8a2754980a7c/scratch/play_by_play_2026.parquet")
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    local_pbp = cache_dir / "play_by_play_2026.parquet"
+
     if not local_pbp.exists():
-        if global_scratch_file.exists():
-            import shutil
-            shutil.copy(global_scratch_file, local_pbp)
-            print(f"Loaded existing parquet from scratch: {local_pbp}")
-        else:
-            print(f"Downloading {PBP_URL}...")
-            urllib.request.urlretrieve(PBP_URL, local_pbp)
-            print("Download complete.")
+        print(f"Downloading {pbp_url}...")
+        req = urllib.request.Request(
+            pbp_url, headers={"User-Agent": "FourthDownLab/1.0"}
+        )
+        # Scheme and domain verified above via urllib.parse
+        with (
+            urllib.request.urlopen(req, timeout=60) as resp,
+            open(local_pbp, "wb") as out_f,
+        ):  # nosec B310
+            while chunk := resp.read(65536):
+                out_f.write(chunk)
+        print("Download complete.")
 
     return pl.read_parquet(local_pbp)
 
 
-def run_pipeline() -> Dict[str, Any]:
-    print("=" * 60)
-    print("Starting Fourth Down Lab data pipeline...")
-    print("=" * 60)
-
-    df_raw = fetch_or_load_pbp()
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-    # 1. Filter 4th downs
-    df_sorted = df_raw.sort(["game_id", "play_id"])
-    fourth_raw = df_sorted.filter(pl.col("down") == 4)
-    total_fourth_down_rows = fourth_raw.height
-    print(f"Total fourth-down rows: {total_fourth_down_rows}")
-
-    # 2. Cancelled Snaps Audit (play_type == 'no_play')
+def audit_cancelled_snaps(
+    fourth_raw: pl.DataFrame, df_sorted: pl.DataFrame
+) -> tuple[list[dict[str, Any]], int, int]:
+    """Audits snaps with play_type == 'no_play' and checks subsequent play in game."""
     no_play_snaps = fourth_raw.filter(pl.col("play_type") == "no_play")
-    print(f"Cancelled snaps (play_type == 'no_play'): {no_play_snaps.height}")
-
-    cancelled_audit: List[Dict[str, Any]] = []
+    cancelled_audit: list[dict[str, Any]] = []
     replayed_count = 0
     not_replayed_count = 0
 
     for row in no_play_snaps.iter_rows(named=True):
         gid = row["game_id"]
         pid = row["play_id"]
-        # Look ahead for next play in game
-        next_plays = df_sorted.filter((pl.col("game_id") == gid) & (pl.col("play_id") > pid)).sort("play_id")
+        next_plays = df_sorted.filter(
+            (pl.col("game_id") == gid) & (pl.col("play_id") > pid)
+        ).sort("play_id")
         replayed = False
-        next_play_info = None
+        next_play_info: dict[str, Any] | None = None
 
         if next_plays.height > 0:
             np_row = next_plays.row(0, named=True)
@@ -104,61 +102,32 @@ def run_pipeline() -> Dict[str, Any]:
         else:
             not_replayed_count += 1
 
-        cancelled_audit.append({
-            "game_id": gid,
-            "play_id": int(pid),
-            "week": int(row["week"]),
-            "posteam": str(row["posteam"]),
-            "defteam": str(row["defteam"]),
-            "qtr": int(row["qtr"]),
-            "ydstogo": float(row["ydstogo"] or 0),
-            "yardline_100": float(row["yardline_100"] or 0),
-            "desc": str(row["desc"]),
-            "penalty": bool(row["penalty"] == 1),
-            "replayed_on_fourth_down": replayed,
-            "replayed_details": next_play_info,
-            "status_label": "Not executed (penalty or cancelled snap)",
-        })
+        cancelled_audit.append(
+            {
+                "game_id": gid,
+                "play_id": int(pid),
+                "week": int(row["week"]),
+                "posteam": str(row["posteam"]),
+                "defteam": str(row["defteam"]),
+                "qtr": int(row["qtr"]),
+                "ydstogo": float(row["ydstogo"] or 0),
+                "yardline_100": float(row["yardline_100"] or 0),
+                "desc": str(row["desc"]),
+                "penalty": bool(row["penalty"] == 1),
+                "replayed_on_fourth_down": replayed,
+                "replayed_details": next_play_info,
+                "status_label": "Not executed (penalty or cancelled snap)",
+            }
+        )
 
-    with open(OUTPUT_DIR / "audit_cancelled_snaps.json", "w", encoding="utf-8") as f:
-        json.dump(cancelled_audit, f, indent=2)
-    print(f"Wrote {len(cancelled_audit)} cancelled snaps to audit_cancelled_snaps.json (Replayed: {replayed_count}, Not replayed: {not_replayed_count})")
+    return cancelled_audit, replayed_count, not_replayed_count
 
-    # 3. Executed Snaps
-    # Only run, pass, punt, field_goal. Exclude qb_kneel, qb_spike, play_deleted == 1
-    executed_raw = fourth_raw.filter(
-        pl.col("play_type").is_in(["run", "pass", "punt", "field_goal"])
-        & ((pl.col("play_deleted") == 0) | pl.col("play_deleted").is_null())
-    )
-    print(f"Executed snaps count: {executed_raw.height}")
 
-    # Excluded snaps count (qb_kneel etc.)
-    excluded_snaps_count = total_fourth_down_rows - no_play_snaps.height - executed_raw.height
+def calculate_team_summaries(decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Pure function calculating team adherence and cost summaries from decisions."""
+    teams_dict: dict[str, dict[str, Any]] = {}
 
-    # 4. Score Executed Snaps with Model
-    print("Running sportsdataverse win probability models on executed snaps...")
-    executed_pd = executed_raw.to_pandas()
-    scored_df = get_4th_down_probs(executed_pd)
-
-    # 5. Process Scored Rows
-    decisions: List[Dict[str, Any]] = []
-    for _, row in scored_df.iterrows():
-        dec = process_scored_row(row.to_dict())
-        decisions.append(dec)
-
-    # Sort decisions: newest week first, then game_id, then play_id descending
-    decisions.sort(key=lambda d: (-d["week"], d["game_id"], -d["play_id"]))
-
-    with open(OUTPUT_DIR / "decisions.json", "w", encoding="utf-8") as f:
-        json.dump(decisions, f, indent=2)
-    print(f"Wrote {len(decisions)} decisions to decisions.json")
-
-    # 6. Team Adherence Summary
-    # Adherence = share of NON-toss-up genuine decisions where actual choice was model's single preferred option.
-    teams_dict: Dict[str, Dict[str, Any]] = {}
-
-    # Initialise all 32 NFL teams
-    all_teams = sorted(list(set(d["posteam"] for d in decisions if d["posteam"])))
+    all_teams = sorted({d["posteam"] for d in decisions if d["posteam"]})
     for team in all_teams:
         teams_dict[team] = {
             "team": team,
@@ -196,8 +165,8 @@ def run_pipeline() -> Dict[str, Any]:
         if d.get("tier") == "clear_go" and d.get("actual_choice") == "punt":
             t_stat["punted_on_clear_go"] += 1
 
-    team_summary_list: List[Dict[str, Any]] = []
-    for team, stat in teams_dict.items():
+    team_summary_list: list[dict[str, Any]] = []
+    for stat in teams_dict.values():
         denom = stat["non_toss_up_genuine"]
         num = stat["adherent_count"]
         if denom > 0:
@@ -206,21 +175,26 @@ def run_pipeline() -> Dict[str, Any]:
             stat["adherence_display"] = f"{num} / {denom} ({pct}%)"
         else:
             stat["adherence_pct"] = None
-            stat["adherence_display"] = f"0 / 0 (n/a)"
+            stat["adherence_display"] = "0 / 0 (n/a)"
 
         stat["total_wp_lost_pp"] = round(stat["total_wp_lost_pp"], 1)
         stat["low_sample_warning"] = stat["genuine_count"] < 5
         team_summary_list.append(stat)
 
     # Sort teams by adherence percentage descending, then genuine count
-    team_summary_list.sort(key=lambda t: (t["adherence_pct"] if t["adherence_pct"] is not None else -1, t["genuine_count"]), reverse=True)
+    team_summary_list.sort(
+        key=lambda t: (
+            t["adherence_pct"] if t["adherence_pct"] is not None else -1,
+            t["genuine_count"],
+        ),
+        reverse=True,
+    )
+    return team_summary_list
 
-    with open(OUTPUT_DIR / "teams_summary.json", "w", encoding="utf-8") as f:
-        json.dump(team_summary_list, f, indent=2)
-    print(f"Wrote {len(team_summary_list)} teams to teams_summary.json")
 
-    # 7. Games Summary
-    games_map: Dict[str, Dict[str, Any]] = {}
+def calculate_games_summary(decisions: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Pure function calculating game matchup summaries and decision timeline strips."""
+    games_map: dict[str, dict[str, Any]] = {}
     for d in decisions:
         gid = d["game_id"]
         if gid not in games_map:
@@ -237,78 +211,175 @@ def run_pipeline() -> Dict[str, Any]:
             }
         g = games_map[gid]
         g["decisions_count"] += 1
-        g["decisions"].append({
-            "play_id": d["play_id"],
-            "qtr": d["qtr"],
-            "posteam": d["posteam"],
-            "ydstogo": d["ydstogo"],
-            "yardline_100": d["yardline_100"],
-            "actual_choice": d["actual_choice"],
-            "cost_pp": d["cost_pp"],
-            "verdict_label": d["verdict_label"],
-            "quadrant": d["quadrant"],
-            "tier": d["tier"],
-        })
+        g["decisions"].append(
+            {
+                "play_id": d["play_id"],
+                "qtr": d["qtr"],
+                "posteam": d["posteam"],
+                "ydstogo": d["ydstogo"],
+                "yardline_100": d["yardline_100"],
+                "actual_choice": d["actual_choice"],
+                "cost_pp": d["cost_pp"],
+                "verdict_label": d["verdict_label"],
+                "quadrant": d["quadrant"],
+                "tier": d["tier"],
+            }
+        )
+
         if d.get("cost_pp") is not None:
-            if d["posteam"] == d["home_team"]:
+            if d["posteam"] == g["home_team"]:
                 g["home_wp_lost_pp"] += d["cost_pp"]
-            else:
+            elif d["posteam"] == g["away_team"]:
                 g["away_wp_lost_pp"] += d["cost_pp"]
 
-    games_list = list(games_map.values())
-    for g in games_list:
+    games_list: list[dict[str, Any]] = []
+    for g in games_map.values():
         g["home_wp_lost_pp"] = round(g["home_wp_lost_pp"], 1)
         g["away_wp_lost_pp"] = round(g["away_wp_lost_pp"], 1)
-        # Sort decisions in game chronologically
+        # Sort decisions chronologically
         g["decisions"].sort(key=lambda x: x["play_id"])
+        games_list.append(g)
 
     games_list.sort(key=lambda g: (-g["week"], g["game_id"]))
+    return games_list
 
-    with open(OUTPUT_DIR / "games_summary.json", "w", encoding="utf-8") as f:
-        json.dump(games_list, f, indent=2)
-    print(f"Wrote {len(games_list)} games to games_summary.json")
 
-    # 8. Meta JSON
-    weeks_list = sorted(list(set(d["week"] for d in decisions)))
-    meta = {
-        "title": "Fourth Down Lab",
-        "build_time": datetime.now(timezone.utc).isoformat(),
-        "data_source": "nflverse play-by-play (2026)",
-        "data_as_of": "2026-11-03",
-        "data_licence": "CC-BY 4.0 (Creative Commons Attribution 4.0 International)",
-        "model_route": "Route A (sportsdataverse 0.1.4 / nfl4th)",
+def build_metadata(
+    total_fourth_down_rows: int,
+    cancelled_count: int,
+    executed_count: int,
+    decisions_count: int,
+    teams_count: int,
+    games_count: int,
+    data_as_of: str | None = None,
+) -> dict[str, Any]:
+    """Builds metadata and audit dictionary for the static payload."""
+    as_of = data_as_of or datetime.now(UTC).strftime("%Y-%m-%d %H:%M UTC")
+    return {
+        "title": "Fourth Down Lab Static Dataset",
         "season": 2026,
-        "weeks": weeks_list,
-        "total_games": len(games_list),
+        "data_as_of": as_of,
+        "model_version": "sportsdataverse-nfl-0.1.4 (nfl4th port)",
+        "source": "nflverse play_by_play_2026.parquet",
+        "licence_data": "CC-BY 4.0 (nflverse)",
+        "licence_model": "MIT (nfl4th / Ben Baldwin, sportsdataverse / Saiem Gilani)",
         "counts": {
             "total_fourth_down_rows": total_fourth_down_rows,
-            "executed_snaps": len(decisions),
-            "cancelled_snaps": len(cancelled_audit),
-            "cancelled_replayed": replayed_count,
-            "cancelled_not_replayed": not_replayed_count,
-            "excluded_snaps": excluded_snaps_count,
+            "cancelled_snaps": cancelled_count,
+            "executed_snaps": executed_count,
+            "decisions_scored": decisions_count,
+            "teams": teams_count,
+            "games": games_count,
         },
         "thresholds": {
             "toss_up_pp": TOSS_UP_PP,
             "genuine_gap_pp": GENUINE_GAP_PP,
             "clear_go_gap_pp": CLEAR_GO_GAP_PP,
+            "verdict_boundaries": {
+                "reasonable_max_cost_pp": 1.0,
+                "model_leaned_max_cost_pp": 3.0,
+                "model_strongly_preferred_min_cost_pp": 3.0,
+            },
         },
-        "credits": [
-            {"entity": "nflverse", "details": "Play-by-play data and win probability models", "licence": "CC-BY 4.0"},
-            {"entity": "nfl4th (Ben Baldwin)", "details": "Reference 4th down decision surface", "licence": "MIT"},
-            {"entity": "sportsdataverse (Saiem Gilani)", "details": "Python nfl4th port and model artifacts", "licence": "MIT"},
-        ],
-        "validation_summary": "Validated against 2020 NFC Championship published benchmark, strict [0, 1] probability constraints, and physical monotonicity checks.",
     }
 
-    with open(OUTPUT_DIR / "meta.json", "w", encoding="utf-8") as f:
-        json.dump(meta, f, indent=2)
-    print("Wrote meta.json")
 
+def run_pipeline(
+    df_raw: pl.DataFrame | None = None,
+    output_dir: Path | None = OUTPUT_DIR,
+    run_model: bool = True,
+) -> dict[str, Any]:
+    """Orchestrates pipeline execution with clean dependency injection."""
     print("=" * 60)
-    print("Data pipeline build complete successfully!")
+    print("Starting Fourth Down Lab data pipeline...")
     print("=" * 60)
-    return meta
+
+    if df_raw is None:
+        df_raw = fetch_or_load_pbp()
+
+    if output_dir is not None:
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+    # 1. Filter 4th downs
+    df_sorted = df_raw.sort(["game_id", "play_id"])
+    fourth_raw = df_sorted.filter(pl.col("down") == 4)
+    total_fourth_down_rows = fourth_raw.height
+    print(f"Total fourth-down rows: {total_fourth_down_rows}")
+
+    # 2. Cancelled Snaps Audit
+    cancelled_audit, replayed_count, not_replayed_count = audit_cancelled_snaps(
+        fourth_raw, df_sorted
+    )
+    if output_dir is not None:
+        with open(
+            output_dir / "audit_cancelled_snaps.json", "w", encoding="utf-8"
+        ) as f:
+            json.dump(cancelled_audit, f, indent=2)
+    print(
+        f"Audited {len(cancelled_audit)} cancelled snaps (Replayed: {replayed_count}, Not replayed: {not_replayed_count})"
+    )
+
+    # 3. Executed Snaps
+    executed_raw = fourth_raw.filter(
+        pl.col("play_type").is_in(["run", "pass", "punt", "field_goal"])
+        & ((pl.col("play_deleted") == 0) | pl.col("play_deleted").is_null())
+    )
+    print(f"Executed snaps count: {executed_raw.height}")
+
+    decisions: list[dict[str, Any]] = []
+
+    # 4. Score Executed Snaps with Model
+    if run_model and executed_raw.height > 0:
+        print("Running sportsdataverse win probability models on executed snaps...")
+        executed_pd = executed_raw.to_pandas()
+        scored_df = get_4th_down_probs(executed_pd)
+
+        for _, row in scored_df.iterrows():
+            dec = process_scored_row(row.to_dict())
+            decisions.append(dec)
+
+    decisions.sort(key=lambda d: (-d["week"], d["game_id"], -d["play_id"]))
+
+    if output_dir is not None:
+        with open(output_dir / "decisions.json", "w", encoding="utf-8") as f:
+            json.dump(decisions, f, indent=2)
+    print(f"Processed {len(decisions)} decisions")
+
+    # 5. Team Adherence Summary
+    team_summary_list = calculate_team_summaries(decisions)
+    if output_dir is not None:
+        with open(output_dir / "teams_summary.json", "w", encoding="utf-8") as f:
+            json.dump(team_summary_list, f, indent=2)
+    print(f"Calculated summaries for {len(team_summary_list)} teams")
+
+    # 6. Games Summary
+    games_list = calculate_games_summary(decisions)
+    if output_dir is not None:
+        with open(output_dir / "games_summary.json", "w", encoding="utf-8") as f:
+            json.dump(games_list, f, indent=2)
+    print(f"Calculated summaries for {len(games_list)} games")
+
+    # 7. Metadata Generation
+    meta = build_metadata(
+        total_fourth_down_rows=total_fourth_down_rows,
+        cancelled_count=len(cancelled_audit),
+        executed_count=executed_raw.height,
+        decisions_count=len(decisions),
+        teams_count=len(team_summary_list),
+        games_count=len(games_list),
+    )
+    if output_dir is not None:
+        with open(output_dir / "meta.json", "w", encoding="utf-8") as f:
+            json.dump(meta, f, indent=2)
+    print("Metadata generated successfully.")
+
+    return {
+        "meta": meta,
+        "decisions_count": len(decisions),
+        "teams_count": len(team_summary_list),
+        "games_count": len(games_list),
+        "cancelled_count": len(cancelled_audit),
+    }
 
 
 if __name__ == "__main__":

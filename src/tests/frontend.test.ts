@@ -1,6 +1,20 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { MOCK_DECISIONS_FIXTURE, MOCK_TEAMS_FIXTURE } from './fixtures.ts';
+import {
+  formatDownAndDistance,
+  formatPointsDifference,
+  formatProbability,
+  formatScoreDifferential,
+  formatTimeRemaining,
+  formatYardline,
+} from '../utils/formatting.ts';
+import {
+  getTeamLogoUrl,
+  getTeamName,
+  isDarkLogo,
+  NFL_TEAMS,
+} from '../utils/teamLogos.ts';
 
 test('Frontend Unit Tests: Filter Logic', () => {
   const all = MOCK_DECISIONS_FIXTURE;
@@ -45,4 +59,64 @@ test('Frontend Unit Tests: 2x2 Separation Integrity', () => {
     assert.doesNotMatch(d.verdict_label.toLowerCase(), /mistake/);
     assert.doesNotMatch(d.verdict_label.toLowerCase(), /blunder/);
   }
+});
+
+test('Formatting Helpers: formatTimeRemaining', () => {
+  assert.equal(formatTimeRemaining(1, 900), 'Q1 15:00');
+  assert.equal(formatTimeRemaining(4, 129), 'Q4 2:09');
+  assert.equal(formatTimeRemaining(5, 540), 'OT 9:00');
+});
+
+test('Formatting Helpers: formatYardline', () => {
+  assert.equal(formatYardline(50, 'GB', 'TB'), '50');
+  assert.equal(formatYardline(8, 'GB', 'TB'), 'TB 8');
+  assert.equal(formatYardline(75, 'GB', 'TB'), 'GB 25');
+});
+
+test('Formatting Helpers: formatDownAndDistance', () => {
+  assert.equal(formatDownAndDistance(4, 8, 8), '4th & Goal');
+  assert.equal(formatDownAndDistance(4, 5, 2), '4th & Goal');
+  assert.equal(formatDownAndDistance(4, 2, 45), '4th & 2');
+});
+
+test('Formatting Helpers: formatProbability', () => {
+  assert.equal(formatProbability(0.122), '12.2%');
+  assert.equal(formatProbability(1.0), '100.0%');
+  assert.equal(formatProbability(null), 'n/a');
+  assert.equal(formatProbability(undefined), 'n/a');
+  assert.equal(formatProbability(NaN), 'n/a');
+});
+
+test('Formatting Helpers: formatPointsDifference', () => {
+  assert.equal(formatPointsDifference(3.68), '+3.7 pp');
+  assert.equal(formatPointsDifference(-2.5), '-2.5 pp');
+  assert.equal(formatPointsDifference(0.0), '0.0 pp');
+  assert.equal(formatPointsDifference(null), 'n/a');
+  assert.equal(formatPointsDifference(undefined), 'n/a');
+  assert.equal(formatPointsDifference(NaN), 'n/a');
+});
+
+test('Formatting Helpers: formatScoreDifferential', () => {
+  assert.equal(formatScoreDifferential(0, 'GB'), 'Tied');
+  assert.equal(formatScoreDifferential(7, 'GB'), 'GB leading by 7');
+  assert.equal(formatScoreDifferential(-8, 'GB'), 'GB trailing by 8');
+});
+
+test('Team Logo Helpers', () => {
+  assert.equal(
+    getTeamLogoUrl('GB'),
+    'https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/gb.png'
+  );
+  assert.equal(
+    getTeamLogoUrl('NFL'),
+    'https://a.espncdn.com/i/teamlogos/nfl/500/scoreboard/nfl.png'
+  );
+  assert.equal(getTeamName('GB'), 'Green Bay Packers');
+  assert.equal(getTeamName('DET'), 'Detroit Lions');
+  assert.equal(getTeamName('UNKNOWN'), 'UNKNOWN');
+
+  assert.equal(isDarkLogo('NYJ'), true);
+  assert.equal(isDarkLogo('PIT'), true);
+  assert.equal(isDarkLogo('GB'), false);
+  assert.equal(Object.keys(NFL_TEAMS).length, 32);
 });
