@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import type { CancelledSnap, Decision, MetaData } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
 import { NFL_TEAMS } from '../utils/teamLogos';
-import { Filter, RotateCcw, Eye, EyeOff, Search, ChevronDown, ChevronUp, ShieldAlert } from 'lucide-react';
+import { Filter, RotateCcw, Eye, EyeOff, Search, ChevronDown, ChevronUp, ShieldAlert, ArrowUpDown } from 'lucide-react';
+import { FEED_SORT_OPTIONS, sortDecisions, sortSnaps, type DecisionSortKey } from '../utils/sort';
 import { BlitzMascot, RefereeMascot } from '../components/AnimeMascots';
 
 interface FeedPageProps {
@@ -11,6 +12,9 @@ interface FeedPageProps {
   meta?: MetaData | null;
   loading: boolean;
   error: string | null;
+  /** Set when another page asks the feed to open one team's decisions. */
+  teamDrilldown?: { team: string; nonce: number } | null;
+  onTeamDrilldownConsumed?: () => void;
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
@@ -19,6 +23,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   meta = null,
   loading,
   error,
+  teamDrilldown = null,
+  onTeamDrilldownConsumed,
 }) => {
   const [selectedWeek, setSelectedWeek] = useState<string>('ALL');
   const [selectedTeam, setSelectedTeam] = useState<string>('ALL');
@@ -27,9 +33,36 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [showObvious, setShowObvious] = useState<boolean>(false);
   const [onlyAgainstModel, setOnlyAgainstModel] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortKey, setSortKey] = useState<DecisionSortKey>('recent');
   const [page, setPage] = useState<number>(1);
   const [mobileFilterOpen, setMobileFilterOpen] = useState<boolean>(false);
   const PAGE_SIZE = 25;
+
+  // Cross-page drill-down (e.g. Teams table -> this feed): reset every filter
+  // to its default, then apply the team, so no stale filter can strand the
+  // user in an empty or contradictory view.
+  React.useEffect(() => {
+    if (!teamDrilldown) return;
+    if (NFL_TEAMS[teamDrilldown.team]) {
+      setSelectedWeek('ALL');
+      setSelectedTier('genuine');
+      setSelectedVerdict('ALL');
+      setShowObvious(false);
+      setOnlyAgainstModel(false);
+      setSearchQuery('');
+      setSortKey('recent');
+      setPage(1);
+      setSelectedTeam(teamDrilldown.team);
+    }
+    onTeamDrilldownConsumed?.();
+  }, [teamDrilldown, onTeamDrilldownConsumed]);
+
+  // The incomplete audit has no model metrics; only time ordering applies.
+  React.useEffect(() => {
+    if (selectedTier === 'incomplete' && sortKey !== 'recent' && sortKey !== 'oldest') {
+      setSortKey('recent');
+    }
+  }, [selectedTier, sortKey]);
 
   const weeks = useMemo(() => {
     const w = Array.from(new Set(decisions.map((d) => d.week))).sort((a, b) => a - b);
@@ -118,14 +151,23 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const clearGoCount = useMemo(() => decisions.filter((d) => d.tier === 'clear_go').length, [decisions]);
   const incompleteCount = useMemo(() => cancelledSnaps.length + (meta?.excluded_snaps?.length || 1), [cancelledSnaps, meta]);
 
+  // Sort (unknown metric values always sort last, never as 0)
+  const sortedDecisions = useMemo(() => {
+    return sortDecisions(filteredDecisions, sortKey);
+  }, [filteredDecisions, sortKey]);
+
+  const sortedIncompleteSnaps = useMemo(() => {
+    return sortSnaps(filteredIncompleteSnaps, sortKey === 'oldest' ? 'oldest' : 'recent');
+  }, [filteredIncompleteSnaps, sortKey]);
+
   // Pagination slice
   const displayedDecisions = useMemo(() => {
-    return filteredDecisions.slice(0, page * PAGE_SIZE);
-  }, [filteredDecisions, page]);
+    return sortedDecisions.slice(0, page * PAGE_SIZE);
+  }, [sortedDecisions, page]);
 
   const displayedIncomplete = useMemo(() => {
-    return filteredIncompleteSnaps.slice(0, page * PAGE_SIZE);
-  }, [filteredIncompleteSnaps, page]);
+    return sortedIncompleteSnaps.slice(0, page * PAGE_SIZE);
+  }, [sortedIncompleteSnaps, page]);
 
   const hasMore = selectedTier === 'incomplete'
     ? displayedIncomplete.length < filteredIncompleteSnaps.length
@@ -139,6 +181,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     setShowObvious(false);
     setOnlyAgainstModel(false);
     setSearchQuery('');
+    setSortKey('recent');
     setPage(1);
   };
 
@@ -459,6 +502,32 @@ export const FeedPage: React.FC<FeedPageProps> = ({
             />
             <span>Only show calls against model</span>
           </label>
+
+          {/* Sort control (P-sort: unknown values always sort last) */}
+          <div className="flex items-center gap-2 min-h-[36px]">
+            <label htmlFor="feed-sort" className="flex items-center gap-1.5 text-slate-300 font-semibold">
+              <ArrowUpDown className="h-3.5 w-3.5 text-sky-400" />
+              <span>Sort by</span>
+            </label>
+            <select
+              id="feed-sort"
+              value={sortKey}
+              onChange={(e) => {
+                setSortKey(e.target.value as DecisionSortKey);
+                setPage(1);
+              }}
+              className="rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
+            >
+              {(selectedTier === 'incomplete'
+                ? FEED_SORT_OPTIONS.filter((o) => o.key === 'recent' || o.key === 'oldest')
+                : FEED_SORT_OPTIONS
+              ).map((o) => (
+                <option key={o.key} value={o.key}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </section>
 

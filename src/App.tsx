@@ -8,6 +8,17 @@ import type { CancelledSnap, Decision, GameSummary, MetaData, TeamSummary } from
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('feed');
+  // Cross-page drill-down: a page can ask the Feed to open one team's decisions.
+  const [feedTeamDrilldown, setFeedTeamDrilldown] = useState<{ team: string; nonce: number } | null>(null);
+
+  const handleViewTeamDecisions = React.useCallback((team: string) => {
+    setFeedTeamDrilldown({ team, nonce: Date.now() });
+    setActiveTab('feed');
+  }, []);
+
+  const clearFeedTeamDrilldown = React.useCallback(() => {
+    setFeedTeamDrilldown(null);
+  }, []);
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [teams, setTeams] = useState<TeamSummary[]>([]);
   const [games, setGames] = useState<GameSummary[]>([]);
@@ -83,6 +94,8 @@ export const App: React.FC = () => {
             meta={meta}
             loading={loading}
             error={error}
+            teamDrilldown={feedTeamDrilldown}
+            onTeamDrilldownConsumed={clearFeedTeamDrilldown}
           />
         )}
         {activeTab === 'teams' && (
@@ -91,6 +104,7 @@ export const App: React.FC = () => {
             decisions={decisions}
             meta={meta}
             loading={loading}
+            onViewTeamDecisions={handleViewTeamDecisions}
           />
         )}
         {activeTab === 'games' && (

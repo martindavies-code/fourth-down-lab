@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { Decision, MetaData, TeamSummary } from '../types/decision';
 import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
-import { AlertTriangle, ArrowUpDown, Table, Sparkles } from 'lucide-react';
+import { AlertTriangle, ArrowUpDown, Table, Sparkles, ChevronRight } from 'lucide-react';
 import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 import { SeasonEditorialAnalysis } from '../components/SeasonEditorialAnalysis';
 
@@ -10,6 +10,8 @@ interface TeamsPageProps {
   decisions?: Decision[];
   meta?: MetaData | null;
   loading: boolean;
+  /** When provided, team names become links that open that team's decisions in the Feed. */
+  onViewTeamDecisions?: (team: string) => void;
 }
 
 type SortField = 'adherence_pct' | 'total_wp_lost_pp' | 'genuine_count' | 'toss_up_count' | 'punted_on_clear_go' | 'team';
@@ -20,6 +22,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({
   decisions = [],
   meta = null,
   loading,
+  onViewTeamDecisions,
 }) => {
   const [activeTab, setActiveTab] = useState<TeamsTab>('rankings');
   const [sortField, setSortField] = useState<SortField>('adherence_pct');
@@ -155,6 +158,9 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({
               <p className="mt-1 text-slate-400 text-[11px]">
                 * Total WP given up is the arithmetic sum of estimated option deficits (cost) across all plays, presented as a model estimate.
               </p>
+              <p className="mt-1 text-slate-400 text-[11px]">
+                Tip: select a team name to open that team's decisions in the Feed.
+              </p>
             </div>
           </div>
 
@@ -214,22 +220,39 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({
                           <span className="text-[11px] font-bold text-slate-400 tabular-nums w-4">
                             {idx + 1}
                           </span>
-                          <img
-                            src={getTeamLogoUrl(team.team)}
-                            alt={getTeamName(team.team)}
-                            className={`h-6 w-6 object-contain ${isDarkLogo(team.team) ? 'team-logo-dark-outline' : ''}`}
-                            loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.onerror = null;
-                              e.currentTarget.src = getTeamFallbackSvg(team.team);
-                            }}
-                          />
-                          <div>
-                            <span className="font-bold">{team.team}</span>
-                            <span className="hidden sm:inline text-xs text-slate-400 ml-1.5">
-                              {getTeamName(team.team)}
-                            </span>
-                          </div>
+                          <button
+                            type="button"
+                            onClick={() => onViewTeamDecisions?.(team.team)}
+                            disabled={!onViewTeamDecisions}
+                            className="group/team flex items-center gap-2.5 rounded-md px-1.5 py-1 -ml-1.5 text-left transition-colors hover:bg-sky-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 disabled:cursor-default"
+                            title={onViewTeamDecisions ? `Open ${getTeamName(team.team)} decisions in the Feed` : undefined}
+                            aria-label={onViewTeamDecisions ? `Open ${getTeamName(team.team)} decisions in the Feed` : undefined}
+                          >
+                            <img
+                              src={getTeamLogoUrl(team.team)}
+                              alt={getTeamName(team.team)}
+                              className={`h-6 w-6 object-contain ${isDarkLogo(team.team) ? 'team-logo-dark-outline' : ''}`}
+                              loading="lazy"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = getTeamFallbackSvg(team.team);
+                              }}
+                            />
+                            <div>
+                              <span className="font-bold group-hover/team:text-sky-300 group-hover/team:underline underline-offset-2">
+                                {team.team}
+                              </span>
+                              <span className="hidden sm:inline text-xs text-slate-400 ml-1.5">
+                                {getTeamName(team.team)}
+                              </span>
+                            </div>
+                            {onViewTeamDecisions && (
+                              <ChevronRight
+                                className="h-3.5 w-3.5 shrink-0 text-sky-400 opacity-0 transition-opacity group-hover/team:opacity-100 group-focus-visible/team:opacity-100"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </button>
                           {team.low_sample_warning && (
                             <span
                               className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-400 border border-amber-500/20"
@@ -302,4 +325,3 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({
     </div>
   );
 };
-
