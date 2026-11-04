@@ -2,7 +2,8 @@ import React, { useState, useMemo } from 'react';
 import type { CancelledSnap, Decision, GameSummary, MetaData } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
 import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
-import { Compass, Calendar, Zap, ArrowRight, ShieldAlert } from 'lucide-react';
+import { Compass, Calendar, Zap, ArrowRight, ShieldAlert, ArrowUpDown } from 'lucide-react';
+import { GAME_SORT_OPTIONS, sortDecisions, sortLabel, type DecisionSortKey } from '../utils/sort';
 import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 
 interface GamesPageProps {
@@ -72,8 +73,16 @@ export const GamesPage: React.FC<GamesPageProps> = ({
     if (!activeGame) return [];
     return decisions
       .filter((d) => d.game_id === activeGame.game_id)
-      .sort((a, b) => a.play_id - b.play_id); // Chronological order
+      .sort((a, b) => a.play_id - b.play_id); // Chronological order (play_id; game seconds reset in OT)
   }, [decisions, activeGame]);
+
+  // Card list ordering. The timeline strip above always stays chronological;
+  // this only reorders the full cards below. Chronological is the default.
+  const [gameSortKey, setGameSortKey] = useState<DecisionSortKey>('chronological');
+
+  const sortedGameDecisions = useMemo(() => {
+    return sortDecisions(gameDecisions, gameSortKey);
+  }, [gameDecisions, gameSortKey]);
 
   const gameCancelledSnaps = useMemo(() => {
     if (!activeGame) return [];
@@ -447,15 +456,39 @@ export const GamesPage: React.FC<GamesPageProps> = ({
             </div>
           )}
 
-          {/* Chronological List of Decision Cards */}
+          {/* Decision Cards (chronological by default; sortable) */}
           <div className="space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
-                <span>Chronological Decisions ({gameDecisions.length} Plays)</span>
+                <span>
+                  {gameSortKey === 'chronological'
+                    ? `Chronological Decisions (${gameDecisions.length} Plays)`
+                    : `Decisions (${gameDecisions.length} Plays) · Sorted by ${sortLabel(gameSortKey)}`}
+                </span>
               </h3>
-              <MangaStamp kanji="激闘" subtext="ALL PLAYS" variant="kekkoh" />
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <label htmlFor="game-sort" className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-300">
+                    <ArrowUpDown className="h-3.5 w-3.5 text-sky-400" />
+                    <span>Sort plays</span>
+                  </label>
+                  <select
+                    id="game-sort"
+                    value={gameSortKey}
+                    onChange={(e) => setGameSortKey(e.target.value as DecisionSortKey)}
+                    className="rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-1.5 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
+                  >
+                    {GAME_SORT_OPTIONS.map((o) => (
+                      <option key={o.key} value={o.key}>
+                        {o.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <MangaStamp kanji="激闘" subtext="ALL PLAYS" variant="kekkoh" />
+              </div>
             </div>
-            {gameDecisions.map((decision) => (
+            {sortedGameDecisions.map((decision) => (
               <DecisionCard key={`${decision.game_id}_${decision.play_id}`} decision={decision} />
             ))}
           </div>
