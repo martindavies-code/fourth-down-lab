@@ -1,5 +1,197 @@
 [
   {
+    "game_id": "2026_09_JAX_BAL",
+    "season": 2026,
+    "week": 9,
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "decisions_count": 15,
+    "decisions": [
+      {
+        "play_id": 480,
+        "qtr": 1,
+        "posteam": "BAL",
+        "ydstogo": 6.0,
+        "yardline_100": 35.0,
+        "actual_choice": "field_goal",
+        "cost_pp": 0.32487599906653175,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 757,
+        "qtr": 1,
+        "posteam": "JAX",
+        "ydstogo": 7.0,
+        "yardline_100": 18.0,
+        "actual_choice": "field_goal",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 1145,
+        "qtr": 2,
+        "posteam": "BAL",
+        "ydstogo": 11.0,
+        "yardline_100": 57.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 1312,
+        "qtr": 2,
+        "posteam": "JAX",
+        "ydstogo": 7.0,
+        "yardline_100": 76.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 1409,
+        "qtr": 2,
+        "posteam": "BAL",
+        "ydstogo": 1.0,
+        "yardline_100": 71.0,
+        "actual_choice": "go",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 1594,
+        "qtr": 2,
+        "posteam": "BAL",
+        "ydstogo": 9.0,
+        "yardline_100": 55.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 1895,
+        "qtr": 2,
+        "posteam": "BAL",
+        "ydstogo": 2.0,
+        "yardline_100": 61.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.3294066131425293,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 2162,
+        "qtr": 3,
+        "posteam": "JAX",
+        "ydstogo": 11.0,
+        "yardline_100": 27.0,
+        "actual_choice": "field_goal",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 2327,
+        "qtr": 3,
+        "posteam": "BAL",
+        "ydstogo": 4.0,
+        "yardline_100": 64.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.2255445345431109,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 2450,
+        "qtr": 3,
+        "posteam": "JAX",
+        "ydstogo": 5.0,
+        "yardline_100": 77.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.010390865011156158,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 2554,
+        "qtr": 3,
+        "posteam": "BAL",
+        "ydstogo": 11.0,
+        "yardline_100": 70.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.12262458174369106,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 2735,
+        "qtr": 3,
+        "posteam": "BAL",
+        "ydstogo": 1.0,
+        "yardline_100": 41.0,
+        "actual_choice": "go",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Failed",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 2968,
+        "qtr": 4,
+        "posteam": "JAX",
+        "ydstogo": 2.0,
+        "yardline_100": 29.0,
+        "actual_choice": "field_goal",
+        "cost_pp": 0.1770282355499475,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 3120,
+        "qtr": 4,
+        "posteam": "JAX",
+        "ydstogo": 2.0,
+        "yardline_100": 15.0,
+        "actual_choice": "field_goal",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      },
+      {
+        "play_id": 3619,
+        "qtr": 4,
+        "posteam": "JAX",
+        "ydstogo": 1.0,
+        "yardline_100": 67.0,
+        "actual_choice": "punt",
+        "cost_pp": 0.0,
+        "verdict_label": "Reasonable",
+        "quadrant": "Consistent & Succeeded",
+        "tier": "genuine"
+      }
+    ],
+    "home_wp_lost_pp": 1.0,
+    "away_wp_lost_pp": 0.2
+  },
+  {
     "game_id": "2026_08_ARI_DAL",
     "season": 2026,
     "week": 8,
@@ -434,7 +626,7 @@
         "ydstogo": 10.0,
         "yardline_100": 88.0,
         "actual_choice": "punt",
-        "cost_pp": 0.15919778581856334,
+        "cost_pp": 0.1591977858043942,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -2606,7 +2798,7 @@
         "ydstogo": 2.0,
         "yardline_100": 61.0,
         "actual_choice": "punt",
-        "cost_pp": 2.929840574963327,
+        "cost_pp": 2.929840578157783,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -3278,7 +3470,7 @@
         "ydstogo": 10.0,
         "yardline_100": 45.0,
         "actual_choice": "punt",
-        "cost_pp": 0.41567854605908117,
+        "cost_pp": 0.4156785330479418,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -4538,7 +4730,7 @@
         "ydstogo": 1.0,
         "yardline_100": 77.0,
         "actual_choice": "punt",
-        "cost_pp": 2.466392242327009,
+        "cost_pp": 2.4663922356639834,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -5930,7 +6122,7 @@
         "ydstogo": 7.0,
         "yardline_100": 65.0,
         "actual_choice": "punt",
-        "cost_pp": 0.36762774599481823,
+        "cost_pp": 0.3676277462224209,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -6122,7 +6314,7 @@
         "ydstogo": 12.0,
         "yardline_100": 59.0,
         "actual_choice": "punt",
-        "cost_pp": 0.19487449916409105,
+        "cost_pp": 0.19487449872725993,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -7682,7 +7874,7 @@
         "ydstogo": 3.0,
         "yardline_100": 89.0,
         "actual_choice": "punt",
-        "cost_pp": 0.7451705945468179,
+        "cost_pp": 0.7451709018381658,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -8438,7 +8630,7 @@
         "ydstogo": 2.0,
         "yardline_100": 54.0,
         "actual_choice": "punt",
-        "cost_pp": 0.015643650149499422,
+        "cost_pp": 0.015643696285971842,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -9410,7 +9602,7 @@
         "ydstogo": 5.0,
         "yardline_100": 63.0,
         "actual_choice": "punt",
-        "cost_pp": 1.4438676172162102,
+        "cost_pp": 1.4438676257453875,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -12902,7 +13094,7 @@
         "ydstogo": 4.0,
         "yardline_100": 68.0,
         "actual_choice": "punt",
-        "cost_pp": 0.38363720812488733,
+        "cost_pp": 0.38363721104016923,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -13178,7 +13370,7 @@
         "ydstogo": 4.0,
         "yardline_100": 58.0,
         "actual_choice": "punt",
-        "cost_pp": 1.608465334552489,
+        "cost_pp": 1.6084653292841866,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -13286,7 +13478,7 @@
         "ydstogo": 4.0,
         "yardline_100": 65.0,
         "actual_choice": "punt",
-        "cost_pp": 0.3690389235834757,
+        "cost_pp": 0.3690389241366665,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -14258,7 +14450,7 @@
         "ydstogo": 2.0,
         "yardline_100": 56.0,
         "actual_choice": "punt",
-        "cost_pp": 2.29916374776582,
+        "cost_pp": 2.2991637518431585,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -14678,7 +14870,7 @@
         "ydstogo": 16.0,
         "yardline_100": 40.0,
         "actual_choice": "field_goal",
-        "cost_pp": 1.955279517359898,
+        "cost_pp": 1.9552795163536696,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -15014,7 +15206,7 @@
         "ydstogo": 3.0,
         "yardline_100": 3.0,
         "actual_choice": "field_goal",
-        "cost_pp": 2.006787164308288,
+        "cost_pp": 2.0067871980194885,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -15518,7 +15710,7 @@
         "ydstogo": 9.0,
         "yardline_100": 58.0,
         "actual_choice": "punt",
-        "cost_pp": 0.09695778845004999,
+        "cost_pp": 0.09695784202185531,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -15734,7 +15926,7 @@
         "ydstogo": 2.0,
         "yardline_100": 68.0,
         "actual_choice": "punt",
-        "cost_pp": 0.7721778813439384,
+        "cost_pp": 0.7721778823461145,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -16082,7 +16274,7 @@
         "ydstogo": 6.0,
         "yardline_100": 56.0,
         "actual_choice": "punt",
-        "cost_pp": 2.4019556105207425,
+        "cost_pp": 2.401955631290051,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -16118,7 +16310,7 @@
         "ydstogo": 22.0,
         "yardline_100": 39.0,
         "actual_choice": "go",
-        "cost_pp": 0.04928033055693736,
+        "cost_pp": 0.049280330464365404,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Failed",
         "tier": "genuine"
@@ -18518,7 +18710,7 @@
         "ydstogo": 3.0,
         "yardline_100": 5.0,
         "actual_choice": "field_goal",
-        "cost_pp": 0.5378431463195388,
+        "cost_pp": 0.5378431403426059,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -18686,7 +18878,7 @@
         "ydstogo": 8.0,
         "yardline_100": 50.0,
         "actual_choice": "punt",
-        "cost_pp": 0.5321787051273001,
+        "cost_pp": 0.5321787112472103,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -19154,7 +19346,7 @@
         "ydstogo": 2.0,
         "yardline_100": 49.0,
         "actual_choice": "punt",
-        "cost_pp": 0.8530073247287773,
+        "cost_pp": 0.8530073148247719,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -20210,7 +20402,7 @@
         "ydstogo": 5.0,
         "yardline_100": 70.0,
         "actual_choice": "punt",
-        "cost_pp": 0.6829105984655137,
+        "cost_pp": 0.6829105962795179,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -20246,7 +20438,7 @@
         "ydstogo": 5.0,
         "yardline_100": 61.0,
         "actual_choice": "punt",
-        "cost_pp": 0.787599135061004,
+        "cost_pp": 0.7875991477844041,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -20522,7 +20714,7 @@
         "ydstogo": 2.0,
         "yardline_100": 80.0,
         "actual_choice": "punt",
-        "cost_pp": 0.1547415810002284,
+        "cost_pp": 0.15474158099622604,
         "verdict_label": "Reasonable",
         "quadrant": "Consistent & Succeeded",
         "tier": "genuine"
@@ -20546,7 +20738,7 @@
         "ydstogo": 1.0,
         "yardline_100": 68.0,
         "actual_choice": "punt",
-        "cost_pp": 1.3778135418061888,
+        "cost_pp": 1.377813544925327,
         "verdict_label": "Model leaned the other way",
         "quadrant": "Against Model & Succeeded",
         "tier": "genuine"
@@ -21362,7 +21554,7 @@
         "ydstogo": 1.0,
         "yardline_100": 56.0,
         "actual_choice": "punt",
-        "cost_pp": 8.07453173778664,
+        "cost_pp": 8.074537114735147,
         "verdict_label": "Model strongly preferred another option",
         "quadrant": "Against Model & Succeeded",
         "tier": "clear_go"
@@ -21494,7 +21686,7 @@
         "ydstogo": 4.0,
         "yardline_100": 45.0,
         "actual_choice": "punt",
-        "cost_pp": 3.7814476293461183,
+        "cost_pp": 3.7814476322719615,
         "verdict_label": "Model strongly preferred another option",
         "quadrant": "Against Model & Succeeded",
         "tier": "clear_go"

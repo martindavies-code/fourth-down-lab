@@ -1,5 +1,1303 @@
 [
   {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 3619,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 4,
+    "quarter_seconds_remaining": 300.0,
+    "half_seconds_remaining": 300.0,
+    "game_seconds_remaining": 300.0,
+    "down": 4,
+    "ydstogo": 1.0,
+    "yardline_100": 67.0,
+    "score_differential": 23.0,
+    "posteam_score": 33,
+    "defteam_score": 10,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 2,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.9985531555844839,
+        "first_down_prob": 0.7205173373222351,
+        "wp_succeed": 0.9984565548659121,
+        "wp_fail": 0.9988020895442522
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.9986284752958454,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.9995933746395167,
+        "miss_fg_wp": 0.9986284752958454,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.9992132806342217
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "punt",
+      "field_goal",
+      "go"
+    ],
+    "is_toss_up": true,
+    "best_option": "punt",
+    "best_wp": 0.9992132806342217,
+    "go_boost": -0.06601250497377809,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(5:00) 9-L.Cooke punts 54 yards to BAL 13, Center-46-R.Matiscik, out of bounds.",
+      "yards_gained": 0,
+      "realised_wpa": -0.00019014941062778234,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 54,
+      "blocked": false,
+      "summary": "54.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 3120,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 4,
+    "quarter_seconds_remaining": 715.0,
+    "half_seconds_remaining": 715.0,
+    "game_seconds_remaining": 715.0,
+    "down": 4,
+    "ydstogo": 2.0,
+    "yardline_100": 15.0,
+    "score_differential": 20.0,
+    "posteam_score": 23,
+    "defteam_score": 3,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.9956381838547962,
+        "first_down_prob": 0.5655235052108765,
+        "wp_succeed": 0.9972952916415779,
+        "wp_fail": 0.9934811902696897
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.9968040908840639,
+        "fg_make_prob": 0.9543537497520447,
+        "make_fg_wp": 0.9970193689223379,
+        "miss_fg_wp": 0.9923031427897513,
+        "low_make_probability": false
+      },
+      "punt": {
+        "status": "UNMODELLED",
+        "reason": "Inside opponent 31-yard line (yardline_100 = 15); not modelled in nfl4th punt landing distribution (0 punts in 2026 dataset)",
+        "wp": null
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": true,
+    "modeled_options_count": 2,
+    "is_overtime": false,
+    "preferred_options": [
+      "field_goal",
+      "go"
+    ],
+    "is_toss_up": true,
+    "best_option": "field_goal",
+    "best_wp": 0.9968040908840639,
+    "go_boost": -0.11659070292676654,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "field_goal",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "field_goal",
+      "desc": "(11:55) 39-C.Little 33 yard field goal is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke.",
+      "yards_gained": 0,
+      "realised_wpa": -0.0005475645884871483,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "field_goal_result": "made",
+      "kick_distance": 33,
+      "summary": "33-yd field goal MADE"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 2968,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 4,
+    "quarter_seconds_remaining": 819.0,
+    "half_seconds_remaining": 819.0,
+    "game_seconds_remaining": 819.0,
+    "down": 4,
+    "ydstogo": 2.0,
+    "yardline_100": 29.0,
+    "score_differential": 17.0,
+    "posteam_score": 20,
+    "defteam_score": 3,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.9914689823830694,
+        "first_down_prob": 0.5888409614562988,
+        "wp_succeed": 0.9947436191307273,
+        "wp_fail": 0.9867791434680572
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.9896987000275699,
+        "fg_make_prob": 0.745015561580658,
+        "make_fg_wp": 0.9911100473254919,
+        "miss_fg_wp": 0.9855750142596662,
+        "low_make_probability": false
+      },
+      "punt": {
+        "status": "UNMODELLED",
+        "reason": "Inside opponent 31-yard line (yardline_100 = 29); not modelled in nfl4th punt landing distribution (0 punts in 2026 dataset)",
+        "wp": null
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": true,
+    "modeled_options_count": 2,
+    "is_overtime": false,
+    "preferred_options": [
+      "go",
+      "field_goal"
+    ],
+    "is_toss_up": true,
+    "best_option": "go",
+    "best_wp": 0.9914689823830694,
+    "go_boost": 0.1770282355499475,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "field_goal",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.1770282355499475,
+    "display_cost_pp": 0.2,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "field_goal",
+      "desc": "(13:39) 39-C.Little 47 yard field goal is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke.",
+      "yards_gained": 0,
+      "realised_wpa": 0.010561337694525719,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "field_goal_result": "made",
+      "kick_distance": 47,
+      "summary": "47-yd field goal MADE"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 2735,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 3,
+    "quarter_seconds_remaining": 187.0,
+    "half_seconds_remaining": 1087.0,
+    "game_seconds_remaining": 1087.0,
+    "down": 4,
+    "ydstogo": 1.0,
+    "yardline_100": 41.0,
+    "score_differential": -17.0,
+    "posteam_score": 3,
+    "defteam_score": 20,
+    "posteam_timeouts_remaining": 3,
+    "defteam_timeouts_remaining": 2,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.018185831408796208,
+        "first_down_prob": 0.676734983921051,
+        "wp_succeed": 0.0232572760443468,
+        "wp_fail": 0.007569079566369978
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.011549120011922594,
+        "fg_make_prob": 0.44918522536754607,
+        "make_fg_wp": 0.016939546912908554,
+        "miss_fg_wp": 0.00715326820500195,
+        "low_make_probability": false
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.010730713237075267
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "go",
+      "field_goal",
+      "punt"
+    ],
+    "is_toss_up": true,
+    "best_option": "go",
+    "best_wp": 0.018185831408796208,
+    "go_boost": 0.6636711396873614,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "go",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "run",
+      "desc": "(3:07) 89-M.Andrews FUMBLES (Aborted) at JAX 41, and recovers at JAX 41.",
+      "yards_gained": 0,
+      "realised_wpa": -0.027944665402173996,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "converted": false,
+      "failed": true,
+      "touchdown": false,
+      "interception": false,
+      "fumble_lost": false,
+      "summary": "Failed (+0 yds, turnover on downs)"
+    },
+    "play_succeeded": false,
+    "quadrant": "Consistent & Failed",
+    "quadrant_slug": "consistent_failed"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 2554,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 3,
+    "quarter_seconds_remaining": 360.0,
+    "half_seconds_remaining": 1260.0,
+    "game_seconds_remaining": 1260.0,
+    "down": 4,
+    "ydstogo": 11.0,
+    "yardline_100": 70.0,
+    "score_differential": -17.0,
+    "posteam_score": 3,
+    "defteam_score": 20,
+    "posteam_timeouts_remaining": 3,
+    "defteam_timeouts_remaining": 2,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.010974680948408503,
+        "first_down_prob": 0.24256767332553864,
+        "wp_succeed": 0.023217232952874294,
+        "wp_fail": 0.007054004003655711
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.0064039218705147505,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.023732001893222332,
+        "miss_fg_wp": 0.0064039218705147505,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.009748435130971593
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "go",
+      "punt",
+      "field_goal"
+    ],
+    "is_toss_up": true,
+    "best_option": "go",
+    "best_wp": 0.010974680948408503,
+    "go_boost": 0.12262458174369106,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.12262458174369106,
+    "display_cost_pp": 0.1,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(6:00) 30-R.Eckley punts 39 yards to JAX 31, Center-46-N.Moore. 11-P.Washington to JAX 42 for 11 yards (46-N.Moore; 49-J.Higgins).",
+      "yards_gained": 0,
+      "realised_wpa": -0.015934478491544724,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 39,
+      "blocked": false,
+      "summary": "39.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 2450,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 3,
+    "quarter_seconds_remaining": 461.0,
+    "half_seconds_remaining": 1361.0,
+    "game_seconds_remaining": 1361.0,
+    "down": 4,
+    "ydstogo": 5.0,
+    "yardline_100": 77.0,
+    "score_differential": 17.0,
+    "posteam_score": 20,
+    "defteam_score": 3,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.9780585217175163,
+        "first_down_prob": 0.47990599274635315,
+        "wp_succeed": 0.988202580614727,
+        "wp_fail": 0.9686982455806932
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.9665336776524782,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.9846796970814466,
+        "miss_fg_wp": 0.9665336776524782,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.9779546130674047
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "go",
+      "punt"
+    ],
+    "is_toss_up": true,
+    "best_option": "go",
+    "best_wp": 0.9780585217175163,
+    "go_boost": 0.010390865011156158,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.010390865011156158,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(7:41) 9-L.Cooke punts 56 yards to BAL 21, Center-46-R.Matiscik. 10-L.Wester to BAL 31 for 10 yards (36-Jay.Jones).",
+      "yards_gained": 0,
+      "realised_wpa": -0.001991577446460724,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 56,
+      "blocked": false,
+      "summary": "56.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 2327,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 3,
+    "quarter_seconds_remaining": 613.0,
+    "half_seconds_remaining": 1513.0,
+    "game_seconds_remaining": 1513.0,
+    "down": 4,
+    "ydstogo": 4.0,
+    "yardline_100": 64.0,
+    "score_differential": -17.0,
+    "posteam_score": 3,
+    "defteam_score": 20,
+    "posteam_timeouts_remaining": 3,
+    "defteam_timeouts_remaining": 2,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.018468374499358224,
+        "first_down_prob": 0.4656779170036316,
+        "wp_succeed": 0.025242152986536905,
+        "wp_fail": 0.012564819498625795
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.011412423569709063,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.027064766734838486,
+        "miss_fg_wp": 0.011412423569709063,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.016212929153927115
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "go",
+      "punt",
+      "field_goal"
+    ],
+    "is_toss_up": true,
+    "best_option": "go",
+    "best_wp": 0.018468374499358224,
+    "go_boost": 0.2255445345431109,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.2255445345431109,
+    "display_cost_pp": 0.2,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(10:13) 30-R.Eckley punts 46 yards to JAX 18, Center-46-N.Moore, downed by BAL-39-K.Jackson. ** Injury Update: BAL-50-A.Isaac has returned to the game.",
+      "yards_gained": 0,
+      "realised_wpa": 0.00536133348941803,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 46,
+      "blocked": false,
+      "summary": "46.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 2162,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 3,
+    "quarter_seconds_remaining": 773.0,
+    "half_seconds_remaining": 1673.0,
+    "game_seconds_remaining": 1673.0,
+    "down": 4,
+    "ydstogo": 11.0,
+    "yardline_100": 27.0,
+    "score_differential": 14.0,
+    "posteam_score": 17,
+    "defteam_score": 3,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.9626386426016716,
+        "first_down_prob": 0.2728450298309326,
+        "wp_succeed": 0.9837546532220319,
+        "wp_fail": 0.9547153584470537
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.967105566186808,
+        "fg_make_prob": 0.7772568464279175,
+        "make_fg_wp": 0.9714483972638845,
+        "miss_fg_wp": 0.9519513621926308,
+        "low_make_probability": false
+      },
+      "punt": {
+        "status": "UNMODELLED",
+        "reason": "Inside opponent 31-yard line (yardline_100 = 27); not modelled in nfl4th punt landing distribution (0 punts in 2026 dataset)",
+        "wp": null
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": true,
+    "modeled_options_count": 2,
+    "is_overtime": false,
+    "preferred_options": [
+      "field_goal",
+      "go"
+    ],
+    "is_toss_up": true,
+    "best_option": "field_goal",
+    "best_wp": 0.967105566186808,
+    "go_boost": -0.446692358513634,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "field_goal",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "field_goal",
+      "desc": "(12:53) 39-C.Little 45 yard field goal is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke.",
+      "yards_gained": 0,
+      "realised_wpa": 0.0049467310309410095,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "field_goal_result": "made",
+      "kick_distance": 45,
+      "summary": "45-yd field goal MADE"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 1895,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 2,
+    "quarter_seconds_remaining": 22.0,
+    "half_seconds_remaining": 22.0,
+    "game_seconds_remaining": 1822.0,
+    "down": 4,
+    "ydstogo": 2.0,
+    "yardline_100": 61.0,
+    "score_differential": -14.0,
+    "posteam_score": 3,
+    "defteam_score": 17,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 2,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.05306248946546649,
+        "first_down_prob": 0.5455686450004578,
+        "wp_succeed": 0.062440860820748935,
+        "wp_fail": 0.0418032634100423
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.04162897355854511,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.06869678571820259,
+        "miss_fg_wp": 0.04162897355854511,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.0497684233340412
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "go",
+      "punt"
+    ],
+    "is_toss_up": true,
+    "best_option": "go",
+    "best_wp": 0.05306248946546649,
+    "go_boost": 0.3294066131425293,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.3294066131425293,
+    "display_cost_pp": 0.3,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(:22) 30-R.Eckley punts 47 yards to JAX 14, Center-46-N.Moore, downed by BAL-46-N.Moore.",
+      "yards_gained": 0,
+      "realised_wpa": -0.00596444308757782,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 47,
+      "blocked": false,
+      "summary": "47.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 1594,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 2,
+    "quarter_seconds_remaining": 132.0,
+    "half_seconds_remaining": 132.0,
+    "game_seconds_remaining": 1932.0,
+    "down": 4,
+    "ydstogo": 9.0,
+    "yardline_100": 55.0,
+    "score_differential": -7.0,
+    "posteam_score": 3,
+    "defteam_score": 10,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.13191122312431391,
+        "first_down_prob": 0.299343079328537,
+        "wp_succeed": 0.19564883136413042,
+        "wp_fail": 0.10468047975060005
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.100468959659338,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.18910320848226547,
+        "miss_fg_wp": 0.100468959659338,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.13583092684611806
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "punt",
+      "go"
+    ],
+    "is_toss_up": true,
+    "best_option": "punt",
+    "best_wp": 0.13583092684611806,
+    "go_boost": -0.3919703721804141,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(2:12) 30-R.Eckley punts 55 yards to end zone, Center-46-N.Moore, Touchback.",
+      "yards_gained": 0,
+      "realised_wpa": -0.023107200860977173,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 55,
+      "blocked": false,
+      "summary": "55.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 1409,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 2,
+    "quarter_seconds_remaining": 277.0,
+    "half_seconds_remaining": 277.0,
+    "game_seconds_remaining": 2077.0,
+    "down": 4,
+    "ydstogo": 1.0,
+    "yardline_100": 71.0,
+    "score_differential": -7.0,
+    "posteam_score": 3,
+    "defteam_score": 10,
+    "posteam_timeouts_remaining": 2,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.14763732721991868,
+        "first_down_prob": 0.6731023788452148,
+        "wp_succeed": 0.17122322068463935,
+        "wp_fail": 0.09907251679942258
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.09314513206481934,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.1894148886203766,
+        "miss_fg_wp": 0.09314513206481934,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.13076216015665001
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "go"
+    ],
+    "is_toss_up": false,
+    "best_option": "go",
+    "best_wp": 0.14763732721991868,
+    "go_boost": 1.6875167063268663,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "go",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "run",
+      "desc": "(4:37) 76-C.Vinson reported in as eligible. 22-D.Henry right end to BAL 33 for 4 yards (25-R.Lane).",
+      "yards_gained": 4,
+      "realised_wpa": 0.0714443027973175,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "converted": true,
+      "failed": false,
+      "touchdown": false,
+      "interception": false,
+      "fumble_lost": false,
+      "summary": "Converted (+4 yds)"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 1312,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 2,
+    "quarter_seconds_remaining": 399.0,
+    "half_seconds_remaining": 399.0,
+    "game_seconds_remaining": 2199.0,
+    "down": 4,
+    "ydstogo": 7.0,
+    "yardline_100": 76.0,
+    "score_differential": 7.0,
+    "posteam_score": 10,
+    "defteam_score": 3,
+    "posteam_timeouts_remaining": 3,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.8279768768024547,
+        "first_down_prob": 0.41893771290779114,
+        "wp_succeed": 0.8884971209040614,
+        "wp_fail": 0.7843426746927388
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.7809512540698051,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.8947356753051281,
+        "miss_fg_wp": 0.7809512540698051,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.8317479733090699
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "punt",
+      "go"
+    ],
+    "is_toss_up": true,
+    "best_option": "punt",
+    "best_wp": 0.8317479733090699,
+    "go_boost": -0.37710965066152236,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(6:39) 9-L.Cooke punts 56 yards to BAL 20, Center-46-R.Matiscik, fair catch by 10-L.Wester.",
+      "yards_gained": 0,
+      "realised_wpa": 0.013107776641845703,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 56,
+      "blocked": false,
+      "summary": "56.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 1145,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 2,
+    "quarter_seconds_remaining": 582.0,
+    "half_seconds_remaining": 582.0,
+    "game_seconds_remaining": 2382.0,
+    "down": 4,
+    "ydstogo": 11.0,
+    "yardline_100": 57.0,
+    "score_differential": -7.0,
+    "posteam_score": 3,
+    "defteam_score": 10,
+    "posteam_timeouts_remaining": 3,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.11793120717425158,
+        "first_down_prob": 0.24688538908958435,
+        "wp_succeed": 0.16635119742803095,
+        "wp_fail": 0.10205820324907391
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.09844472259283066,
+        "fg_make_prob": 0.0,
+        "make_fg_wp": 0.17546624690294266,
+        "miss_fg_wp": 0.09844472259283066,
+        "low_make_probability": true
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.1225989827149358
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "punt",
+      "go"
+    ],
+    "is_toss_up": true,
+    "best_option": "punt",
+    "best_wp": 0.1225989827149358,
+    "go_boost": -0.46677755406842186,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "punt",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "punt",
+      "desc": "(9:42) 30-R.Eckley punts 53 yards to JAX 4, impetus ends at JAX 3, Center-46-N.Moore, downed by BAL-26-R.Ali.",
+      "yards_gained": 0,
+      "realised_wpa": 0.04065856337547302,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "gross_yards": 54,
+      "blocked": false,
+      "summary": "54.0 yd punt"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 757,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 1,
+    "quarter_seconds_remaining": 124.0,
+    "half_seconds_remaining": 1024.0,
+    "game_seconds_remaining": 2824.0,
+    "down": 4,
+    "ydstogo": 7.0,
+    "yardline_100": 18.0,
+    "score_differential": 4.0,
+    "posteam_score": 7,
+    "defteam_score": 3,
+    "posteam_timeouts_remaining": 3,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.8409282260821438,
+        "first_down_prob": 0.3904142677783966,
+        "wp_succeed": 0.8922662096921208,
+        "wp_fail": 0.80804842568796
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.8521421177933131,
+        "fg_make_prob": 0.908444344997406,
+        "make_fg_wp": 0.8570366948843002,
+        "miss_fg_wp": 0.8035765662789345,
+        "low_make_probability": false
+      },
+      "punt": {
+        "status": "UNMODELLED",
+        "reason": "Inside opponent 31-yard line (yardline_100 = 18); not modelled in nfl4th punt landing distribution (0 punts in 2026 dataset)",
+        "wp": null
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": true,
+    "modeled_options_count": 2,
+    "is_overtime": false,
+    "preferred_options": [
+      "field_goal"
+    ],
+    "is_toss_up": false,
+    "best_option": "field_goal",
+    "best_wp": 0.8521421177933131,
+    "go_boost": -1.1213891711169266,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "field_goal",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.0,
+    "display_cost_pp": 0.0,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "field_goal",
+      "desc": "(2:04) 39-C.Little 36 yard field goal is GOOD, Center-46-R.Matiscik, Holder-9-L.Cooke.",
+      "yards_gained": 0,
+      "realised_wpa": -0.003358781337738037,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "field_goal_result": "made",
+      "kick_distance": 36,
+      "summary": "36-yd field goal MADE"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 480,
+    "season": 2026,
+    "week": 9,
+    "season_type": "REG",
+    "home_team": "BAL",
+    "away_team": "JAX",
+    "posteam": "BAL",
+    "defteam": "JAX",
+    "qtr": 1,
+    "quarter_seconds_remaining": 396.0,
+    "half_seconds_remaining": 1296.0,
+    "game_seconds_remaining": 3096.0,
+    "down": 4,
+    "ydstogo": 6.0,
+    "yardline_100": 35.0,
+    "score_differential": -7.0,
+    "posteam_score": 0,
+    "defteam_score": 7,
+    "posteam_timeouts_remaining": 3,
+    "defteam_timeouts_remaining": 3,
+    "roof": "outdoors",
+    "spread_line": -8.5,
+    "total_line": 40.5,
+    "options": {
+      "go": {
+        "status": "AVAILABLE",
+        "reason": "Standard fourth down go option",
+        "wp": 0.1393110885937091,
+        "first_down_prob": 0.4010286331176758,
+        "wp_succeed": 0.19741264406169404,
+        "wp_fail": 0.10041041877936303
+      },
+      "field_goal": {
+        "status": "AVAILABLE",
+        "reason": "Field goal attempt is possible",
+        "wp": 0.1360623286030438,
+        "fg_make_prob": 0.6630135774612427,
+        "make_fg_wp": 0.15719813108444214,
+        "miss_fg_wp": 0.09447808936238289,
+        "low_make_probability": false
+      },
+      "punt": {
+        "status": "AVAILABLE",
+        "reason": "Standard punt territory",
+        "wp": 0.11914811997235623
+      }
+    },
+    "is_complete_comparison": true,
+    "is_partial_comparison": false,
+    "modeled_options_count": 3,
+    "is_overtime": false,
+    "preferred_options": [
+      "go",
+      "field_goal"
+    ],
+    "is_toss_up": true,
+    "best_option": "go",
+    "best_wp": 0.1393110885937091,
+    "go_boost": 0.32487599906653175,
+    "tier": "genuine",
+    "is_genuine": true,
+    "actual_choice": "field_goal",
+    "is_consistent_with_model": true,
+    "cost_pp": 0.32487599906653175,
+    "display_cost_pp": 0.3,
+    "exact_cost_display": null,
+    "is_near_boundary": false,
+    "verdict_label": "Reasonable",
+    "cost_reason": "Within model preferred set (cost <= 1.0 pp)",
+    "outcome": {
+      "play_type": "field_goal",
+      "desc": "(6:36) 45-J.Moody 53 yard field goal is GOOD, Center-46-N.Moore, Holder-30-R.Eckley.",
+      "yards_gained": 0,
+      "realised_wpa": 0.03772762417793274,
+      "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
+      "penalty_affected": false,
+      "field_goal_result": "made",
+      "kick_distance": 53,
+      "summary": "53-yd field goal MADE"
+    },
+    "play_succeeded": true,
+    "quadrant": "Consistent & Succeeded",
+    "quadrant_slug": "consistent_succeeded"
+  },
+  {
     "game_id": "2026_08_ARI_DAL",
     "play_id": 5167,
     "season": 2026,
@@ -284,9 +1582,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.8565746951013159,
+        "wp": 0.8565747098352419,
         "first_down_prob": 0.25532016158103943,
-        "wp_succeed": 0.9963148754923978,
+        "wp_succeed": 0.9963149332000456,
         "wp_fail": 0.8086635532977294
       },
       "field_goal": {
@@ -315,7 +1613,7 @@
     "is_toss_up": true,
     "best_option": "field_goal",
     "best_wp": 0.8645782243974427,
-    "go_boost": -0.8003529296126799,
+    "go_boost": -0.8003514562200831,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -1670,9 +2968,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.006729900928249325,
+        "wp": 0.006729900927593726,
         "first_down_prob": 0.29180335998535156,
-        "wp_succeed": 0.01483317310809234,
+        "wp_succeed": 0.01483317310584562,
         "wp_fail": 0.003391051355473738
       },
       "field_goal": {
@@ -1687,7 +2985,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.005137923070063692
+        "wp": 0.005137923069549784
       }
     },
     "is_complete_comparison": true,
@@ -1701,13 +2999,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.006729900928249325,
-    "go_boost": 0.15919778581856334,
+    "best_wp": 0.006729900927593726,
+    "go_boost": 0.1591977858043942,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.15919778581856334,
+    "cost_pp": 0.1591977858043942,
     "display_cost_pp": 0.2,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -3508,7 +4806,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.9347262990701602
+        "wp": 0.9347262990678725
       }
     },
     "is_complete_comparison": true,
@@ -3520,8 +4818,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.9347262990701602,
-    "go_boost": -2.439041874634673,
+    "best_wp": 0.9347262990678725,
+    "go_boost": -2.4390418744059006,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -10755,7 +12053,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.5084911495276212
+        "wp": 0.5084911495264501
       }
     },
     "is_complete_comparison": true,
@@ -10767,8 +12065,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.5084911495276212,
-    "go_boost": -4.47869071686105,
+    "best_wp": 0.5084911495264501,
+    "go_boost": -4.478690716743944,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "punt",
@@ -11428,9 +12726,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.022474458583270376,
+        "wp": 0.022474458752007136,
         "first_down_prob": 0.34633952379226685,
-        "wp_succeed": 0.050160279947620075,
+        "wp_succeed": 0.050160280434820494,
         "wp_fail": 0.007805231153831369
       },
       "field_goal": {
@@ -11458,8 +12756,8 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.022474458583270376,
-    "go_boost": 0.471675504741367,
+    "best_wp": 0.022474458752007136,
+    "go_boost": 0.47167552161504306,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -14683,9 +15981,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.9689879928014616,
+        "wp": 0.9689879937254645,
         "first_down_prob": 0.48037585616111755,
-        "wp_succeed": 0.9919898311303138,
+        "wp_succeed": 0.9919898330538138,
         "wp_fail": 0.9477234766009045
       },
       "field_goal": {
@@ -14714,7 +16012,7 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.9766884036622112,
-    "go_boost": -0.7700410860749574,
+    "go_boost": -0.7700409936746699,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -15458,9 +16756,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.6708142761401843,
+        "wp": 0.6708142761757871,
         "first_down_prob": 0.1217816174030304,
-        "wp_succeed": 0.7942970766227448,
+        "wp_succeed": 0.7942970769150951,
         "wp_fail": 0.6536910685409064
       },
       "field_goal": {
@@ -15475,7 +16773,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.6950815863411026
+        "wp": 0.6950815863520217
       }
     },
     "is_complete_comparison": true,
@@ -15487,8 +16785,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.6950815863411026,
-    "go_boost": -2.4267310200918324,
+    "best_wp": 0.6950815863520217,
+    "go_boost": -2.4267310176234513,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -17175,9 +18473,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.3194169348719248,
+        "wp": 0.3194169348164373,
         "first_down_prob": 0.3105408251285553,
-        "wp_succeed": 0.40966993903677046,
+        "wp_succeed": 0.40966993885809005,
         "wp_fail": 0.27876591668032147
       },
       "field_goal": {
@@ -17192,7 +18490,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.3338699332972106
+        "wp": 0.33386993328963477
       }
     },
     "is_complete_comparison": true,
@@ -17204,8 +18502,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.3338699332972106,
-    "go_boost": -1.4452998425285801,
+    "best_wp": 0.33386993328963477,
+    "go_boost": -1.4452998473197476,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -17948,9 +19246,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.8092536001110201,
+        "wp": 0.8092536001429647,
         "first_down_prob": 0.625635027885437,
-        "wp_succeed": 0.8629565808511139,
+        "wp_succeed": 0.8629565809021732,
         "wp_fail": 0.7195057686829368
       },
       "field_goal": {
@@ -17977,13 +19275,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.8092536001110201,
-    "go_boost": 2.929840574963327,
+    "best_wp": 0.8092536001429647,
+    "go_boost": 2.929840578157783,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 2.929840574963327,
+    "cost_pp": 2.929840578157783,
     "display_cost_pp": 2.9,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -21511,7 +22809,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.17156217996063536
+        "wp": 0.17156218009074675
       }
     },
     "is_complete_comparison": true,
@@ -21525,12 +22823,12 @@
     "is_toss_up": true,
     "best_option": "go",
     "best_wp": 0.17571896542122617,
-    "go_boost": 0.41567854605908117,
+    "go_boost": 0.4156785330479418,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.41567854605908117,
+    "cost_pp": 0.4156785330479418,
     "display_cost_pp": 0.4,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -23402,7 +24700,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.28054827736379245
+        "wp": 0.2805482778609606
       }
     },
     "is_complete_comparison": true,
@@ -23414,8 +24712,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.28054827736379245,
-    "go_boost": -2.003891830333826,
+    "best_wp": 0.2805482778609606,
+    "go_boost": -2.00389188005064,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -26312,9 +27610,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.004583371281997029,
+        "wp": 0.0045833712811641164,
         "first_down_prob": 0.3253958225250244,
-        "wp_succeed": 0.007980240761048057,
+        "wp_succeed": 0.007980240758488367,
         "wp_fail": 0.002944888783588601
       },
       "field_goal": {
@@ -26329,7 +27627,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.004578920245230099
+        "wp": 0.004578920245203406
       }
     },
     "is_complete_comparison": true,
@@ -26343,8 +27641,8 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.004583371281997029,
-    "go_boost": 0.000445103676693058,
+    "best_wp": 0.0045833712811641164,
+    "go_boost": 0.00044510359607100383,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -29001,9 +30299,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.7348539136860375,
+        "wp": 0.734853915253308,
         "first_down_prob": 0.40949487686157227,
-        "wp_succeed": 0.8441830787819681,
+        "wp_succeed": 0.8441830826092945,
         "wp_fail": 0.6590379194735002
       },
       "field_goal": {
@@ -29031,7 +30329,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.7590360262897304,
-    "go_boost": -2.4182112603692962,
+    "go_boost": -2.4182111036422427,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -30309,7 +31607,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.6412830567904313
+        "wp": 0.6412830568570616
       }
     },
     "is_complete_comparison": true,
@@ -30322,12 +31620,12 @@
     "is_toss_up": false,
     "best_option": "go",
     "best_wp": 0.6659469792137014,
-    "go_boost": 2.466392242327009,
+    "go_boost": 2.4663922356639834,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 2.466392242327009,
+    "cost_pp": 2.4663922356639834,
     "display_cost_pp": 2.5,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -34255,10 +35553,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.6836150349384202,
+        "wp": 0.6836150345948327,
         "first_down_prob": 0.7482722997665405,
         "wp_succeed": 0.7323718826197463,
-        "wp_fail": 0.538683100725263
+        "wp_fail": 0.5386830993603455
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -34284,8 +35582,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.6836150349384202,
-    "go_boost": 3.8039972947029543,
+    "best_wp": 0.6836150345948327,
+    "go_boost": 3.803997260344205,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -36668,7 +37966,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.18894077009671995
+        "wp": 0.18894077009640942
       }
     },
     "is_complete_comparison": true,
@@ -36680,8 +37978,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.18894077009671995,
-    "go_boost": -1.8033444581802782,
+    "best_wp": 0.18894077009640942,
+    "go_boost": -1.8033444581492253,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -37852,10 +39150,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.15650778016289285,
+        "wp": 0.15650778069465282,
         "first_down_prob": 0.10945872962474823,
         "wp_succeed": 0.3541753848175015,
-        "wp_fail": 0.13221194610881032
+        "wp_fail": 0.13221194670593028
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -37882,7 +39180,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.18186641430903452,
-    "go_boost": -2.5358634146141674,
+    "go_boost": -2.5358633614381705,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -38281,9 +39579,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.1632410210780359,
+        "wp": 0.16324102065960605,
         "first_down_prob": 0.3446473777294159,
-        "wp_succeed": 0.2390882982496415,
+        "wp_succeed": 0.23908829703556048,
         "wp_fail": 0.12335324063652568
       },
       "field_goal": {
@@ -38298,7 +39596,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.1686452142310871
+        "wp": 0.1686452142308148
       }
     },
     "is_complete_comparison": true,
@@ -38311,8 +39609,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.1686452142310871,
-    "go_boost": -0.5404193153051212,
+    "best_wp": 0.1686452142308148,
+    "go_boost": -0.5404193571208749,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -38965,9 +40263,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.21731069847183465,
+        "wp": 0.2173106984317252,
         "first_down_prob": 0.19975227117538452,
-        "wp_succeed": 0.31686469982248217,
+        "wp_succeed": 0.31686469962168634,
         "wp_fail": 0.1924607211984253
       },
       "field_goal": {
@@ -38982,7 +40280,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.2382134611391599
+        "wp": 0.2382134611372851
       }
     },
     "is_complete_comparison": true,
@@ -38994,8 +40292,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.2382134611391599,
-    "go_boost": -2.0902762667325243,
+    "best_wp": 0.2382134611372851,
+    "go_boost": -2.090276270555988,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -39050,9 +40348,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.6680885010464276,
+        "wp": 0.6680885024337758,
         "first_down_prob": 0.4895220398902893,
-        "wp_succeed": 0.7443464762646536,
+        "wp_succeed": 0.7443464790987412,
         "wp_fail": 0.5949610352128268
       },
       "field_goal": {
@@ -39080,7 +40378,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.679390660610693,
-    "go_boost": -1.130215956426539,
+    "go_boost": -1.1302158176917154,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -39830,9 +41128,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.07837045190179089,
+        "wp": 0.07837045190406691,
         "first_down_prob": 0.43378856778144836,
-        "wp_succeed": 0.10409664809091261,
+        "wp_succeed": 0.10409664809615947,
         "wp_fail": 0.05866098046391522
       },
       "field_goal": {
@@ -39860,13 +41158,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.07837045190179089,
-    "go_boost": 0.36762774599481823,
+    "best_wp": 0.07837045190406691,
+    "go_boost": 0.3676277462224209,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.36762774599481823,
+    "cost_pp": 0.3676277462224209,
     "display_cost_pp": 0.4,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -40958,9 +42256,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.09920413627291401,
+        "wp": 0.09920413626723167,
         "first_down_prob": 0.284582257270813,
-        "wp_succeed": 0.16334311878906418,
+        "wp_succeed": 0.1633431187690969,
         "wp_fail": 0.07369062810373149
       },
       "field_goal": {
@@ -40975,7 +42273,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.0972553912812731
+        "wp": 0.09725539127995907
       }
     },
     "is_complete_comparison": true,
@@ -40988,13 +42286,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.09920413627291401,
-    "go_boost": 0.19487449916409105,
+    "best_wp": 0.09920413626723167,
+    "go_boost": 0.19487449872725993,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.19487449916409105,
+    "cost_pp": 0.19487449872725993,
     "display_cost_pp": 0.2,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -42158,9 +43456,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5781847274737383,
+        "wp": 0.5781847276297513,
         "first_down_prob": 0.5348078608512878,
-        "wp_succeed": 0.6446169326354385,
+        "wp_succeed": 0.6446169329271563,
         "wp_fail": 0.5018109509212998
       },
       "field_goal": {
@@ -42187,8 +43485,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.5781847274737383,
-    "go_boost": 2.0958540453893337,
+    "best_wp": 0.5781847276297513,
+    "go_boost": 2.0958540609906318,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -42681,9 +43979,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.9796724012536906,
-        "first_down_prob": 0.7283645868301392,
-        "wp_succeed": 0.984515701499631,
+        "wp": 0.9796724014835541,
+        "first_down_prob": 0.7283646464347839,
+        "wp_succeed": 0.9845156212488314,
         "wp_fail": 0.9666857633098335
       },
       "field_goal": {
@@ -42713,7 +44011,7 @@
     "is_toss_up": true,
     "best_option": "field_goal",
     "best_wp": 0.9796804716356675,
-    "go_boost": -0.0008070381976921226,
+    "go_boost": -0.0008070152113459628,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -52155,10 +53453,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.8641641007397983,
+        "wp": 0.8641641038127118,
         "first_down_prob": 0.5778108239173889,
         "wp_succeed": 0.8942066924566751,
-        "wp_fail": 0.8230475001413041
+        "wp_fail": 0.8230475074198257
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -52185,13 +53483,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.8641641007397983,
-    "go_boost": 0.7451705945468179,
+    "best_wp": 0.8641641038127118,
+    "go_boost": 0.7451709018381658,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.7451705945468179,
+    "cost_pp": 0.7451709018381658,
     "display_cost_pp": 0.7,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -55511,9 +56809,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.2573750309058359,
+        "wp": 0.2573750309178904,
         "first_down_prob": 0.3184855878353119,
-        "wp_succeed": 0.37277415346136233,
+        "wp_succeed": 0.3727741534992115,
         "wp_fail": 0.20344665787375174
       },
       "field_goal": {
@@ -55528,7 +56826,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.26462046916963716
+        "wp": 0.2646204691749391
       }
     },
     "is_complete_comparison": true,
@@ -55541,8 +56839,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.26462046916963716,
-    "go_boost": -0.7245438263801252,
+    "best_wp": 0.2646204691749391,
+    "go_boost": -0.7245438257048709,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -56201,9 +57499,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.9718729400137212,
+        "wp": 0.9718729404750859,
         "first_down_prob": 0.6106066107749939,
-        "wp_succeed": 0.9889936716023396,
+        "wp_succeed": 0.9889936723579237,
         "wp_fail": 0.9450258272826864
       },
       "field_goal": {
@@ -56231,13 +57529,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.9718729400137212,
-    "go_boost": 0.015643650149499422,
+    "best_wp": 0.9718729404750859,
+    "go_boost": 0.015643696285971842,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.015643650149499422,
+    "cost_pp": 0.015643696285971842,
     "display_cost_pp": 0.0,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -56822,7 +58120,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.003991500215048084
+        "wp": 0.003991500215011073
       }
     },
     "is_complete_comparison": true,
@@ -56835,7 +58133,7 @@
     "is_toss_up": false,
     "best_option": "go",
     "best_wp": 0.048497012787210234,
-    "go_boost": 4.4505512572162145,
+    "go_boost": 4.450551257219916,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -63782,9 +65080,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5809384744950068,
+        "wp": 0.5809384745802986,
         "first_down_prob": 0.4644334316253662,
-        "wp_succeed": 0.6911589163526471,
+        "wp_succeed": 0.6911589165362938,
         "wp_fail": 0.4853572900082469
       },
       "field_goal": {
@@ -63811,13 +65109,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.5809384744950068,
-    "go_boost": 1.4438676172162102,
+    "best_wp": 0.5809384745802986,
+    "go_boost": 1.4438676257453875,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 1.4438676172162102,
+    "cost_pp": 1.4438676257453875,
     "display_cost_pp": 1.4,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -64231,7 +65529,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.5143982671180615
+        "wp": 0.5143982672715098
       }
     },
     "is_complete_comparison": true,
@@ -64243,8 +65541,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.5143982671180615,
-    "go_boost": -6.060377637878117,
+    "best_wp": 0.5143982672715098,
+    "go_boost": -6.060377653222954,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "punt",
@@ -67231,10 +68529,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.7821971990395603,
+        "wp": 0.7821972003699235,
         "first_down_prob": 0.45987266302108765,
-        "wp_succeed": 0.8515065133159048,
-        "wp_fail": 0.7231862702436868
+        "wp_succeed": 0.8515065167278386,
+        "wp_fail": 0.7231862698017689
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -67261,7 +68559,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.7925547122327776,
-    "go_boost": -1.0357513193217316,
+    "go_boost": -1.0357511862854163,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -68253,9 +69551,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.42280510215145306,
+        "wp": 0.42280510198188315,
         "first_down_prob": 0.4673077464103699,
-        "wp_succeed": 0.6086571417905927,
+        "wp_succeed": 0.6086571414277271,
         "wp_fail": 0.2597651907874636
       },
       "field_goal": {
@@ -68282,8 +69580,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.42280510215145306,
-    "go_boost": 4.928082031933833,
+    "best_wp": 0.42280510198188315,
+    "go_boost": 4.928082014976843,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -69116,9 +70414,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5234914740197381,
+        "wp": 0.5234914737364375,
         "first_down_prob": 0.713067889213562,
-        "wp_succeed": 0.5808300385875269,
+        "wp_succeed": 0.5808300381902286,
         "wp_fail": 0.3809967896520153
       },
       "field_goal": {
@@ -69145,8 +70443,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.5234914740197381,
-    "go_boost": 2.2632362021250962,
+    "best_wp": 0.5234914737364375,
+    "go_boost": 2.2632361737950357,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -69721,18 +71019,18 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5759203734554675,
+        "wp": 0.575920382022698,
         "first_down_prob": 0.5786837935447693,
         "wp_succeed": 0.7494263729933026,
-        "wp_fail": 0.3376074426555589
+        "wp_fail": 0.33760746299000327
       },
       "field_goal": {
         "status": "AVAILABLE",
         "reason": "Field goal attempt is possible",
-        "wp": 0.5817852928285276,
+        "wp": 0.5817852991589394,
         "fg_make_prob": 0.7875866293907166,
         "make_fg_wp": 0.654717206954956,
-        "miss_fg_wp": 0.3113682270050049,
+        "miss_fg_wp": 0.31136825680732727,
         "low_make_probability": false
       },
       "punt": {
@@ -69751,8 +71049,8 @@
     ],
     "is_toss_up": true,
     "best_option": "field_goal",
-    "best_wp": 0.5817852928285276,
-    "go_boost": -0.5864919373060107,
+    "best_wp": 0.5817852991589394,
+    "go_boost": -0.5864917136241377,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -71000,10 +72298,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.9748177180621715,
+        "wp": 0.9748177182237266,
         "first_down_prob": 0.5509722828865051,
         "wp_succeed": 0.9912493065443432,
-        "wp_fail": 0.9546554733402368
+        "wp_fail": 0.9546554737000253
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -71029,8 +72327,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.9748177180621715,
-    "go_boost": 2.216425732369698,
+    "best_wp": 0.9748177182237266,
+    "go_boost": 2.216425748525208,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -77969,10 +79267,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.10424566091179548,
+        "wp": 0.10424566114134491,
         "first_down_prob": 0.041658006608486176,
         "wp_succeed": 0.3316064030042567,
-        "wp_fail": 0.09436255879727772
+        "wp_fail": 0.0943625590368054
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -77999,7 +79297,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.16472402378908196,
-    "go_boost": -6.047836287728649,
+    "go_boost": -6.047836264773705,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "punt",
@@ -78832,9 +80130,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.679276046322347,
-        "first_down_prob": 0.6993476748466492,
-        "wp_succeed": 0.7225351406045836,
+        "wp": 0.6792760516518433,
+        "first_down_prob": 0.699347734451294,
+        "wp_succeed": 0.7225350866443687,
         "wp_fail": 0.5786510237590815
       },
       "field_goal": {
@@ -78861,8 +80159,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.679276046322347,
-    "go_boost": 3.338468857645649,
+    "best_wp": 0.6792760516518433,
+    "go_boost": 3.338469390595289,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -79462,7 +80760,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.13656886934066903
+        "wp": 0.13656886956433634
       }
     },
     "is_complete_comparison": true,
@@ -79475,8 +80773,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.13656886934066903,
-    "go_boost": -0.1401457177947818,
+    "best_wp": 0.13656886956433634,
+    "go_boost": -0.1401457401615125,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -80061,7 +81359,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.45803043919001774
+        "wp": 0.4580304395976579
       }
     },
     "is_complete_comparison": true,
@@ -80074,7 +81372,7 @@
     "is_toss_up": false,
     "best_option": "go",
     "best_wp": 0.4872032196023754,
-    "go_boost": 2.9172780412357655,
+    "go_boost": 2.917278000471751,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -80405,7 +81703,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.4496363701542478
+        "wp": 0.4496363701548226
       }
     },
     "is_complete_comparison": true,
@@ -80418,8 +81716,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.4496363701542478,
-    "go_boost": -0.25761396890849886,
+    "best_wp": 0.4496363701548226,
+    "go_boost": -0.25761396896598066,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -81335,9 +82633,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5709809148062432,
+        "wp": 0.5709809149516096,
         "first_down_prob": 0.3994253873825073,
-        "wp_succeed": 0.6748375324397616,
+        "wp_succeed": 0.6748375328037004,
         "wp_fail": 0.5019088312667614
       },
       "field_goal": {
@@ -81365,7 +82663,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.5933253037937698,
-    "go_boost": -2.2344388987526553,
+    "go_boost": -2.2344388842160168,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -81850,9 +83148,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.4541414997219236,
+        "wp": 0.45414150053962477,
         "first_down_prob": 0.5792667269706726,
-        "wp_succeed": 0.5844721114381223,
+        "wp_succeed": 0.5844721128497364,
         "wp_fail": 0.27470191629450214
       },
       "field_goal": {
@@ -81880,7 +83178,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.46837597976444734,
-    "go_boost": -1.4234480042523756,
+    "go_boost": -1.4234479224822572,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -83225,9 +84523,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.021436546738932676,
+        "wp": 0.02143654666853068,
         "first_down_prob": 0.3688047230243683,
-        "wp_succeed": 0.045845007165746084,
+        "wp_succeed": 0.04584500697485374,
         "wp_fail": 0.007174786505047072
       },
       "field_goal": {
@@ -83242,7 +84540,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.013407624372995476
+        "wp": 0.013407624372977395
       }
     },
     "is_complete_comparison": true,
@@ -83255,8 +84553,8 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.021436546738932676,
-    "go_boost": 0.80289223659372,
+    "best_wp": 0.02143654666853068,
+    "go_boost": 0.8028922295553285,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -84623,7 +85921,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.6638544832787993
+        "wp": 0.6638544834161723
       }
     },
     "is_complete_comparison": true,
@@ -84635,8 +85933,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.6638544832787993,
-    "go_boost": -6.094240924806204,
+    "best_wp": 0.6638544834161723,
+    "go_boost": -6.094240938543505,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "punt",
@@ -85298,10 +86596,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.6701660514828356,
-        "first_down_prob": 0.45003941655158997,
-        "wp_succeed": 0.7719373671776071,
-        "wp_fail": 0.5868853175431012
+        "wp": 0.6701659908667377,
+        "first_down_prob": 0.4500393867492676,
+        "wp_succeed": 0.7719373490827235,
+        "wp_fail": 0.5868853275691471
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -85315,7 +86613,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.678967369709324
+        "wp": 0.6789673697089639
       }
     },
     "is_complete_comparison": true,
@@ -85328,8 +86626,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.678967369709324,
-    "go_boost": -0.8801318226488442,
+    "best_wp": 0.6789673697089639,
+    "go_boost": -0.8801378842226204,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -85554,9 +86852,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.44877646587654446,
+        "wp": 0.4487764659108122,
         "first_down_prob": 0.3183532953262329,
-        "wp_succeed": 0.5467676693901792,
+        "wp_succeed": 0.5467676694978199,
         "wp_fail": 0.4030110828157119
       },
       "field_goal": {
@@ -85584,7 +86882,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.46502758907659114,
-    "go_boost": -1.625112320004668,
+    "go_boost": -1.6251123165778925,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -86412,9 +87710,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.7857272399687681,
+        "wp": 0.7857272407557677,
         "first_down_prob": 0.722557783126831,
-        "wp_succeed": 0.8385452898377902,
+        "wp_succeed": 0.8385452909269759,
         "wp_fail": 0.648170472946831
       },
       "field_goal": {
@@ -86441,8 +87739,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.7857272399687681,
-    "go_boost": 1.5064377343748103,
+    "best_wp": 0.7857272407557677,
+    "go_boost": 1.506437813074768,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -87100,9 +88398,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.17805658359034968,
+        "wp": 0.1780565836195025,
         "first_down_prob": 0.45715686678886414,
-        "wp_succeed": 0.22517968894963925,
+        "wp_succeed": 0.22517968901340912,
         "wp_fail": 0.13837172068017614
       },
       "field_goal": {
@@ -87130,13 +88428,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.17805658359034968,
-    "go_boost": 0.38363720812488733,
+    "best_wp": 0.1780565836195025,
+    "go_boost": 0.38363721104016923,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.38363720812488733,
+    "cost_pp": 0.38363721104016923,
     "display_cost_pp": 0.4,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -87629,7 +88927,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.47460284601894526
+        "wp": 0.4746028460716283
       }
     },
     "is_complete_comparison": true,
@@ -87642,12 +88940,12 @@
     "is_toss_up": false,
     "best_option": "go",
     "best_wp": 0.49068749936447015,
-    "go_boost": 1.608465334552489,
+    "go_boost": 1.6084653292841866,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 1.608465334552489,
+    "cost_pp": 1.6084653292841866,
     "display_cost_pp": 1.6,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -88816,10 +90114,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.16280245201327026,
+        "wp": 0.1628024521219947,
         "first_down_prob": 0.26801633834838867,
         "wp_succeed": 0.27687596297074246,
-        "wp_fail": 0.12103435483965051
+        "wp_fail": 0.12103435498818449
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -88847,7 +90145,7 @@
     "is_toss_up": true,
     "best_option": "field_goal",
     "best_wp": 0.16595084779194735,
-    "go_boost": -0.31483957786770933,
+    "go_boost": -0.3148395669952647,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -88989,10 +90287,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.7042666859657745,
-        "first_down_prob": 0.3935287594795227,
-        "wp_succeed": 0.7475388507613101,
-        "wp_fail": 0.6761880558541221
+        "wp": 0.7042666371602117,
+        "first_down_prob": 0.39352869987487793,
+        "wp_succeed": 0.7475389255787426,
+        "wp_fail": 0.67618806675714
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -89019,7 +90317,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.7757463840325838,
-    "go_boost": -7.147969806680932,
+    "go_boost": -7.1479746872372125,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "field_goal",
@@ -89074,9 +90372,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.21801962135401867,
+        "wp": 0.21801962135955058,
         "first_down_prob": 0.48587560653686523,
-        "wp_succeed": 0.2771300246353656,
+        "wp_succeed": 0.27713002464675107,
         "wp_fail": 0.16215708351918015
       },
       "field_goal": {
@@ -89104,13 +90402,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.21801962135401867,
-    "go_boost": 0.3690389235834757,
+    "best_wp": 0.21801962135955058,
+    "go_boost": 0.3690389241366665,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.3690389235834757,
+    "cost_pp": 0.3690389241366665,
     "display_cost_pp": 0.4,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -92609,10 +93907,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.9420361749539055,
+        "wp": 0.9420361751137454,
         "first_down_prob": 0.3505684435367584,
         "wp_succeed": 0.9647737011210278,
-        "wp_fail": 0.9297623158075811
+        "wp_fail": 0.9297623160537037
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -92640,7 +93938,7 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.9463883370333784,
-    "go_boost": -0.43521620794729765,
+    "go_boost": -0.43521619196330574,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -93305,9 +94603,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.017321103502540694,
+        "wp": 0.017321103520924613,
         "first_down_prob": 0.41945505142211914,
-        "wp_succeed": 0.025678975369497127,
+        "wp_succeed": 0.02567897541332522,
         "wp_fail": 0.011282379180092839
       },
       "field_goal": {
@@ -93336,8 +94634,8 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.017321103502540694,
-    "go_boost": 0.09621794328840659,
+    "best_wp": 0.017321103520924613,
+    "go_boost": 0.09621794512679853,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -93481,9 +94779,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.0493053214660912,
+        "wp": 0.04930532145529166,
         "first_down_prob": 0.1507655680179596,
-        "wp_succeed": 0.10741665517674841,
+        "wp_succeed": 0.10741665510511698,
         "wp_fail": 0.0389887480121913
       },
       "field_goal": {
@@ -93498,7 +94796,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.053399868344474744
+        "wp": 0.05339986834047725
       }
     },
     "is_complete_comparison": true,
@@ -93511,8 +94809,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.053399868344474744,
-    "go_boost": -0.40945468783835437,
+    "best_wp": 0.05339986834047725,
+    "go_boost": -0.40945468851855893,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -95112,10 +96410,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.3106403146640599,
+        "wp": 0.310640314482863,
         "first_down_prob": 0.7235759496688843,
         "wp_succeed": 0.338678243108667,
-        "wp_fail": 0.23724738565967968
+        "wp_fail": 0.23724738500417622
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -95141,8 +96439,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.3106403146640599,
-    "go_boost": 2.1245250781348535,
+    "best_wp": 0.310640314482863,
+    "go_boost": 2.1245250600151646,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -96487,10 +97785,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.6878213901752677,
+        "wp": 0.6878213903161611,
         "first_down_prob": 0.4457818567752838,
         "wp_succeed": 0.768545136022674,
-        "wp_fail": 0.6228917224744718
+        "wp_fail": 0.6228917227286919
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -96516,8 +97814,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.6878213901752677,
-    "go_boost": 5.530751506787368,
+    "best_wp": 0.6878213903161611,
+    "go_boost": 5.530751520876709,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -97010,9 +98308,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5779513108339664,
+        "wp": 0.5779513108747398,
         "first_down_prob": 0.5760726928710938,
-        "wp_succeed": 0.6426855692437017,
+        "wp_succeed": 0.64268556931448,
         "wp_fail": 0.4899842170924973
       },
       "field_goal": {
@@ -97039,13 +98337,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.5779513108339664,
-    "go_boost": 2.29916374776582,
+    "best_wp": 0.5779513108747398,
+    "go_boost": 2.2991637518431585,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 2.29916374776582,
+    "cost_pp": 2.2991637518431585,
     "display_cost_pp": 2.3,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -98552,9 +99850,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5455922298004817,
+        "wp": 0.5455922298235784,
         "first_down_prob": 0.20914596319198608,
-        "wp_succeed": 0.7268808554397514,
+        "wp_succeed": 0.7268808555501846,
         "wp_fail": 0.49764939526920793
       },
       "field_goal": {
@@ -98582,7 +99880,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.6188303250442717,
-    "go_boost": -7.323809524379,
+    "go_boost": -7.323809522069336,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "punt",
@@ -98808,9 +100106,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5254534311102217,
+        "wp": 0.5254534310763193,
         "first_down_prob": 0.1387549787759781,
-        "wp_succeed": 0.7029109732791293,
+        "wp_succeed": 0.7029109730347957,
         "wp_fail": 0.4968632804628149
       },
       "field_goal": {
@@ -98825,7 +100123,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.5585146153848846
+        "wp": 0.5585146153748223
       }
     },
     "is_complete_comparison": true,
@@ -98837,13 +100135,13 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.5585146153848846,
-    "go_boost": -3.306118427466287,
+    "best_wp": 0.5585146153748223,
+    "go_boost": -3.306118429850302,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
     "is_consistent_with_model": false,
-    "cost_pp": 1.955279517359898,
+    "cost_pp": 1.9552795163536696,
     "display_cost_pp": 2.0,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -98978,10 +100276,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.4725408140579778,
+        "wp": 0.47254081362719363,
         "first_down_prob": 0.1836341917514801,
         "wp_succeed": 0.5999196903149977,
-        "wp_fail": 0.44388805817302784
+        "wp_fail": 0.4438880576453426
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -99008,7 +100306,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.4963676617227559,
-    "go_boost": -2.3826847664778104,
+    "go_boost": -2.3826848095562294,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -99776,7 +101074,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.7847219706887094
+        "wp": 0.7847219732546157
       }
     },
     "is_complete_comparison": true,
@@ -99788,8 +101086,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.7847219706887094,
-    "go_boost": -1.5428832515398172,
+    "best_wp": 0.7847219732546157,
+    "go_boost": -1.5428835081304437,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -100368,9 +101666,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.4765624318067735,
+        "wp": 0.4765624318866759,
         "first_down_prob": 0.48459696769714355,
-        "wp_succeed": 0.6062022134805846,
+        "wp_succeed": 0.6062022136454691,
         "wp_fail": 0.35467132687603425
       },
       "field_goal": {
@@ -100397,8 +101695,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.4765624318067735,
-    "go_boost": 4.941280368954127,
+    "best_wp": 0.4765624318866759,
+    "go_boost": 4.941280376944368,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -100541,10 +101839,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.4760947917696796,
+        "wp": 0.4760947921067916,
         "first_down_prob": 0.3853391706943512,
         "wp_succeed": 0.6318258755759829,
-        "wp_fail": 0.3784648548951036
+        "wp_fail": 0.37846485544355557
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -100570,13 +101868,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.4760947917696796,
-    "go_boost": 2.006787164308288,
+    "best_wp": 0.4760947921067916,
+    "go_boost": 2.0067871980194885,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
     "is_consistent_with_model": false,
-    "cost_pp": 2.006787164308288,
+    "cost_pp": 2.0067871980194885,
     "display_cost_pp": 2.0,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -101073,7 +102371,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.44144506504209163
+        "wp": 0.4414450650404297
       }
     },
     "is_complete_comparison": true,
@@ -101085,8 +102383,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.44144506504209163,
-    "go_boost": -1.3510261070766305,
+    "best_wp": 0.4414450650404297,
+    "go_boost": -1.3510261069104357,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -101754,7 +103052,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.15598736872722058
+        "wp": 0.1559873700127199
       }
     },
     "is_complete_comparison": true,
@@ -101766,8 +103064,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.15598736872722058,
-    "go_boost": -1.4426713486897058,
+    "best_wp": 0.1559873700127199,
+    "go_boost": -1.4426714772396376,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -102939,9 +104237,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.3844732429379247,
+        "wp": 0.3844732426011847,
         "first_down_prob": 0.4274330139160156,
-        "wp_succeed": 0.48715179317070373,
+        "wp_succeed": 0.48715179238288414,
         "wp_fail": 0.3078215964804634
       },
       "field_goal": {
@@ -102970,7 +104268,7 @@
     "is_toss_up": true,
     "best_option": "field_goal",
     "best_wp": 0.38469381705202643,
-    "go_boost": -0.022057411410175698,
+    "go_boost": -0.022057445084172622,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -104398,9 +105696,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.19519752760320858,
+        "wp": 0.19519752813892663,
         "first_down_prob": 0.3278510570526123,
-        "wp_succeed": 0.2985295086468428,
+        "wp_succeed": 0.29852951028087155,
         "wp_fail": 0.14479575346079532
       },
       "field_goal": {
@@ -104428,13 +105726,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.19519752760320858,
-    "go_boost": 0.09695778845004999,
+    "best_wp": 0.19519752813892663,
+    "go_boost": 0.09695784202185531,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.09695778845004999,
+    "cost_pp": 0.09695784202185531,
     "display_cost_pp": 0.1,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -106119,9 +107417,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5485417491140562,
+        "wp": 0.5485417491240779,
         "first_down_prob": 0.6045977473258972,
-        "wp_succeed": 0.6096697688921463,
+        "wp_succeed": 0.6096697689087222,
         "wp_fail": 0.45507268977359117
       },
       "field_goal": {
@@ -106149,13 +107447,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.5485417491140562,
-    "go_boost": 0.7721778813439384,
+    "best_wp": 0.5485417491240779,
+    "go_boost": 0.7721778823461145,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.7721778813439384,
+    "cost_pp": 0.7721778823461145,
     "display_cost_pp": 0.8,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -106552,10 +107850,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.08906953589542886,
+        "wp": 0.08906953605121064,
         "first_down_prob": 0.058373574167490005,
         "wp_succeed": 0.23118150733681883,
-        "wp_fail": 0.08025969476036514
+        "wp_fail": 0.0802596949258042
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -106582,7 +107880,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.11185463008155239,
-    "go_boost": -2.2785094186123525,
+    "go_boost": -2.278509403034175,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -106997,7 +108295,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.2804072285678744
+        "wp": 0.2804072310395805
       }
     },
     "is_complete_comparison": true,
@@ -107010,8 +108308,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.2804072285678744,
-    "go_boost": -0.41276580307499366,
+    "best_wp": 0.2804072310395805,
+    "go_boost": -0.41276605024559987,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -107326,9 +108624,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.0020012207463579374,
+        "wp": 0.002001220747283657,
         "first_down_prob": 0.07284519821405411,
-        "wp_succeed": 0.008779473302809352,
+        "wp_succeed": 0.00877947331551739,
         "wp_fail": 0.001468663381351232
       },
       "field_goal": {
@@ -107358,12 +108656,12 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.002494024051927311,
-    "go_boost": -0.04928033055693736,
+    "go_boost": -0.049280330464365404,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
     "is_consistent_with_model": true,
-    "cost_pp": 0.04928033055693736,
+    "cost_pp": 0.049280330464365404,
     "display_cost_pp": 0.0,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -107589,9 +108887,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.1534178029419365,
+        "wp": 0.15341780314962958,
         "first_down_prob": 0.44409820437431335,
-        "wp_succeed": 0.22145987920599633,
+        "wp_succeed": 0.22145987967367017,
         "wp_fail": 0.09906043051336301
       },
       "field_goal": {
@@ -107618,13 +108916,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.1534178029419365,
-    "go_boost": 2.4019556105207425,
+    "best_wp": 0.15341780314962958,
+    "go_boost": 2.401955631290051,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 2.4019556105207425,
+    "cost_pp": 2.401955631290051,
     "display_cost_pp": 2.4,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -109645,9 +110943,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.743697173829645,
+        "wp": 0.7436971739277106,
         "first_down_prob": 0.32334384322166443,
-        "wp_succeed": 0.8178377144774299,
+        "wp_succeed": 0.8178377147807158,
         "wp_fail": 0.708268742412318
       },
       "field_goal": {
@@ -109676,7 +110974,7 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.7472532162632657,
-    "go_boost": -0.3556042433620732,
+    "go_boost": -0.3556042335555065,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -113955,9 +115253,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5329881913822809,
+        "wp": 0.532988190640898,
         "first_down_prob": 0.48194754123687744,
-        "wp_succeed": 0.617111576724045,
+        "wp_succeed": 0.6171115751857389,
         "wp_fail": 0.4547276638233842
       },
       "field_goal": {
@@ -113972,7 +115270,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.541940538673504
+        "wp": 0.5419405386720814
       }
     },
     "is_complete_comparison": true,
@@ -113985,8 +115283,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.541940538673504,
-    "go_boost": -0.8952347291223073,
+    "best_wp": 0.5419405386720814,
+    "go_boost": -0.8952348031183388,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -114126,9 +115424,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.5312275738866706,
+        "wp": 0.5312275750913534,
         "first_down_prob": 0.3878016471862793,
-        "wp_succeed": 0.6511826973127609,
+        "wp_succeed": 0.6511827004192013,
         "wp_fail": 0.4552410995041989
       },
       "field_goal": {
@@ -114156,7 +115454,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.5467131457491755,
-    "go_boost": -1.5485571862504877,
+    "go_boost": -1.5485570657822079,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -116188,9 +117486,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.019072035332775735,
+        "wp": 0.01907203533421483,
         "first_down_prob": 0.13608375191688538,
-        "wp_succeed": 0.04003520508040739,
+        "wp_succeed": 0.04003520509098247,
         "wp_fail": 0.015769925518684814
       },
       "field_goal": {
@@ -116220,7 +117518,7 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.021552028155163237,
-    "go_boost": -0.24799928223875023,
+    "go_boost": -0.24799928209484068,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -120981,18 +122279,18 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.594298218028502,
+        "wp": 0.5942982182147979,
         "first_down_prob": 0.47204166650772095,
         "wp_succeed": 0.6742791417966695,
-        "wp_fail": 0.5227881647736939
+        "wp_fail": 0.5227881651265547
       },
       "field_goal": {
         "status": "AVAILABLE",
         "reason": "Field goal attempt is possible",
-        "wp": 0.5026078820228577,
+        "wp": 0.50260791182518,
         "fg_make_prob": 0.0,
         "make_fg_wp": 0.7261592596769333,
-        "miss_fg_wp": 0.5026078820228577,
+        "miss_fg_wp": 0.50260791182518,
         "low_make_probability": true
       },
       "punt": {
@@ -121012,7 +122310,7 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.5981278976972055,
-    "go_boost": -0.3829679668703512,
+    "go_boost": -0.3829679482407644,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -124000,9 +125298,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.4823960671019244,
+        "wp": 0.4823960672099913,
         "first_down_prob": 0.679172933101654,
-        "wp_succeed": 0.5658844260089606,
+        "wp_succeed": 0.565884426168076,
         "wp_fail": 0.30565591535080794
       },
       "field_goal": {
@@ -124029,8 +125327,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.4823960671019244,
-    "go_boost": 8.505807721245324,
+    "best_wp": 0.4823960672099913,
+    "go_boost": 8.505807732052013,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -124513,10 +125811,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.18893170893806321,
+        "wp": 0.18893170887829389,
         "first_down_prob": 0.37370607256889343,
         "wp_succeed": 0.2780430743654,
-        "wp_fail": 0.13575945070199458
+        "wp_fail": 0.13575945060656125
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -124543,13 +125841,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.18893170893806321,
-    "go_boost": 0.5378431463195388,
+    "best_wp": 0.18893170887829389,
+    "go_boost": 0.5378431403426059,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
     "is_consistent_with_model": true,
-    "cost_pp": 0.5378431463195388,
+    "cost_pp": 0.5378431403426059,
     "display_cost_pp": 0.5,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -124787,7 +126085,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.2651120260522511
+        "wp": 0.2651120270402446
       }
     },
     "is_complete_comparison": true,
@@ -124799,8 +126097,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.2651120260522511,
-    "go_boost": -2.248360540279337,
+    "best_wp": 0.2651120270402446,
+    "go_boost": -2.2483606390786894,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -125205,9 +126503,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.01733819960539742,
+        "wp": 0.01733819962217426,
         "first_down_prob": 0.3316042721271515,
-        "wp_succeed": 0.034338173430547556,
+        "wp_succeed": 0.0343381734811405,
         "wp_fail": 0.008904177697784163
       },
       "field_goal": {
@@ -125237,7 +126535,7 @@
     "is_toss_up": true,
     "best_option": "field_goal",
     "best_wp": 0.0218663709258351,
-    "go_boost": -0.45281713204376806,
+    "go_boost": -0.45281713036608406,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -125395,7 +126693,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.9179840936704586
+        "wp": 0.917984093701995
       }
     },
     "is_complete_comparison": true,
@@ -125408,8 +126706,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.9179840936704586,
-    "go_boost": -0.3033792985685402,
+    "best_wp": 0.917984093701995,
+    "go_boost": -0.3033793017221731,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -125549,9 +126847,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.04465174438725757,
+        "wp": 0.044651744448456675,
         "first_down_prob": 0.3674390912055969,
-        "wp_succeed": 0.06854305117289547,
+        "wp_succeed": 0.06854305133945122,
         "wp_fail": 0.030773871235468875
       },
       "field_goal": {
@@ -125579,13 +126877,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.04465174438725757,
-    "go_boost": 0.5321787051273001,
+    "best_wp": 0.044651744448456675,
+    "go_boost": 0.5321787112472103,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.5321787051273001,
+    "cost_pp": 0.5321787112472103,
     "display_cost_pp": 0.5,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -126927,9 +128225,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.21740734384565885,
+        "wp": 0.21740734388647978,
         "first_down_prob": 0.24215179681777954,
-        "wp_succeed": 0.30476424786750417,
+        "wp_succeed": 0.30476424803608004,
         "wp_fail": 0.18949458877874223
       },
       "field_goal": {
@@ -126957,7 +128255,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.25481763831818993,
-    "go_boost": -3.741029447253108,
+    "go_boost": -3.741029443171015,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "punt",
@@ -129516,9 +130814,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.14663191635632453,
+        "wp": 0.14663191674119988,
         "first_down_prob": 0.23147915303707123,
-        "wp_succeed": 0.21729947851673417,
+        "wp_succeed": 0.21729948017941247,
         "wp_fail": 0.1253467773725633
       },
       "field_goal": {
@@ -129546,7 +130844,7 @@
     "is_toss_up": false,
     "best_option": "punt",
     "best_wp": 0.15850484706773343,
-    "go_boost": -1.1872930711408909,
+    "go_boost": -1.1872930326533555,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -129601,9 +130899,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.353703960185073,
+        "wp": 0.35370396008603294,
         "first_down_prob": 0.547935962677002,
-        "wp_succeed": 0.4126759734965596,
+        "wp_succeed": 0.4126759733158084,
         "wp_fail": 0.28222541775288623
       },
       "field_goal": {
@@ -129631,13 +130929,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.353703960185073,
-    "go_boost": 0.8530073247287773,
+    "best_wp": 0.35370396008603294,
+    "go_boost": 0.8530073148247719,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.8530073247287773,
+    "cost_pp": 0.8530073148247719,
     "display_cost_pp": 0.9,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -130371,9 +131669,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.01126191922056903,
+        "wp": 0.011261919200592406,
         "first_down_prob": 0.4472324848175049,
-        "wp_succeed": 0.025181353329386404,
+        "wp_succeed": 0.0251813532847192,
         "wp_fail": 0.0
       },
       "field_goal": {
@@ -130388,7 +131686,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.0006282597754226904
+        "wp": 0.0006282597753372304
       }
     },
     "is_complete_comparison": true,
@@ -130400,8 +131698,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.01126191922056903,
-    "go_boost": 1.063365944514634,
+    "best_wp": 0.011261919200592406,
+    "go_boost": 1.0633659425255175,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -133557,9 +134855,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.9627106438524478,
+        "wp": 0.9627106443076519,
         "first_down_prob": 0.49750399589538574,
-        "wp_succeed": 0.9752149217906871,
+        "wp_succeed": 0.9752149227056625,
         "wp_fail": 0.9503305887092327
       },
       "field_goal": {
@@ -133588,7 +134886,7 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.9656802854310402,
-    "go_boost": -0.29696415785924746,
+    "go_boost": -0.2969641123388378,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -133918,7 +135216,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.14214357585132376
+        "wp": 0.142143575709383
       }
     },
     "is_complete_comparison": true,
@@ -133930,8 +135228,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.14214357585132376,
-    "go_boost": -1.4861258786613651,
+    "best_wp": 0.142143575709383,
+    "go_boost": -1.4861258644672888,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -134416,10 +135714,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.583458458128072,
+        "wp": 0.5834584585354203,
         "first_down_prob": 0.47891172766685486,
         "wp_succeed": 0.7308857574971,
-        "wp_fail": 0.4479638025291023
+        "wp_fail": 0.44796380331082863
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -134446,7 +135744,7 @@
     "is_toss_up": false,
     "best_option": "field_goal",
     "best_wp": 0.6278610592938279,
-    "go_boost": -4.4402601165755895,
+    "go_boost": -4.440260075840752,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "field_goal",
@@ -134865,7 +136163,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.6589664151780872
+        "wp": 0.6589664156571436
       }
     },
     "is_complete_comparison": true,
@@ -134877,8 +136175,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.6589664151780872,
-    "go_boost": -5.217615167934864,
+    "best_wp": 0.6589664156571436,
+    "go_boost": -5.21761521584051,
     "tier": "obvious",
     "is_genuine": false,
     "actual_choice": "punt",
@@ -135450,10 +136748,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.19525806105424948,
+        "wp": 0.19525806118148348,
         "first_down_prob": 0.4710236191749573,
         "wp_succeed": 0.26175719171067546,
-        "wp_fail": 0.1360443374756574
+        "wp_fail": 0.1360443377161861
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -135480,13 +136778,13 @@
     ],
     "is_toss_up": true,
     "best_option": "go",
-    "best_wp": 0.19525806105424948,
-    "go_boost": 0.787599135061004,
+    "best_wp": 0.19525806118148348,
+    "go_boost": 0.7875991477844041,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.787599135061004,
+    "cost_pp": 0.7875991477844041,
     "display_cost_pp": 0.8,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -135724,7 +137022,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.544867415008222
+        "wp": 0.544867415030082
       }
     },
     "is_complete_comparison": true,
@@ -135738,12 +137036,12 @@
     "is_toss_up": true,
     "best_option": "go",
     "best_wp": 0.5516965209928771,
-    "go_boost": 0.6829105984655137,
+    "go_boost": 0.6829105962795179,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.6829105984655137,
+    "cost_pp": 0.6829105962795179,
     "display_cost_pp": 0.7,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -137715,7 +139013,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.7632387846079217
+        "wp": 0.7632387835879866
       }
     },
     "is_complete_comparison": true,
@@ -137728,7 +139026,7 @@
     "is_toss_up": false,
     "best_option": "go",
     "best_wp": 0.7889327023742398,
-    "go_boost": 2.569391776631813,
+    "go_boost": 2.5693918786253267,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "go",
@@ -137872,9 +139170,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.41821685938473124,
+        "wp": 0.4182168594159226,
         "first_down_prob": 0.6884937286376953,
-        "wp_succeed": 0.4653290140299095,
+        "wp_succeed": 0.4653290140752134,
         "wp_fail": 0.31408912675472145
       },
       "field_goal": {
@@ -137901,13 +139199,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.41821685938473124,
-    "go_boost": 1.3778135418061888,
+    "best_wp": 0.4182168594159226,
+    "go_boost": 1.377813544925327,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 1.3778135418061888,
+    "cost_pp": 1.377813544925327,
     "display_cost_pp": 1.4,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -138059,7 +139357,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.36738641193879684
+        "wp": 0.36738641193883687
       }
     },
     "is_complete_comparison": true,
@@ -138073,12 +139371,12 @@
     "is_toss_up": true,
     "best_option": "go",
     "best_wp": 0.3689338277487991,
-    "go_boost": 0.1547415810002284,
+    "go_boost": 0.15474158099622604,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": true,
-    "cost_pp": 0.1547415810002284,
+    "cost_pp": 0.15474158099622604,
     "display_cost_pp": 0.2,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -140801,9 +142099,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.25403494936431303,
+        "wp": 0.25403494933389015,
         "first_down_prob": 0.5735048651695251,
-        "wp_succeed": 0.34717087714451267,
+        "wp_succeed": 0.3471708770914654,
         "wp_fail": 0.12879574455212778
       },
       "field_goal": {
@@ -140818,7 +142116,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.21677856070692234
+        "wp": 0.2167785606920767
       }
     },
     "is_complete_comparison": true,
@@ -140830,8 +142128,8 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.25403494936431303,
-    "go_boost": 3.7256388657390698,
+    "best_wp": 0.25403494933389015,
+    "go_boost": 3.725638864181344,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "go",
@@ -142089,10 +143387,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.6413043624415569,
-        "first_down_prob": 0.7366696000099182,
-        "wp_succeed": 0.7354986272803912,
-        "wp_fail": 0.3777949883384155
+        "wp": 0.641304416211042,
+        "first_down_prob": 0.7366697192192078,
+        "wp_succeed": 0.735498570055017,
+        "wp_fail": 0.3777950196580752
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -142118,13 +143416,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.6413043624415569,
-    "go_boost": 8.07453173778664,
+    "best_wp": 0.641304416211042,
+    "go_boost": 8.074537114735147,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 8.07453173778664,
+    "cost_pp": 8.074537114735147,
     "display_cost_pp": 8.1,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -142861,10 +144159,10 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.7908649515179229,
+        "wp": 0.7908649504216955,
         "first_down_prob": 0.17962954938411713,
         "wp_succeed": 0.8800592598217861,
-        "wp_fail": 0.771334845451282
+        "wp_fail": 0.771334844115023
       },
       "field_goal": {
         "status": "AVAILABLE",
@@ -142878,7 +144176,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.8072781944455538
+        "wp": 0.807278194410665
       }
     },
     "is_complete_comparison": true,
@@ -142890,8 +144188,8 @@
     ],
     "is_toss_up": false,
     "best_option": "punt",
-    "best_wp": 0.8072781944455538,
-    "go_boost": -1.641324292763091,
+    "best_wp": 0.807278194410665,
+    "go_boost": -1.6413243988969484,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -143032,9 +144330,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.8159549513444756,
+        "wp": 0.8159549529794125,
         "first_down_prob": 0.20530453324317932,
-        "wp_succeed": 0.8836437642536349,
+        "wp_succeed": 0.8836437722171067,
         "wp_fail": 0.7984679459221188
       },
       "field_goal": {
@@ -143063,7 +144361,7 @@
     "is_toss_up": true,
     "best_option": "punt",
     "best_wp": 0.8248614440208689,
-    "go_boost": -0.8906492676393318,
+    "go_boost": -0.8906491041456466,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
@@ -144068,9 +145366,9 @@
       "go": {
         "status": "AVAILABLE",
         "reason": "Standard fourth down go option",
-        "wp": 0.313921270038836,
+        "wp": 0.31392127007536924,
         "first_down_prob": 0.4878811836242676,
-        "wp_succeed": 0.41359468939119837,
+        "wp_succeed": 0.41359468946607975,
         "wp_fail": 0.2189652085653392
       },
       "field_goal": {
@@ -144085,7 +145383,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.27610679374537483
+        "wp": 0.2761067937526496
       }
     },
     "is_complete_comparison": true,
@@ -144097,13 +145395,13 @@
     ],
     "is_toss_up": false,
     "best_option": "go",
-    "best_wp": 0.313921270038836,
-    "go_boost": 3.7814476293461183,
+    "best_wp": 0.31392127007536924,
+    "go_boost": 3.7814476322719615,
     "tier": "clear_go",
     "is_genuine": true,
     "actual_choice": "punt",
     "is_consistent_with_model": false,
-    "cost_pp": 3.7814476293461183,
+    "cost_pp": 3.7814476322719615,
     "display_cost_pp": 3.8,
     "exact_cost_display": null,
     "is_near_boundary": false,
@@ -145897,7 +147195,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.833998000615456
+        "wp": 0.8339980015394635
       }
     },
     "is_complete_comparison": true,
@@ -145911,7 +147209,7 @@
     "is_toss_up": true,
     "best_option": "go",
     "best_wp": 0.8427834373807379,
-    "go_boost": 0.8785436765281873,
+    "go_boost": 0.8785435841274447,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "field_goal",
@@ -147358,7 +148656,7 @@
       "punt": {
         "status": "AVAILABLE",
         "reason": "Standard punt territory",
-        "wp": 0.7658329353501943
+        "wp": 0.7658329348524969
       }
     },
     "is_complete_comparison": true,
@@ -147371,8 +148669,8 @@
     ],
     "is_toss_up": true,
     "best_option": "punt",
-    "best_wp": 0.7658329353501943,
-    "go_boost": -0.6281422682542726,
+    "best_wp": 0.7658329348524969,
+    "go_boost": -0.6281422184845398,
     "tier": "genuine",
     "is_genuine": true,
     "actual_choice": "punt",
