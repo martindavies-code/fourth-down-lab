@@ -9,23 +9,24 @@
     5,
     6,
     7,
-    8
+    8,
+    9
   ],
-  "data_as_of": "2026-11-03 19:47 UTC",
+  "data_as_of": "2026-11-06 15:37 UTC",
   "model_version": "sportsdataverse-nfl-0.1.4 (nfl4th port)",
   "source": "nflverse play_by_play_2026.parquet",
   "licence_data": "CC-BY 4.0 (nflverse)",
   "licence_model": "MIT (nfl4th / Ben Baldwin, sportsdataverse / Saiem Gilani)",
   "counts": {
-    "total_fourth_down_rows": 1867,
-    "cancelled_snaps": 148,
+    "total_fourth_down_rows": 1883,
+    "cancelled_snaps": 149,
     "cancelled_replayed": 110,
-    "cancelled_not_replayed": 38,
-    "executed_snaps": 1718,
+    "cancelled_not_replayed": 39,
+    "executed_snaps": 1733,
     "excluded_snaps": 1,
-    "decisions_scored": 1718,
+    "decisions_scored": 1733,
     "teams": 32,
-    "games": 121
+    "games": 122
   },
   "excluded_snaps": [
     {
@@ -41,8 +42,10 @@
     }
   ],
   "made_fgs_negative_wpa_audit": {
-    "count": 117,
+    "count": 119,
     "sample_play_ids": [
+      3120,
+      757,
       4443,
       2674,
       1881,
@@ -55,9 +58,7 @@
       1136,
       952,
       689,
-      4079,
-      3833,
-      921
+      4079
     ],
     "verdict": "faithful_state_transition",
     "explanation": "Audited raw play-by-play transitions confirm negative realised WPA on made field goals reflects faithful state transitions in the nflverse post-play win probability model (possession change and surrendered touchdown equity), not a perspective or join artefact."
