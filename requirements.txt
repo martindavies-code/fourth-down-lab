@@ -1,0 +1,8 @@
+polars
+pandas
+pyarrow
+sportsdataverse
+xgboost
+pytest
+pytest-cov
+ruff

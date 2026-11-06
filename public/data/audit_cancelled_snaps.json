@@ -3068,5 +3068,25 @@
       "next_desc": "(9:01) 4-J.Elliott 41 yard field goal is No Good, Hit Left Upright, Center-41-R.Underwood, Holder-10-B.Mann."
     },
     "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_JAX_BAL",
+    "play_id": 618,
+    "week": 9,
+    "posteam": "JAX",
+    "defteam": "BAL",
+    "qtr": 1,
+    "ydstogo": 4.0,
+    "yardline_100": 42.0,
+    "desc": "(4:25) (Shotgun) PENALTY on BAL-92-N.Madubuike, Neutral Zone Infraction, 5 yards, enforced at BAL 42 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 642,
+      "next_down": 1.0,
+      "next_play_type": "run",
+      "next_desc": "(4:25) 33-B.Tuten left end to BAL 32 for 5 yards (98-T.Jones; 0-R.Smith)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
   }
 ]
