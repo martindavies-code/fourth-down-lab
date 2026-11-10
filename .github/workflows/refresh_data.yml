@@ -36,7 +36,7 @@ jobs:
 
       - name: Validate generated data invariants
         run: |
-          python -m pytest pipeline/tests/test_pipeline.py -v
+          python -m pytest pipeline/tests/test_pipeline.py -v -s
 
       - name: Commit and push updated data
         run: |
