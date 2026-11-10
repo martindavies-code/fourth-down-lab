@@ -4,11 +4,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { MOCK_DECISIONS_FIXTURE, MOCK_TEAMS_FIXTURE } from './fixtures.ts';
 import {
+  formatCount,
   formatDownAndDistance,
   formatPointsDifference,
   formatProbability,
   formatScoreDifferential,
   formatTimeRemaining,
+  formatWeekRange,
+  formatWeekRangeJa,
   formatYardline,
   getFieldPositionInfo,
   getScoreDifferentialBadge,
@@ -144,6 +147,43 @@ test('Guard Against Stale-Stat Regressions (P2-5)', () => {
   assert.ok(!content.includes('345 fourth-down'), 'Must not hardcode 345 fourth-down');
   assert.ok(!content.includes('44.2 pp of win probability'), 'Must not hardcode 44.2 pp');
   assert.ok(!content.includes('13 / 14 non-toss-ups'), 'Must not hardcode 13 / 14');
+});
+
+test('Formatting Helpers: formatWeekRange, formatWeekRangeJa, and formatCount', () => {
+  // formatWeekRange
+  assert.equal(formatWeekRange([1, 2, 3, 4, 5, 6, 7, 8, 9]), 'Weeks 1–9');
+  assert.equal(formatWeekRange([4]), 'Week 4');
+  assert.equal(formatWeekRange(null, [{ week: 1 }, { week: 9 }]), 'Weeks 1–9');
+  assert.equal(formatWeekRange([], []), 'unavailable');
+  assert.equal(formatWeekRange(null, null), 'unavailable');
+  assert.equal(formatWeekRange(undefined, undefined), 'unavailable');
+
+  // formatWeekRangeJa
+  assert.equal(formatWeekRangeJa([1, 2, 3, 4, 5, 6, 7, 8, 9]), '第1週〜第9週');
+  assert.equal(formatWeekRangeJa([5]), '第5週');
+  assert.equal(formatWeekRangeJa(null, [{ week: 2 }]), '第2週');
+  assert.equal(formatWeekRangeJa([], []), 'unavailable');
+  assert.equal(formatWeekRangeJa(null, null), 'unavailable');
+
+  // formatCount
+  assert.equal(formatCount(2106), '2,106');
+  assert.equal(formatCount(0), '0');
+  assert.equal(formatCount(null), 'unavailable');
+  assert.equal(formatCount(undefined), 'unavailable');
+  assert.equal(formatCount(NaN), 'unavailable');
+});
+
+test('Guard Against Hardcoded Counts in TeamsPage, MethodPage, FeedPage (Round 4)', () => {
+  const pages = ['TeamsPage.tsx', 'MethodPage.tsx', 'FeedPage.tsx'];
+  for (const page of pages) {
+    const pagePath = path.resolve(`src/pages/${page}`);
+    const content = fs.readFileSync(pagePath, 'utf-8');
+    assert.ok(!content.includes('1867'), `${page} must not hardcode 1867`);
+    assert.ok(!content.includes('1718'), `${page} must not hardcode 1718`);
+    assert.ok(!content.includes('|| 8'), `${page} must not fall back to hardcoded 8`);
+    assert.ok(!content.includes(': 8'), `${page} must not fall back to hardcoded 8`);
+    assert.ok(!content.includes("'1,718'"), `${page} must not fall back to hardcoded '1,718'`);
+  }
 });
 
 test('Game State HUD Helpers: Field Position & Red Zone Detection', () => {
