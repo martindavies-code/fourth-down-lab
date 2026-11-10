@@ -113,3 +113,69 @@ export function getFieldPositionInfo(yardline100: number, posteam: string, defte
   };
 }
 
+/**
+ * Derives a human-readable week range string from weeks list or decision array.
+ * Returns formatted string like 'Weeks 1–9' or 'Week 1', or 'unavailable' if data is empty.
+ */
+export function formatWeekRange(
+  weeks?: number[] | null,
+  decisions?: { week: number }[] | null,
+  prefix: string = 'Weeks '
+): string {
+  let derived: number[] = [];
+  if (weeks && weeks.length > 0) {
+    derived = weeks;
+  } else if (decisions && decisions.length > 0) {
+    derived = Array.from(new Set(decisions.map((d) => d.week)));
+  }
+
+  if (derived.length === 0) {
+    return 'unavailable';
+  }
+
+  const min = Math.min(...derived);
+  const max = Math.max(...derived);
+  if (min === max) {
+    return `Week ${min}`;
+  }
+  return `${prefix}${min}–${max}`;
+}
+
+/**
+ * Derives a Japanese week range string from weeks list or decision array.
+ * Returns formatted string like '第1週〜第9週' or '第1週', or 'unavailable' if data is empty.
+ */
+export function formatWeekRangeJa(
+  weeks?: number[] | null,
+  decisions?: { week: number }[] | null
+): string {
+  let derived: number[] = [];
+  if (weeks && weeks.length > 0) {
+    derived = weeks;
+  } else if (decisions && decisions.length > 0) {
+    derived = Array.from(new Set(decisions.map((d) => d.week)));
+  }
+
+  if (derived.length === 0) {
+    return 'unavailable';
+  }
+
+  const min = Math.min(...derived);
+  const max = Math.max(...derived);
+  if (min === max) {
+    return `第${min}週`;
+  }
+  return `第${min}週〜第${max}週`;
+}
+
+/**
+ * Formats a count value or falls back to 'unavailable' when undefined, null, or NaN.
+ */
+export function formatCount(count: number | null | undefined): string {
+  if (count === null || count === undefined || isNaN(count)) {
+    return 'unavailable';
+  }
+  return count.toLocaleString();
+}
+
+

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import type { CancelledSnap, Decision, MetaData } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
 import { NFL_TEAMS } from '../utils/teamLogos';
+import { formatWeekRangeJa, formatCount } from '../utils/formatting';
 import { Filter, RotateCcw, Eye, EyeOff, Search, ChevronDown, ChevronUp, ShieldAlert, ArrowUpDown } from 'lucide-react';
 import { FEED_SORT_OPTIONS, sortDecisions, sortSnaps, type DecisionSortKey } from '../utils/sort';
 import { BlitzMascot, RefereeMascot } from '../components/AnimeMascots';
@@ -215,11 +216,18 @@ export const FeedPage: React.FC<FeedPageProps> = ({
     );
   }
 
-  const maxWeek = meta?.weeks?.length ? Math.max(...meta.weeks) : (weeks.length ? Math.max(...weeks) : 8);
-  const totalFourthDownRows = meta?.counts?.total_fourth_down_rows || 1867;
-  const executedSnapsCount = meta?.counts?.executed_snaps || decisions.length;
-  const cancelledCount = meta?.counts?.cancelled_snaps || 148;
-  const excludedCount = meta?.counts?.excluded_snaps || 1;
+  const weekRangeJa = formatWeekRangeJa(meta?.weeks, decisions);
+  const maxWeek = meta?.weeks?.length
+    ? Math.max(...meta.weeks)
+    : weeks.length
+    ? Math.max(...weeks)
+    : null;
+  const totalFourthDownDisplay = formatCount(meta?.counts?.total_fourth_down_rows);
+  const executedSnapsDisplay = formatCount(
+    meta?.counts?.executed_snaps ?? (decisions.length > 0 ? decisions.length : undefined)
+  );
+  const cancelledCountDisplay = formatCount(meta?.counts?.cancelled_snaps);
+  const excludedCountDisplay = formatCount(meta?.counts?.excluded_snaps);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
@@ -236,13 +244,15 @@ export const FeedPage: React.FC<FeedPageProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500" />
               </span>
-              <span>激闘！2026シーズン 第1週〜第{maxWeek}週 全{totalFourthDownRows.toLocaleString()}プレー解析</span>
+              <span>
+                激闘！2026シーズン {weekRangeJa !== 'unavailable' ? `${weekRangeJa} ` : ''}全{totalFourthDownDisplay !== 'unavailable' ? `${totalFourthDownDisplay}プレー解析` : 'プレー解析 (unavailable)'}
+              </span>
             </div>
             <h2 className="text-xl sm:text-3xl font-black tracking-tight text-white flex flex-col sm:flex-row items-center sm:items-baseline gap-2">
               <span>勝利へのギャンブルか、堅実な陣地戦か！？</span>
             </h2>
             <p className="text-sm sm:text-base text-white leading-relaxed font-semibold drop-shadow-sm">
-              Every authentic NFL 4th down decision tracked, simulated, and audited ({executedSnapsCount.toLocaleString()} decisions scored, {cancelledCount} cancelled snaps audited, {excludedCount} kneel excluded). Mathematically evaluating the win probability of Go, Field Goal, and Punt from the exact same pre-snap moment.
+              Every authentic NFL 4th down decision tracked, simulated, and audited ({executedSnapsDisplay} decisions scored, {cancelledCountDisplay} cancelled snaps audited, {excludedCountDisplay} kneel excluded). Mathematically evaluating the win probability of Go, Field Goal, and Punt from the exact same pre-snap moment.
             </p>
             <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-2.5">
               <span className="inline-flex items-center gap-1.5 text-xs font-black text-sky-200 bg-sky-950/90 px-3 py-1.5 rounded-lg border border-sky-400/50 shadow-sm">
@@ -398,7 +408,9 @@ export const FeedPage: React.FC<FeedPageProps> = ({
               }}
               className="w-full rounded-lg border border-slate-700 bg-[#111827] px-2.5 py-2 text-xs text-white focus:border-sky-500 focus:outline-none min-h-[40px]"
             >
-              <option value="ALL">All Weeks (1–{maxWeek})</option>
+              <option value="ALL">
+                {maxWeek !== null ? `All Weeks (1–${maxWeek})` : 'All Weeks'}
+              </option>
               {weeks.map((w) => (
                 <option key={w} value={w}>
                   Week {w}

@@ -16,11 +16,13 @@ import pandas as pd  # type: ignore[import-untyped]
 import polars as pl
 import pytest
 from build_data import (
+    MonotonicityReviewGateError,
     audit_cancelled_snaps,
     build_metadata,
     calculate_games_summary,
     calculate_team_summaries,
     fetch_or_load_pbp,
+    load_committed_head_meta,
     load_previous_committed_meta,
     run_pipeline,
     verify_counts_monotonicity,
@@ -863,6 +865,85 @@ class TestForensicVerification:
                 new_executed=prev_executed - 1,
                 prev_meta=prev_meta,
             )
+
+    def test_p2_1c_orchestration_run_pipeline_invokes_guard_and_raises_on_decrease(
+        self,
+    ) -> None:
+        """P2-1c: Prove normal run_pipeline call invokes the guard and raises when counts drop."""
+        reduced_df = pl.DataFrame(
+            {
+                "game_id": ["2026_01_DET_GB"] * 5,
+                "play_id": [1, 2, 3, 4, 5],
+                "down": [4, 4, 4, 4, 4],
+                "play_type": ["run", "pass", "field_goal", "punt", "no_play"],
+                "play_deleted": [0, 0, 0, 0, 0],
+                "week": [1, 1, 1, 1, 1],
+                "posteam": ["DET", "DET", "DET", "DET", "DET"],
+                "defteam": ["GB", "GB", "GB", "GB", "GB"],
+                "qtr": [1, 2, 3, 4, 1],
+                "ydstogo": [1.0, 2.0, 5.0, 10.0, 5.0],
+                "yardline_100": [40.0, 35.0, 25.0, 60.0, 50.0],
+                "desc": ["Play 1", "Play 2", "Play 3", "Play 4", "Penalty"],
+                "penalty": [0, 0, 0, 0, 1],
+            }
+        )
+
+        with patch("build_data.fetch_or_load_pbp", return_value=reduced_df):
+            # Normal run_pipeline call (df_raw=None and default output_dir=OUTPUT_DIR)
+            # Must invoke the guard and raise MonotonicityReviewGateError naming the decrease
+            with pytest.raises(
+                MonotonicityReviewGateError,
+                match=r"(?s)Monotonicity review gate failed.*Total fourth down rows decreased",
+            ) as exc_info:
+                run_pipeline(df_raw=None, run_model=False)
+
+            err_msg = str(exc_info.value)
+            assert "Pipeline updates must never silently drop fourth-down plays" in err_msg
+            assert "ALLOW_MONOTONICITY_DECREASE=1" in err_msg
+            assert "allow_monotonicity_decrease" in err_msg
+
+    def test_p2_1d_orchestration_override_env_allows_decrease(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """P2-1d: Prove ALLOW_MONOTONICITY_DECREASE=1 overrides review gate for legitimate corrections."""
+        reduced_df = pl.DataFrame(
+            {
+                "game_id": ["2026_01_DET_GB"] * 5,
+                "play_id": [1, 2, 3, 4, 5],
+                "down": [4, 4, 4, 4, 4],
+                "play_type": ["run", "pass", "field_goal", "punt", "no_play"],
+                "play_deleted": [0, 0, 0, 0, 0],
+                "week": [1, 1, 1, 1, 1],
+                "posteam": ["DET", "DET", "DET", "DET", "DET"],
+                "defteam": ["GB", "GB", "GB", "GB", "GB"],
+                "qtr": [1, 2, 3, 4, 1],
+                "ydstogo": [1.0, 2.0, 5.0, 10.0, 5.0],
+                "yardline_100": [40.0, 35.0, 25.0, 60.0, 50.0],
+                "desc": ["Play 1", "Play 2", "Play 3", "Play 4", "Penalty"],
+                "penalty": [0, 0, 0, 0, 1],
+            }
+        )
+
+        monkeypatch.setenv("ALLOW_MONOTONICITY_DECREASE", "1")
+        with patch("build_data.fetch_or_load_pbp", return_value=reduced_df):
+            # With override env var, run_pipeline should proceed without raising
+            res = run_pipeline(
+                df_raw=None,
+                output_dir=None,
+                run_model=False,
+                enforce_monotonicity=True,
+            )
+            assert res["cancelled_count"] == 1
+            assert res["meta"]["counts"]["total_fourth_down_rows"] == 5
+
+    def test_p2_1e_committed_head_meta_loads_head_explicitly(self) -> None:
+        """P2-1e: Prove load_committed_head_meta reads HEAD:public/data/meta.json directly."""
+        head_meta = load_committed_head_meta()
+        if head_meta is None:
+            pytest.skip("Git unreachable in environment")
+        assert "counts" in head_meta
+        assert head_meta["counts"]["total_fourth_down_rows"] >= 1867
+        assert head_meta["counts"]["executed_snaps"] >= 1718
 
     def test_p2_2_mathematical_exactness_property(self) -> None:
         """P2-2: Property test verifying internal exactness on all real executed plays."""

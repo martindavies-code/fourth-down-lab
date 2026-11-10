@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import type { Decision, MetaData, TeamSummary } from '../types/decision';
 import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
+import { formatWeekRange, formatCount } from '../utils/formatting';
 import { AlertTriangle, ArrowUpDown, Table, Sparkles, ChevronRight } from 'lucide-react';
 import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 import { SeasonEditorialAnalysis } from '../components/SeasonEditorialAnalysis';
@@ -105,13 +106,11 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({
 
         <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400">
           <span className="font-semibold text-slate-300">
-            Weeks 1–{meta?.weeks?.length ? Math.max(...meta.weeks) : 8}:
+            {formatWeekRange(meta?.weeks, decisions)}:
           </span>{' '}
-          {meta?.counts?.executed_snaps
-            ? meta.counts.executed_snaps.toLocaleString()
-            : decisions.length
-            ? decisions.length.toLocaleString()
-            : '1,718'}{' '}
+          {formatCount(
+            meta?.counts?.executed_snaps ?? (decisions.length > 0 ? decisions.length : undefined)
+          )}{' '}
           Snaps Audited
         </div>
       </div>
@@ -139,7 +138,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({
                     <MangaSoundEffect sound="ドドンッ！" english="rank" className="text-emerald-400 hidden sm:inline-flex" />
                   </div>
                   <p className="text-xs text-slate-300 font-medium">
-                    Measuring coaching decision alignment with the mathematical win probability model on genuine 4th-down situations (Weeks 1–{meta?.weeks?.length ? Math.max(...meta.weeks) : 8}).
+                    Measuring coaching decision alignment with the mathematical win probability model on genuine 4th-down situations ({formatWeekRange(meta?.weeks, decisions)}).
                   </p>
                 </div>
               </div>

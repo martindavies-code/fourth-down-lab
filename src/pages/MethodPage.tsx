@@ -1,5 +1,6 @@
 import React from 'react';
 import type { MetaData } from '../types/decision';
+import { formatWeekRange, formatCount } from '../utils/formatting';
 import { BookOpen, ShieldAlert, CheckCircle, Scale, Database, Cpu } from 'lucide-react';
 import { BlitzMascot, RefereeMascot, MangaStamp } from '../components/AnimeMascots';
 
@@ -8,16 +9,20 @@ interface MethodPageProps {
 }
 
 export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
-  const maxWeek = meta?.weeks?.length ? Math.max(...meta.weeks) : 8;
-  const totalRows = meta?.counts?.total_fourth_down_rows || 1867;
-  const executedRows = meta?.counts?.executed_snaps || 1718;
-  const cancelledRows = meta?.counts?.cancelled_snaps || 148;
-  const replayedCount = meta?.counts?.cancelled_replayed || 110;
-  const notReplayedCount = meta?.counts?.cancelled_not_replayed || 38;
-  const excludedRows = meta?.counts?.excluded_snaps || 1;
-  const gamesCount = meta?.counts?.games || 121;
-  const dataAsOf = meta?.data_as_of || '2026-11-03';
-  const puntsInside31 = meta?.punt_domain?.empirical_punts_inside_31 ?? 0;
+  const weekRange = formatWeekRange(meta?.weeks, null, 'Weeks 1 to ');
+  const maxWeek = meta?.weeks?.length ? Math.max(...meta.weeks) : null;
+  const totalRowsDisplay = formatCount(meta?.counts?.total_fourth_down_rows);
+  const executedRowsDisplay = formatCount(meta?.counts?.executed_snaps);
+  const cancelledRowsDisplay = formatCount(meta?.counts?.cancelled_snaps);
+  const replayedCountDisplay = formatCount(meta?.counts?.cancelled_replayed);
+  const notReplayedCountDisplay = formatCount(meta?.counts?.cancelled_not_replayed);
+  const excludedRowsDisplay = formatCount(meta?.counts?.excluded_snaps);
+  const gamesCountDisplay = formatCount(meta?.counts?.games);
+  const madeFgsNegWpaCountDisplay = formatCount(meta?.made_fgs_negative_wpa_audit?.count);
+  const dataAsOf = meta?.data_as_of || 'unavailable';
+  const puntsInside31 = meta?.punt_domain?.empirical_punts_inside_31 !== undefined
+    ? meta.punt_domain.empirical_punts_inside_31
+    : 'unavailable';
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
@@ -131,7 +136,10 @@ export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
               </div>
               <div>
                 <span className="text-slate-400 block text-[11px]">Weeks Covered:</span>
-                <span className="font-bold text-white">Weeks 1 to {maxWeek} ({gamesCount} Games)</span>
+                <span className="font-bold text-white">
+                  {weekRange !== 'unavailable' ? weekRange : 'Weeks unavailable'}{' '}
+                  ({gamesCountDisplay !== 'unavailable' ? `${gamesCountDisplay} Games` : 'Games unavailable'})
+                </span>
               </div>
               <div>
                 <span className="text-slate-400 block text-[11px]">Data Timestamp:</span>
@@ -139,11 +147,14 @@ export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
               </div>
               <div>
                 <span className="text-slate-400 block text-[11px]">Total 4th Downs:</span>
-                <span className="font-bold text-white">{totalRows.toLocaleString()} Snaps</span>
+                <span className="font-bold text-white">
+                  {totalRowsDisplay !== 'unavailable' ? `${totalRowsDisplay} Snaps` : 'Snaps unavailable'}
+                </span>
               </div>
             </div>
             <div className="mt-3 border-t border-slate-800 pt-2 text-[11px] text-slate-300">
-              <strong className="text-sky-300">Exact Snap Reconciliation:</strong> {totalRows.toLocaleString()} Total = {executedRows.toLocaleString()} Executed Decisions + {cancelledRows} Cancelled/Nullified Snaps + {excludedRows} Victory Kneel.
+              <strong className="text-sky-300">Exact Snap Reconciliation:</strong>{' '}
+              {totalRowsDisplay} Total = {executedRowsDisplay} Executed Decisions + {cancelledRowsDisplay} Cancelled/Nullified Snaps + {excludedRowsDisplay} Victory Kneel.
             </div>
           </div>
         </section>
@@ -172,14 +183,14 @@ export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
           <div className="mt-4 rounded-lg border border-slate-800 bg-[#080d19] p-3 text-xs space-y-2">
             <h3 className="font-bold text-white text-xs">Validation Results & Audit Findings</h3>
             <p className="text-slate-300">
-              Mathematical exactness property checks verify on all {executedRows.toLocaleString()} plays that expected win probabilities match conditional probabilities to &lt; 10⁻⁶:
+              Mathematical exactness property checks verify on all {executedRowsDisplay} plays that expected win probabilities match conditional probabilities to &lt; 10⁻⁶:
               <code className="ml-1 text-[11px] text-sky-300">go_wp = p_convert * wp_succeed + (1 - p_convert) * wp_fail</code>.
             </p>
             <p className="text-slate-300">
-              Validated against the published <strong>2020 NFC Championship benchmark</strong> (GB vs TB, Q4 2:09, 4th & 8 on TB 8) within 1.5 percentage points. Cross-validation against a diverse sample of 50 plays across all 8 weeks confirms continuous monotonic behavior.
+              Validated against the published <strong>2020 NFC Championship benchmark</strong> (GB vs TB, Q4 2:09, 4th & 8 on TB 8) within 1.5 percentage points. Cross-validation against a diverse sample of 50 plays across {maxWeek !== null ? `all ${maxWeek} weeks` : 'all weeks'} confirms continuous monotonic behavior.
             </p>
             <div className="rounded border border-slate-700/60 bg-[#060a14] p-2 text-[11px] text-slate-300">
-              <strong className="text-amber-300">Realised WPA on Made Field Goals Audit:</strong> An audit of the 2026 dataset identified {meta?.made_fgs_negative_wpa_audit?.count || 117} made field goals that resulted in negative realised WPA in the nflverse post-play win probability model. Verification against raw play-by-play transitions confirms this is a faithful state transition of the nflverse post-play model (surrendering possession inside opponent territory when touchdown equity was high), not a join or perspective artefact.
+              <strong className="text-amber-300">Realised WPA on Made Field Goals Audit:</strong> An audit of the 2026 dataset identified {madeFgsNegWpaCountDisplay} made field goals that resulted in negative realised WPA in the nflverse post-play win probability model. Verification against raw play-by-play transitions confirms this is a faithful state transition of the nflverse post-play model (surrendering possession inside opponent territory when touchdown equity was high), not a join or perspective artefact.
             </div>
           </div>
         </section>
@@ -195,7 +206,7 @@ export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
               <strong>AVAILABLE:</strong> An ordinary legal choice supported by the empirical distribution model.
             </li>
             <li>
-              <strong>UNMODELLED (Punt Domain Grounding):</strong> In <code>nfl4th</code>, empirical support in the punt distribution table (<code>punt_data.parquet</code>) strictly begins at <code>yardline_100 &gt;= 31.0</code>. Inside the opponent's 31-yard line (<code>yardline_100 &lt; 31.0</code>), punting has zero empirical table support and returns missing values. Across all {totalRows.toLocaleString()} fourth downs in 2026, <strong>exactly {puntsInside31} punts occurred inside the 31-yard line</strong>. Where punting is unmodelled, cards are explicitly labelled as partial comparisons (2 of 3 options modelled) evaluated between Go and Field Goal.
+              <strong>UNMODELLED (Punt Domain Grounding):</strong> In <code>nfl4th</code>, empirical support in the punt distribution table (<code>punt_data.parquet</code>) strictly begins at <code>yardline_100 &gt;= 31.0</code>. Inside the opponent's 31-yard line (<code>yardline_100 &lt; 31.0</code>), punting has zero empirical table support and returns missing values. Across all {totalRowsDisplay} fourth downs in 2026, <strong>exactly {puntsInside31} punts occurred inside the 31-yard line</strong>. Where punting is unmodelled, cards are explicitly labelled as partial comparisons (2 of 3 options modelled) evaluated between Go and Field Goal.
             </li>
             <li>
               <strong>OVERTIME plays:</strong> Regular season overtime plays (<code>qtr &gt;= 5</code>) operate under modified sudden-death rules and are flagged as <em>Overtime — outside validated model domain</em>.
@@ -219,10 +230,10 @@ export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
             We preserve all cancelled snaps in a dedicated public audit file (<code>audit_cancelled_snaps.json</code>):
           </p>
           <ul className="mt-2 list-disc list-inside space-y-1 text-xs text-slate-300 pl-2">
-            <li>Total cancelled fourth-down snaps: <strong>{cancelledRows}</strong> (evaluated in public audit log).</li>
-            <li>Followed by a replayed 4th-down snap: <strong>{replayedCount}</strong> (evaluated separately at the new distance).</li>
-            <li>Resulted in a 1st down, turnover, or end of half: <strong>{notReplayedCount}</strong>.</li>
-            <li>In addition, <strong>{excludedRows}</strong> victory formation kneel (Mahomes vs DEN) is preserved in <code>meta.json</code>.</li>
+            <li>Total cancelled fourth-down snaps: <strong>{cancelledRowsDisplay}</strong> (evaluated in public audit log).</li>
+            <li>Followed by a replayed 4th-down snap: <strong>{replayedCountDisplay}</strong> (evaluated separately at the new distance).</li>
+            <li>Resulted in a 1st down, turnover, or end of half: <strong>{notReplayedCountDisplay}</strong>.</li>
+            <li>In addition, <strong>{excludedRowsDisplay}</strong> victory formation kneel (Mahomes vs DEN) is preserved in <code>meta.json</code>.</li>
           </ul>
         </section>
 

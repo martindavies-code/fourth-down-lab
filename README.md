@@ -143,6 +143,16 @@ npm run dev
 npm run build
 ```
 
+### 7. Monotonicity Review Gate & Upstream Override
+The data refresh pipeline strictly enforces monotonic counts: total fourth-down rows and executed snaps must never decrease between refreshes compared to the committed baseline at `HEAD`. If a decrease is detected, the pipeline fails immediately before scoring models or writing to disk.
+
+For legitimate upstream corrections in the `nflverse` dataset (e.g. retroactive stat deletions or nullified plays), an explicit review override is supported:
+- **CLI / Local Environment:** Set `ALLOW_MONOTONICITY_DECREASE=1` (or `ALLOW_MONOTONICITY_DECREASE=true`).
+  ```bash
+  ALLOW_MONOTONICITY_DECREASE=1 python pipeline/build_data.py
+  ```
+- **GitHub Actions Workflow:** In the manual `workflow_dispatch` trigger for *Refresh 4th Down Decisions Data*, enable the `allow_monotonicity_decrease` input checkbox.
+
 ---
 
 ## 🔍 Validation Summary

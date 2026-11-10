@@ -34,7 +34,7 @@ export const GamesPage: React.FC<GamesPageProps> = ({
   }, [games]);
 
   const [selectedWeek, setSelectedWeek] = useState<number>(() => {
-    return games[0]?.week || 8;
+    return games[0]?.week || 1;
   });
 
   const [selectedGameId, setSelectedGameId] = useState<string>(games[0]?.game_id || '');

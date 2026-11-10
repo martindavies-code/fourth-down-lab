@@ -8,6 +8,7 @@ snaps, generates team adherence summaries, and writes optimised static JSON file
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import urllib.parse
 import urllib.request
@@ -303,37 +304,26 @@ def build_metadata(
     }
 
 
-def load_previous_committed_meta(
+class MonotonicityReviewGateError(AssertionError):
+    """Raised when fourth-down snap counts decrease between refreshes without an explicit override."""
+
+    pass
+
+
+def load_committed_head_meta(
     repo_root: Path | None = None,
 ) -> dict[str, Any] | None:
-    """Load previous committed meta.json from git if available.
+    """Load committed meta.json from HEAD in git.
 
-    If public/data/meta.json has uncommitted changes (e.g. during pipeline refresh),
-    reads HEAD:public/data/meta.json.
-    If public/data/meta.json is already committed, reads HEAD~1:public/data/meta.json.
+    Captures the committed baseline explicitly before generation so that
+    a data commit at HEAD does not fall back to HEAD~1.
     Falls back to None if git history is unreachable (e.g. shallow clone or not git).
     """
     if repo_root is None:
         repo_root = Path(__file__).resolve().parent.parent
     meta_rel = "public/data/meta.json"
+    git_ref = f"HEAD:{meta_rel}"
     try:
-        diff_res = subprocess.run(
-            ["git", "diff", "HEAD", "--", meta_rel],
-            capture_output=True,
-            text=True,
-            cwd=repo_root,
-            check=False,
-        )
-        has_uncommitted_diff = (
-            diff_res.returncode == 0 and bool(diff_res.stdout.strip())
-        )
-        if has_uncommitted_diff:
-            git_ref = f"HEAD:{meta_rel}"
-            source_desc = f"{git_ref} (uncommitted working tree diff detected)"
-        else:
-            git_ref = f"HEAD~1:{meta_rel}"
-            source_desc = f"{git_ref} (clean working tree, prior commit)"
-
         show_res = subprocess.run(
             ["git", "show", git_ref],
             capture_output=True,
@@ -344,7 +334,7 @@ def load_previous_committed_meta(
         if show_res.returncode == 0 and show_res.stdout.strip():
             meta: dict[str, Any] = json.loads(show_res.stdout)
             print(
-                f"[monotonicity] Loaded previous committed metadata from {source_desc}"
+                f"[monotonicity] Loaded committed metadata from {git_ref}"
             )
             return meta
     except Exception as e:
@@ -352,49 +342,101 @@ def load_previous_committed_meta(
     return None
 
 
+def load_previous_committed_meta(
+    repo_root: Path | None = None,
+) -> dict[str, Any] | None:
+    """Backward-compatible alias for loading committed HEAD meta.json."""
+    return load_committed_head_meta(repo_root=repo_root)
+
+
 def verify_counts_monotonicity(
     new_total: int,
     new_executed: int,
     prev_meta: dict[str, Any] | None = None,
+    allow_decrease_override: bool | None = None,
 ) -> None:
     """Ensure total fourth down rows and executed snaps never decrease between refreshes.
 
-    Raises AssertionError naming old and new counts if any decrease is detected.
+    Acts as a production review gate: raises MonotonicityReviewGateError naming old and
+    new counts if any decrease is detected, unless an explicit override is provided via
+    ALLOW_MONOTONICITY_DECREASE=1 environment variable (or workflow input) or allow_decrease_override=True.
     """
+    if allow_decrease_override is None:
+        override_env = os.environ.get("ALLOW_MONOTONICITY_DECREASE", "").strip().lower()
+        allow_decrease_override = override_env in ("1", "true", "yes")
+
     if prev_meta is None:
-        prev_meta = load_previous_committed_meta()
+        prev_meta = load_committed_head_meta()
 
     if prev_meta is not None:
         prev_counts = prev_meta["counts"]
         prev_total = prev_counts["total_fourth_down_rows"]
         prev_executed = prev_counts["executed_snaps"]
 
+        decrease_reasons: list[str] = []
         if new_total < prev_total:
-            raise AssertionError(
+            decrease_reasons.append(
                 f"Total fourth down rows decreased between refreshes: "
-                f"previous committed was {prev_total}, but new count is {new_total}"
+                f"previous committed was {prev_total}, but new count is {new_total} "
+                f"(-{prev_total - new_total})"
             )
         if new_executed < prev_executed:
-            raise AssertionError(
+            decrease_reasons.append(
                 f"Executed fourth down snaps decreased between refreshes: "
-                f"previous committed was {prev_executed}, but new count is {new_executed}"
+                f"previous committed was {prev_executed}, but new count is {new_executed} "
+                f"(-{prev_executed - new_executed})"
             )
+
+        if decrease_reasons:
+            if allow_decrease_override:
+                print(
+                    f"[monotonicity] REVIEW GATE OVERRIDE ACTIVE (ALLOW_MONOTONICITY_DECREASE): "
+                    f"allowing detected decrease ({'; '.join(decrease_reasons)})"
+                )
+                return
+
+            reasons_text = "\n  - ".join(decrease_reasons)
+            raise MonotonicityReviewGateError(
+                f"Monotonicity review gate failed:\n  - {reasons_text}\n"
+                f"Pipeline updates must never silently drop fourth-down plays.\n"
+                f"If this decrease represents an intentional upstream correction in nflverse, "
+                f"you can override this review gate by setting the environment variable "
+                f"ALLOW_MONOTONICITY_DECREASE=1 or triggering the workflow with the "
+                f"allow_monotonicity_decrease input set to true."
+            )
+
         print(
             f"[monotonicity] Monotonicity verified: total {new_total} >= {prev_total}, "
             f"executed {new_executed} >= {prev_executed}"
         )
     else:
         # Fallback floor when git history is unreachable
+        decrease_reasons = []
         if new_total < 1867:
-            raise AssertionError(
+            decrease_reasons.append(
                 f"Total fourth down rows below initial baseline: "
                 f"baseline was 1867, but count is {new_total}"
             )
         if new_executed < 1718:
-            raise AssertionError(
+            decrease_reasons.append(
                 f"Executed fourth down snaps below initial baseline: "
                 f"baseline was 1718, but count is {new_executed}"
             )
+
+        if decrease_reasons:
+            if allow_decrease_override:
+                print(
+                    f"[monotonicity] REVIEW GATE OVERRIDE ACTIVE (ALLOW_MONOTONICITY_DECREASE): "
+                    f"allowing baseline floor decrease ({'; '.join(decrease_reasons)})"
+                )
+                return
+
+            reasons_text = "\n  - ".join(decrease_reasons)
+            raise MonotonicityReviewGateError(
+                f"Baseline floor review gate failed (git unreachable):\n  - {reasons_text}\n"
+                f"If this decrease is intentional, set ALLOW_MONOTONICITY_DECREASE=1 to override."
+            )
+
         print(
             f"[monotonicity] Baseline floor verified (git unreachable): "
             f"total {new_total} >= 1867, executed {new_executed} >= 1718"
@@ -412,6 +454,16 @@ def run_pipeline(
     print("Starting Fourth Down Lab data pipeline...")
     print("=" * 60)
 
+    # Capture explicit flag at function entry before df_raw is overwritten
+    is_default_fetch = df_raw is None
+    if enforce_monotonicity is None:
+        enforce_monotonicity = output_dir == OUTPUT_DIR and is_default_fetch
+
+    # Capture committed HEAD meta.json explicitly before generation
+    committed_head_meta = (
+        load_committed_head_meta() if enforce_monotonicity else None
+    )
+
     if df_raw is None:
         df_raw = fetch_or_load_pbp()
 
@@ -428,11 +480,6 @@ def run_pipeline(
     cancelled_audit, replayed_count, not_replayed_count = audit_cancelled_snaps(
         fourth_raw, df_sorted
     )
-    if output_dir is not None:
-        with open(
-            output_dir / "audit_cancelled_snaps.json", "w", encoding="utf-8"
-        ) as f:
-            json.dump(cancelled_audit, f, indent=2)
     print(
         f"Audited {len(cancelled_audit)} cancelled snaps (Replayed: {replayed_count}, Not replayed: {not_replayed_count})"
     )
@@ -473,9 +520,23 @@ def run_pipeline(
         f"Snap reconciliation verified: {fourth_raw.height} total = {executed_raw.height} executed + {len(cancelled_audit)} cancelled + {len(excluded_snaps)} excluded"
     )
 
+    # 4. Monotonicity Verification Review Gate (fail-fast before model scoring and disk writes)
+    if enforce_monotonicity:
+        verify_counts_monotonicity(
+            new_total=total_fourth_down_rows,
+            new_executed=executed_raw.height,
+            prev_meta=committed_head_meta,
+        )
+
+    if output_dir is not None:
+        with open(
+            output_dir / "audit_cancelled_snaps.json", "w", encoding="utf-8"
+        ) as f:
+            json.dump(cancelled_audit, f, indent=2)
+
     decisions: list[dict[str, Any]] = []
 
-    # 4. Score Executed Snaps with Model
+    # 5. Score Executed Snaps with Model
     if run_model and executed_raw.height > 0:
         print("Running sportsdataverse win probability models on executed snaps...")
         executed_pd = executed_raw.to_pandas()
@@ -549,16 +610,6 @@ def run_pipeline(
         punt_domain=punt_domain,
         weeks=weeks_list,
     )
-
-    # 9. Monotonicity verification
-    if enforce_monotonicity is None:
-        enforce_monotonicity = output_dir == OUTPUT_DIR and df_raw is None
-
-    if enforce_monotonicity:
-        verify_counts_monotonicity(
-            new_total=total_fourth_down_rows,
-            new_executed=executed_raw.height,
-        )
 
     if output_dir is not None:
         with open(output_dir / "meta.json", "w", encoding="utf-8") as f:

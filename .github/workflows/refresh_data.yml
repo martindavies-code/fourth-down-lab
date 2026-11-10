@@ -2,6 +2,12 @@ name: Refresh 4th Down Decisions Data
 
 on:
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+    inputs:
+      allow_monotonicity_decrease:
+        description: 'Override monotonicity review gate for legitimate upstream corrections (ALLOW_MONOTONICITY_DECREASE=1)'
+        required: false
+        type: boolean
+        default: false
   schedule:
     # Auto sync: Tuesday morning & noon (after MNF) and Friday morning & noon (after TNF)
     - cron: '0 8,12 * * 2'
@@ -33,10 +39,14 @@ jobs:
       - name: Execute data pipeline
         run: |
           python pipeline/build_data.py
+        env:
+          ALLOW_MONOTONICITY_DECREASE: ${{ inputs.allow_monotonicity_decrease && '1' || '0' }}
 
       - name: Validate generated data invariants
         run: |
           python -m pytest pipeline/tests/test_pipeline.py -v -s
+        env:
+          ALLOW_MONOTONICITY_DECREASE: ${{ inputs.allow_monotonicity_decrease && '1' || '0' }}
 
       - name: Commit and push updated data
         run: |
