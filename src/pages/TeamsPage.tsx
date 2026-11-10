@@ -139,7 +139,7 @@ export const TeamsPage: React.FC<TeamsPageProps> = ({
                     <MangaSoundEffect sound="ドドンッ！" english="rank" className="text-emerald-400 hidden sm:inline-flex" />
                   </div>
                   <p className="text-xs text-slate-300 font-medium">
-                    Measuring coaching decision alignment with the mathematical win probability model on genuine 4th-down situations (Weeks 1–8).
+                    Measuring coaching decision alignment with the mathematical win probability model on genuine 4th-down situations (Weeks 1–{meta?.weeks?.length ? Math.max(...meta.weeks) : 9}).
                   </p>
                 </div>
               </div>
