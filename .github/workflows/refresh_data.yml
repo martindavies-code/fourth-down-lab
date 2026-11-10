@@ -3,9 +3,9 @@ name: Refresh 4th Down Decisions Data
 on:
   workflow_dispatch: # Allows manual trigger from GitHub Actions tab
   schedule:
-    # Auto sync twice weekly: Tuesday morning (after MNF) and Friday morning (after TNF)
-    - cron: '0 8 * * 2'
-    - cron: '0 8 * * 5'
+    # Auto sync: Tuesday morning & noon (after MNF) and Friday morning & noon (after TNF)
+    - cron: '0 8,12 * * 2'
+    - cron: '0 8,12 * * 5'
 
 permissions:
   contents: write
@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install polars pandas pyarrow sportsdataverse xgboost pytest pytest-cov ruff
+          pip install -r requirements.txt
 
       - name: Run pipeline unit tests
         run: |
@@ -35,6 +35,10 @@ jobs:
       - name: Execute data pipeline
         run: |
           python pipeline/build_data.py
+
+      - name: Validate generated data invariants
+        run: |
+          python -m pytest pipeline/tests/test_pipeline.py -v
 
       - name: Commit and push updated data
         run: |

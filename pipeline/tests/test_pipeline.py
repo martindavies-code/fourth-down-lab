@@ -815,16 +815,18 @@ class TestForensicVerification:
         cancelled = counts["cancelled_snaps"]
         excluded = counts["excluded_snaps"]
         assert total == executed + cancelled + excluded
-        assert total == 1867
-        assert executed == 1718
-        assert cancelled == 148
-        assert excluded == 1
-        assert len(meta["excluded_snaps"]) == 1
-        assert meta["excluded_snaps"][0]["play_type"] == "qb_kneel"
-        assert meta["excluded_snaps"][0]["game_id"] == "2026_01_DEN_KC"
+        assert total >= 1867
+        assert executed >= 1718
+        assert cancelled >= 148
+        assert excluded >= 1
+        assert len(meta["excluded_snaps"]) >= 1
+        assert any(
+            e["play_type"] == "qb_kneel" and e["game_id"] == "2026_01_DEN_KC"
+            for e in meta["excluded_snaps"]
+        )
 
     def test_p2_2_mathematical_exactness_property(self) -> None:
-        """P2-2: Property test verifying internal exactness on all 1,718 real plays."""
+        """P2-2: Property test verifying internal exactness on all real executed plays."""
         import json
 
         dec_file = (
@@ -833,10 +835,20 @@ class TestForensicVerification:
             / "data"
             / "decisions.json"
         )
+        meta_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "public"
+            / "data"
+            / "meta.json"
+        )
         assert dec_file.exists()
         with open(dec_file, encoding="utf-8") as f:
             decisions = json.load(f)
-        assert len(decisions) == 1718
+        with open(meta_file, encoding="utf-8") as f:
+            meta = json.load(f)
+
+        assert len(decisions) == meta["counts"]["executed_snaps"]
+        assert len(decisions) >= 1718
         for d in decisions:
             go_opt = d["options"]["go"]
             if go_opt["status"] == "AVAILABLE" and go_opt["wp"] is not None:
@@ -869,7 +881,7 @@ class TestForensicVerification:
         with open(dec_file, encoding="utf-8") as f:
             decisions = json.load(f)
         ot_decs = [d for d in decisions if d["qtr"] >= 5]
-        assert len(ot_decs) == 15
+        assert len(ot_decs) >= 15
         for d in ot_decs:
             assert d["is_overtime"] is True
 
@@ -883,14 +895,23 @@ class TestForensicVerification:
             / "data"
             / "decisions.json"
         )
+        meta_file = (
+            Path(__file__).resolve().parent.parent.parent
+            / "public"
+            / "data"
+            / "meta.json"
+        )
         with open(dec_file, encoding="utf-8") as f:
             decisions = json.load(f)
+        with open(meta_file, encoding="utf-8") as f:
+            meta = json.load(f)
+
         sample = decisions[::34][:50]
         assert len(sample) >= 50
         for d in sample:
             assert d["game_id"]
             assert d["play_id"] > 0
-            assert d["week"] in range(1, 9)
+            assert d["week"] in meta["weeks"]
             assert d["best_wp"] is not None
             assert 0.0 <= d["best_wp"] <= 1.0
 
