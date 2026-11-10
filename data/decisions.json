@@ -19617,7 +19617,7 @@
       "play_type": "punt",
       "desc": "(7:13) 5-B.Anger punts 52 yards to ARI 24, Center-44-T.Sieg. 81-D.Duvernay to ARI 32 for 8 yards (84-J.Mitchell).",
       "yards_gained": 0,
-      "realised_wpa": -0.037377944237039995,
+      "realised_wpa": -0.03737794423704005,
       "realised_wpa_note": "Realised WPA from nflverse (different post-play model measuring shift in WP)",
       "penalty_affected": false,
       "gross_yards": 52,
