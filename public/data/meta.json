@@ -12,7 +12,7 @@
     8,
     9
   ],
-  "data_as_of": "2026-11-10 13:43 UTC",
+  "data_as_of": "2026-11-10 16:30 UTC",
   "model_version": "sportsdataverse-nfl-0.1.4 (nfl4th port)",
   "source": "nflverse play_by_play_2026.parquet",
   "licence_data": "CC-BY 4.0 (nflverse)",
