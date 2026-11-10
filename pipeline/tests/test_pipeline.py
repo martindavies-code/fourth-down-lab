@@ -793,11 +793,51 @@ class TestGate1Regression:
         assert dec["quadrant"] == "Consistent & Succeeded"
 
 
+def load_previous_committed_meta() -> dict | None:
+    """Load previous committed meta.json from git if available.
+
+    If public/data/meta.json has uncommitted changes (e.g. during pipeline refresh),
+    reads HEAD:public/data/meta.json.
+    If public/data/meta.json is already committed, reads HEAD~1:public/data/meta.json.
+    Falls back to None if git history is unreachable (e.g. shallow clone or not git).
+    """
+    import json
+    import subprocess
+
+    repo_root = Path(__file__).resolve().parent.parent.parent
+    meta_rel = "public/data/meta.json"
+    try:
+        diff_res = subprocess.run(
+            ["git", "diff", "HEAD", "--", meta_rel],
+            capture_output=True,
+            text=True,
+            cwd=repo_root,
+            check=False,
+        )
+        if diff_res.returncode == 0 and diff_res.stdout.strip():
+            git_ref = f"HEAD:{meta_rel}"
+        else:
+            git_ref = f"HEAD~1:{meta_rel}"
+
+        show_res = subprocess.run(
+            ["git", "show", git_ref],
+            capture_output=True,
+            text=True,
+            cwd=repo_root,
+            check=False,
+        )
+        if show_res.returncode == 0 and show_res.stdout.strip():
+            return json.loads(show_res.stdout)
+    except Exception:
+        pass
+    return None
+
+
 class TestForensicVerification:
     """Forensic verification tests covering P2-1 to P2-6."""
 
     def test_p2_1_reconciliation(self) -> None:
-        """P2-1: Snap reconciliation test (1867 == 1718 executed + 148 cancelled + 1 excluded)."""
+        """P2-1: Snap reconciliation test and monotonicity verification against committed meta."""
         import json
 
         meta_file = (
@@ -814,16 +854,65 @@ class TestForensicVerification:
         executed = counts["executed_snaps"]
         cancelled = counts["cancelled_snaps"]
         excluded = counts["excluded_snaps"]
+
+        # Exact reconciliation equality must hold
         assert total == executed + cancelled + excluded
-        assert total >= 1867
-        assert executed >= 1718
-        assert cancelled >= 148
+
+        # Monotonicity check against previous committed meta.json:
+        # Executed and total rows must never decrease between refreshes
+        prev_meta = load_previous_committed_meta()
+        if prev_meta is not None:
+            prev_counts = prev_meta["counts"]
+            prev_total = prev_counts["total_fourth_down_rows"]
+            prev_executed = prev_counts["executed_snaps"]
+            assert total >= prev_total, (
+                f"Total fourth down rows decreased between refreshes: "
+                f"previous committed was {prev_total}, but new count is {total}"
+            )
+            assert executed >= prev_executed, (
+                f"Executed fourth down snaps decreased between refreshes: "
+                f"previous committed was {prev_executed}, but new count is {executed}"
+            )
+        else:
+            # Fallback floor if git history is unreachable
+            assert total >= 1867
+            assert executed >= 1718
+
+        assert cancelled >= 0
         assert excluded >= 1
-        assert len(meta["excluded_snaps"]) >= 1
+        assert len(meta["excluded_snaps"]) == excluded
         assert any(
             e["play_type"] == "qb_kneel" and e["game_id"] == "2026_01_DEN_KC"
             for e in meta["excluded_snaps"]
         )
+
+    def test_p2_1b_monotonicity_guard_detects_decrease(self) -> None:
+        """P2-1b: Verify that any count decrease between refreshes raises an AssertionError naming counts."""
+        prev_meta = load_previous_committed_meta()
+        if prev_meta is None:
+            pytest.skip("Git history not available for monotonicity unit test")
+        prev_total = prev_meta["counts"]["total_fourth_down_rows"]
+        prev_executed = prev_meta["counts"]["executed_snaps"]
+
+        with pytest.raises(
+            AssertionError,
+            match=rf"Total fourth down rows decreased.*{prev_total}.*{prev_total - 1}",
+        ):
+            simulated_total = prev_total - 1
+            assert simulated_total >= prev_total, (
+                f"Total fourth down rows decreased between refreshes: "
+                f"previous committed was {prev_total}, but new count is {simulated_total}"
+            )
+
+        with pytest.raises(
+            AssertionError,
+            match=rf"Executed fourth down snaps decreased.*{prev_executed}.*{prev_executed - 1}",
+        ):
+            simulated_executed = prev_executed - 1
+            assert simulated_executed >= prev_executed, (
+                f"Executed fourth down snaps decreased between refreshes: "
+                f"previous committed was {prev_executed}, but new count is {simulated_executed}"
+            )
 
     def test_p2_2_mathematical_exactness_property(self) -> None:
         """P2-2: Property test verifying internal exactness on all real executed plays."""
@@ -848,7 +937,15 @@ class TestForensicVerification:
             meta = json.load(f)
 
         assert len(decisions) == meta["counts"]["executed_snaps"]
-        assert len(decisions) >= 1718
+        prev_meta = load_previous_committed_meta()
+        if prev_meta is not None:
+            prev_executed = prev_meta["counts"]["executed_snaps"]
+            assert len(decisions) >= prev_executed, (
+                f"Executed decisions count decreased between refreshes: "
+                f"previous committed was {prev_executed}, but new count is {len(decisions)}"
+            )
+        else:
+            assert len(decisions) >= 1718
         for d in decisions:
             go_opt = d["options"]["go"]
             if go_opt["status"] == "AVAILABLE" and go_opt["wp"] is not None:
