@@ -21,7 +21,9 @@ from build_data import (
     calculate_games_summary,
     calculate_team_summaries,
     fetch_or_load_pbp,
+    load_previous_committed_meta,
     run_pipeline,
+    verify_counts_monotonicity,
 )
 from model_engine import (
     _safe_float,
@@ -793,46 +795,6 @@ class TestGate1Regression:
         assert dec["quadrant"] == "Consistent & Succeeded"
 
 
-def load_previous_committed_meta() -> dict | None:
-    """Load previous committed meta.json from git if available.
-
-    If public/data/meta.json has uncommitted changes (e.g. during pipeline refresh),
-    reads HEAD:public/data/meta.json.
-    If public/data/meta.json is already committed, reads HEAD~1:public/data/meta.json.
-    Falls back to None if git history is unreachable (e.g. shallow clone or not git).
-    """
-    import json
-    import subprocess
-
-    repo_root = Path(__file__).resolve().parent.parent.parent
-    meta_rel = "public/data/meta.json"
-    try:
-        diff_res = subprocess.run(
-            ["git", "diff", "HEAD", "--", meta_rel],
-            capture_output=True,
-            text=True,
-            cwd=repo_root,
-            check=False,
-        )
-        if diff_res.returncode == 0 and diff_res.stdout.strip():
-            git_ref = f"HEAD:{meta_rel}"
-        else:
-            git_ref = f"HEAD~1:{meta_rel}"
-
-        show_res = subprocess.run(
-            ["git", "show", git_ref],
-            capture_output=True,
-            text=True,
-            cwd=repo_root,
-            check=False,
-        )
-        if show_res.returncode == 0 and show_res.stdout.strip():
-            return json.loads(show_res.stdout)
-    except Exception:
-        pass
-    return None
-
-
 class TestForensicVerification:
     """Forensic verification tests covering P2-1 to P2-6."""
 
@@ -858,25 +820,13 @@ class TestForensicVerification:
         # Exact reconciliation equality must hold
         assert total == executed + cancelled + excluded
 
-        # Monotonicity check against previous committed meta.json:
-        # Executed and total rows must never decrease between refreshes
+        # Monotonicity check against previous committed meta.json via pipeline guard
         prev_meta = load_previous_committed_meta()
-        if prev_meta is not None:
-            prev_counts = prev_meta["counts"]
-            prev_total = prev_counts["total_fourth_down_rows"]
-            prev_executed = prev_counts["executed_snaps"]
-            assert total >= prev_total, (
-                f"Total fourth down rows decreased between refreshes: "
-                f"previous committed was {prev_total}, but new count is {total}"
-            )
-            assert executed >= prev_executed, (
-                f"Executed fourth down snaps decreased between refreshes: "
-                f"previous committed was {prev_executed}, but new count is {executed}"
-            )
-        else:
-            # Fallback floor if git history is unreachable
-            assert total >= 1867
-            assert executed >= 1718
+        verify_counts_monotonicity(
+            new_total=total,
+            new_executed=executed,
+            prev_meta=prev_meta,
+        )
 
         assert cancelled >= 0
         assert excluded >= 1
@@ -898,20 +848,20 @@ class TestForensicVerification:
             AssertionError,
             match=rf"Total fourth down rows decreased.*{prev_total}.*{prev_total - 1}",
         ):
-            simulated_total = prev_total - 1
-            assert simulated_total >= prev_total, (
-                f"Total fourth down rows decreased between refreshes: "
-                f"previous committed was {prev_total}, but new count is {simulated_total}"
+            verify_counts_monotonicity(
+                new_total=prev_total - 1,
+                new_executed=prev_executed,
+                prev_meta=prev_meta,
             )
 
         with pytest.raises(
             AssertionError,
             match=rf"Executed fourth down snaps decreased.*{prev_executed}.*{prev_executed - 1}",
         ):
-            simulated_executed = prev_executed - 1
-            assert simulated_executed >= prev_executed, (
-                f"Executed fourth down snaps decreased between refreshes: "
-                f"previous committed was {prev_executed}, but new count is {simulated_executed}"
+            verify_counts_monotonicity(
+                new_total=prev_total,
+                new_executed=prev_executed - 1,
+                prev_meta=prev_meta,
             )
 
     def test_p2_2_mathematical_exactness_property(self) -> None:

@@ -8,6 +8,7 @@ snaps, generates team adherence summaries, and writes optimised static JSON file
 from __future__ import annotations
 
 import json
+import subprocess
 import urllib.parse
 import urllib.request
 from datetime import UTC, datetime
@@ -302,10 +303,109 @@ def build_metadata(
     }
 
 
+def load_previous_committed_meta(
+    repo_root: Path | None = None,
+) -> dict[str, Any] | None:
+    """Load previous committed meta.json from git if available.
+
+    If public/data/meta.json has uncommitted changes (e.g. during pipeline refresh),
+    reads HEAD:public/data/meta.json.
+    If public/data/meta.json is already committed, reads HEAD~1:public/data/meta.json.
+    Falls back to None if git history is unreachable (e.g. shallow clone or not git).
+    """
+    if repo_root is None:
+        repo_root = Path(__file__).resolve().parent.parent
+    meta_rel = "public/data/meta.json"
+    try:
+        diff_res = subprocess.run(
+            ["git", "diff", "HEAD", "--", meta_rel],
+            capture_output=True,
+            text=True,
+            cwd=repo_root,
+            check=False,
+        )
+        has_uncommitted_diff = (
+            diff_res.returncode == 0 and bool(diff_res.stdout.strip())
+        )
+        if has_uncommitted_diff:
+            git_ref = f"HEAD:{meta_rel}"
+            source_desc = f"{git_ref} (uncommitted working tree diff detected)"
+        else:
+            git_ref = f"HEAD~1:{meta_rel}"
+            source_desc = f"{git_ref} (clean working tree, prior commit)"
+
+        show_res = subprocess.run(
+            ["git", "show", git_ref],
+            capture_output=True,
+            text=True,
+            cwd=repo_root,
+            check=False,
+        )
+        if show_res.returncode == 0 and show_res.stdout.strip():
+            meta: dict[str, Any] = json.loads(show_res.stdout)
+            print(
+                f"[monotonicity] Loaded previous committed metadata from {source_desc}"
+            )
+            return meta
+    except Exception as e:
+        print(f"[monotonicity] Git history unreachable: {e}")
+    return None
+
+
+def verify_counts_monotonicity(
+    new_total: int,
+    new_executed: int,
+    prev_meta: dict[str, Any] | None = None,
+) -> None:
+    """Ensure total fourth down rows and executed snaps never decrease between refreshes.
+
+    Raises AssertionError naming old and new counts if any decrease is detected.
+    """
+    if prev_meta is None:
+        prev_meta = load_previous_committed_meta()
+
+    if prev_meta is not None:
+        prev_counts = prev_meta["counts"]
+        prev_total = prev_counts["total_fourth_down_rows"]
+        prev_executed = prev_counts["executed_snaps"]
+
+        if new_total < prev_total:
+            raise AssertionError(
+                f"Total fourth down rows decreased between refreshes: "
+                f"previous committed was {prev_total}, but new count is {new_total}"
+            )
+        if new_executed < prev_executed:
+            raise AssertionError(
+                f"Executed fourth down snaps decreased between refreshes: "
+                f"previous committed was {prev_executed}, but new count is {new_executed}"
+            )
+        print(
+            f"[monotonicity] Monotonicity verified: total {new_total} >= {prev_total}, "
+            f"executed {new_executed} >= {prev_executed}"
+        )
+    else:
+        # Fallback floor when git history is unreachable
+        if new_total < 1867:
+            raise AssertionError(
+                f"Total fourth down rows below initial baseline: "
+                f"baseline was 1867, but count is {new_total}"
+            )
+        if new_executed < 1718:
+            raise AssertionError(
+                f"Executed fourth down snaps below initial baseline: "
+                f"baseline was 1718, but count is {new_executed}"
+            )
+        print(
+            f"[monotonicity] Baseline floor verified (git unreachable): "
+            f"total {new_total} >= 1867, executed {new_executed} >= 1718"
+        )
+
+
 def run_pipeline(
     df_raw: pl.DataFrame | None = None,
     output_dir: Path | None = OUTPUT_DIR,
     run_model: bool = True,
+    enforce_monotonicity: bool | None = None,
 ) -> dict[str, Any]:
     """Orchestrates pipeline execution with clean dependency injection."""
     print("=" * 60)
@@ -449,6 +549,17 @@ def run_pipeline(
         punt_domain=punt_domain,
         weeks=weeks_list,
     )
+
+    # 9. Monotonicity verification
+    if enforce_monotonicity is None:
+        enforce_monotonicity = output_dir == OUTPUT_DIR and df_raw is None
+
+    if enforce_monotonicity:
+        verify_counts_monotonicity(
+            new_total=total_fourth_down_rows,
+            new_executed=executed_raw.height,
+        )
+
     if output_dir is not None:
         with open(output_dir / "meta.json", "w", encoding="utf-8") as f:
             json.dump(meta, f, indent=2)
