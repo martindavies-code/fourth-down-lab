@@ -3070,6 +3070,131 @@
     "status_label": "Not executed (penalty or cancelled snap)"
   },
   {
+    "game_id": "2026_09_BUF_MIN",
+    "play_id": 3115,
+    "week": 9,
+    "posteam": "BUF",
+    "defteam": "MIN",
+    "qtr": 3,
+    "ydstogo": 7.0,
+    "yardline_100": 36.0,
+    "desc": "(1:08) (Field Goal formation) ** Injury Update: MIN-90-T.Ingram-Dawkins has returned to the game. PENALTY on BUF-53-L.Cushenberry, False Start, 5 yards, enforced at MIN 36 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3145,
+      "next_down": 4,
+      "next_ydstogo": 12.0,
+      "next_play_type": "no_play",
+      "next_desc": "(:58) (Punt formation) PENALTY on BUF-42-D.Williams, False Start, 5 yards, enforced at MIN 41 - No Play."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_BUF_MIN",
+    "play_id": 3145,
+    "week": 9,
+    "posteam": "BUF",
+    "defteam": "MIN",
+    "qtr": 3,
+    "ydstogo": 12.0,
+    "yardline_100": 41.0,
+    "desc": "(:58) (Punt formation) PENALTY on BUF-42-D.Williams, False Start, 5 yards, enforced at MIN 41 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3172,
+      "next_down": 4,
+      "next_ydstogo": 17.0,
+      "next_play_type": "punt",
+      "next_desc": "(:40) 39-T.Doman punts 46 yards to end zone, Center-69-R.Ferguson, Touchback."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_CLE_NO",
+    "play_id": 615,
+    "week": 9,
+    "posteam": "CLE",
+    "defteam": "NO",
+    "qtr": 1,
+    "ydstogo": 2.0,
+    "yardline_100": 55.0,
+    "desc": "(4:26) 13-C.Bojorquez punts 48 yards to NO 7, Center-50-R.Sunahara, downed by CLE-24-D.Thomas. PENALTY on CLE-24-D.Thomas, Illegal Touch Kick, 5 yards, enforced at CLE 45 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 646,
+      "next_down": 4,
+      "next_ydstogo": 7.0,
+      "next_play_type": "punt",
+      "next_desc": "(4:14) 13-C.Bojorquez punts 46 yards to NO 14, Center-50-R.Sunahara. 19-B.Brown to NO 37 for 23 yards (59-W.Reid)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_CLE_NO",
+    "play_id": 3144,
+    "week": 9,
+    "posteam": "CLE",
+    "defteam": "NO",
+    "qtr": 4,
+    "ydstogo": 7.0,
+    "yardline_100": 47.0,
+    "desc": "(10:46) 13-C.Bojorquez punts 36 yards to NO 11, Center-50-R.Sunahara, fair catch by 19-B.Brown. PENALTY on NO-7-J.Sanker, Defensive Offside, 5 yards, enforced at NO 47 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3175,
+      "next_down": 4,
+      "next_ydstogo": 2.0,
+      "next_play_type": "pass",
+      "next_desc": "(10:39) (Shotgun) 2-S.Sanders pass incomplete short left to 22-D.Sampson (96-C.Granderson)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_CLE_NO",
+    "play_id": 3367,
+    "week": 9,
+    "posteam": "NO",
+    "defteam": "CLE",
+    "qtr": 4,
+    "ydstogo": 1.0,
+    "yardline_100": 37.0,
+    "desc": "(7:57) (Shotgun) 6-T.Shough sacked at CLE 37 for 0 yards (51-M.Hall). PENALTY on CLE-7-T.Campbell, Illegal Contact, 5 yards, enforced at CLE 37 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 3398,
+      "next_down": 1.0,
+      "next_play_type": "run",
+      "next_desc": "(7:52) (Shotgun) 30-A.Estime up the middle to CLE 32 for no gain (92-S.Kamara; 49-C.Schwesinger)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_GB_NE",
+    "play_id": 1655,
+    "week": 9,
+    "posteam": "GB",
+    "defteam": "NE",
+    "qtr": 2,
+    "ydstogo": 1.0,
+    "yardline_100": 45.0,
+    "desc": "(7:15) (Run formation) PENALTY on GB-10-J.Love, False Start, 5 yards, enforced at NE 45 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 1688,
+      "next_down": 4,
+      "next_ydstogo": 6.0,
+      "next_play_type": "punt",
+      "next_desc": "(7:15) 19-D.Whelan punts 50 yards to end zone, Center-42-M.Orzech, Touchback."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
     "game_id": "2026_09_JAX_BAL",
     "play_id": 618,
     "week": 9,
@@ -3086,6 +3211,132 @@
       "next_down": 1.0,
       "next_play_type": "run",
       "next_desc": "(4:25) 33-B.Tuten left end to BAL 32 for 5 yards (98-T.Jones; 0-R.Smith)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_LA_WAS",
+    "play_id": 3847,
+    "week": 9,
+    "posteam": "WAS",
+    "defteam": "LA",
+    "qtr": 4,
+    "ydstogo": 6.0,
+    "yardline_100": 40.0,
+    "desc": "(8:22) (Shotgun) PENALTY on WAS, Delay of Game, 5 yards, enforced at LA 40 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3871,
+      "next_down": 4,
+      "next_ydstogo": 11.0,
+      "next_play_type": "punt",
+      "next_desc": "(8:22) 10-T.Way punts 33 yards to LA 12, Center-69-T.Ott, fair catch by 23-K.Williams."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_LA_WAS",
+    "play_id": 4398,
+    "week": 9,
+    "posteam": "LA",
+    "defteam": "WAS",
+    "qtr": 4,
+    "ydstogo": 6.0,
+    "yardline_100": 46.0,
+    "desc": "(:59) (Run formation) PENALTY on LA, Delay of Game, 5 yards, enforced at WAS 46 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 4422,
+      "next_down": 4,
+      "next_ydstogo": 11.0,
+      "next_play_type": "punt",
+      "next_desc": "(:59) 42-E.Evans punts 42 yards to WAS 9, Center-43-J.McQuaide, fair catch by 14-A.Williams."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_TB_CHI",
+    "play_id": 912,
+    "week": 9,
+    "posteam": "TB",
+    "defteam": "CHI",
+    "qtr": 2,
+    "ydstogo": 4.0,
+    "yardline_100": 4.0,
+    "desc": "(14:07) (Shotgun) PENALTY on TB, Delay of Game, 5 yards, enforced at CHI 4 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 936,
+      "next_down": 4,
+      "next_ydstogo": 9.0,
+      "next_play_type": "field_goal",
+      "next_desc": "(13:52) 4-C.McLaughlin 27 yard field goal is GOOD, Center-86-E.Deckers, Holder-9-R.Dixon."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_TB_CHI",
+    "play_id": 3298,
+    "week": 9,
+    "posteam": "CHI",
+    "defteam": "TB",
+    "qtr": 3,
+    "ydstogo": 4.0,
+    "yardline_100": 81.0,
+    "desc": "(:33) (Punt formation) PENALTY on CHI-57-J.Sanborn, False Start, 5 yards, enforced at CHI 19 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3328,
+      "next_down": 4,
+      "next_ydstogo": 9.0,
+      "next_play_type": "punt",
+      "next_desc": "(:33) 19-T.Taylor punts 51 yards to TB 35, Center-46-S.Daly, out of bounds."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_TB_CHI",
+    "play_id": 3539,
+    "week": 9,
+    "posteam": "TB",
+    "defteam": "CHI",
+    "qtr": 4,
+    "ydstogo": 4.0,
+    "yardline_100": 12.0,
+    "desc": "(11:28) (Shotgun) PENALTY on TB, Delay of Game, 5 yards, enforced at CHI 12 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3571,
+      "next_down": 4,
+      "next_ydstogo": 9.0,
+      "next_play_type": "field_goal",
+      "next_desc": "(11:28) 4-C.McLaughlin 35 yard field goal is GOOD, Center-86-E.Deckers, Holder-9-R.Dixon."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_09_TB_CHI",
+    "play_id": 3776,
+    "week": 9,
+    "posteam": "CHI",
+    "defteam": "TB",
+    "qtr": 4,
+    "ydstogo": 7.0,
+    "yardline_100": 41.0,
+    "desc": "(8:10) (Shotgun) PENALTY on CHI, Delay of Game, 5 yards, enforced at TB 41 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3800,
+      "next_down": 4,
+      "next_ydstogo": 12.0,
+      "next_play_type": "punt",
+      "next_desc": "(8:10) 19-T.Taylor punts 31 yards to TB 15, Center-46-S.Daly, fair catch by 15-T.Johnson. ** Injury Update: TB-44-S.Tucker has returned to the game."
     },
     "status_label": "Not executed (penalty or cancelled snap)"
   }
