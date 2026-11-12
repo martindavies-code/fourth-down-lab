@@ -1,9 +1,18 @@
-# Data-refresh repair, 6 November 2026
+# Data freshness and refresh alerts, 12 November 2026
 
-The scheduled refresh stopped in actions/setup-python because pip caching had no dependency manifest to hash. Added root requirements.txt matching the workflow's existing dependency list. No model or editorial logic changed.
+## Changes
+- Header shows the metadata timestamp and week coverage on every tab, wrapping rather than clipping on small screens. Removed the hardcoded fallback date: missing metadata says unavailable.
+- Refresh schedule (UTC): Sunday 23:00; Monday and Tuesday 08:00/12:00; Friday 08:00/12:00. Sunday catches early games, Monday catches the rest of Sunday, Tuesday follows MNF, Friday follows TNF. Upstream data availability still governs when games appear.
+- A separate failure-only job opens a GitHub issue or updates the existing bot-owned issue with the latest failed-run link. Issue write permission is limited to that job. Alert jobs are serialized to avoid duplicate issues. Close the issue after confirming recovery.
 
-Checks: Python 3.11 pipeline tests 41/41; frontend tests 39/39; production build passed. The repair-branch GitHub refresh successfully installed dependencies, passed tests, generated refreshed data and committed the results. Full local refresh exceeded local memory, so the hosted runner supplied end-to-end validation instead. Partial local JSON files were not published.
+## Checks before merge
+- Python pipeline suite: 45 passed (four upstream Polars deprecation warnings).
+- Frontend tests, production build and actionlint validation passed.
+- Chromium checks: stamp visible at 1280, 390 and 320px; missing metadata shows unavailable. Desktop and mobile screenshots inspected.
+- Failure-alert create/update paths tested with a mocked GitHub API, without manufacturing a failed production run or test issue.
 
-Verification run: https://github.com/martindavies-code/fourth-down-lab/actions/runs/42244567644
+## Remaining verification
+- Confirm PR checks, merge once, then verify Pages deployment and live timestamp.
+- A real future scheduled refresh and a real failure will confirm the external scheduling/issue permissions end to end. No intentional production failure was introduced.
 
-Scheduled Tuesday/Friday refresh timing is unchanged. Pull the final merged main before resuming edits. The manifest currently mirrors the workflow dependency list; keep both in sync when changing packages.
+Pull the final merged main with a clean tree before resuming edits. No model or data files changed.
