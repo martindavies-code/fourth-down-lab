@@ -83,6 +83,7 @@ export const App: React.FC = () => {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         dataAsOf={meta?.data_as_of}
+        weeks={meta?.weeks}
       />
 
       {/* Main Content Area */}

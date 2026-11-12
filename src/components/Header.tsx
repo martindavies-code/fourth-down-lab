@@ -1,6 +1,7 @@
 import React from 'react';
 import { Activity, ShieldCheck, Compass, BookOpen } from 'lucide-react';
 import { BlitzMascot } from './AnimeMascots';
+import { formatWeekRange } from '../utils/formatting';
 
 export type NavTab = 'feed' | 'teams' | 'games' | 'method';
 
@@ -8,9 +9,10 @@ interface HeaderProps {
   activeTab: NavTab;
   onTabChange: (tab: NavTab) => void;
   dataAsOf?: string;
+  weeks?: number[];
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, dataAsOf = '2026-11-03' }) => {
+export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, dataAsOf, weeks }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-sky-950/60 bg-[#070b14]/95 backdrop-blur-md">
       <div className="mx-auto flex flex-col sm:flex-row max-w-7xl sm:items-center justify-between px-2 py-2 sm:px-6 sm:py-3 gap-2 sm:gap-4">
@@ -108,11 +110,14 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, dataAsOf
       </div>
 
       {/* Secondary Bar: Data Freshness with Manga Badge */}
-      <div className="border-t border-slate-800/60 bg-[#0a0f1d] px-3 py-1 text-center text-[11px] text-slate-300 sm:px-6 flex items-center justify-center gap-2">
+      <div className="border-t border-slate-800/60 bg-[#0a0f1d] px-3 py-1 text-center text-[11px] text-slate-300 sm:px-6 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
         <span className="rounded bg-sky-500/20 px-1 py-0.2 text-[9px] font-extrabold text-sky-300 border border-sky-400/30">
           UNOFFICIAL
         </span>
-        <span className="truncate">Unofficial analytics on nflverse play-by-play (CC-BY 4.0) • Data refreshed {dataAsOf}</span>
+        <span>nflverse play-by-play (CC-BY 4.0)</span>
+        <span className="w-full sm:w-auto font-semibold text-sky-200" aria-label="Data freshness">
+          Data as of: {dataAsOf?.trim() || 'unavailable'} • {formatWeekRange(weeks)}
+        </span>
       </div>
     </header>
   );
