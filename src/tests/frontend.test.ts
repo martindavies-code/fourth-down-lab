@@ -353,3 +353,51 @@ test('Card palette text meets WCAG AA contrast (4.5:1) on the card background', 
     assert.ok(contrastRatio(colour, CARD_BG) >= 4.5, `${name} ${colour} fails 4.5:1`);
   }
 });
+
+
+test('Header freshness uses live metadata, never a fabricated date or clipped timestamp', () => {
+  const header = fs.readFileSync('src/components/Header.tsx', 'utf8');
+  const app = fs.readFileSync('src/App.tsx', 'utf8');
+  assert.match(app, /dataAsOf=\{meta\?\.data_as_of\}/);
+  assert.match(app, /weeks=\{meta\?\.weeks\}/);
+  assert.match(header, /Data as of:/);
+  assert.match(header, /dataAsOf\?\.trim\(\) \|\| 'unavailable'/);
+  assert.match(header, /formatWeekRange\(weeks\)/);
+  assert.doesNotMatch(header, /dataAsOf\s*=\s*['"]/);
+  const freshnessBar = header.slice(header.indexOf('{/* Secondary Bar:'));
+  assert.doesNotMatch(freshnessBar, /truncate/);
+});
+
+test('Refresh failure alert creates or updates one issue and links the failed run', async () => {
+  const workflow = fs.readFileSync('.github/workflows/refresh_data.yml', 'utf8');
+  assert.match(workflow, /cron: '0 23 \* \* 0'/);
+  assert.match(workflow, /cron: '0 8,12 \* \* 1,2'/);
+  assert.match(workflow, /cron: '0 8,12 \* \* 5'/);
+  assert.match(workflow, /needs: refresh/);
+  assert.ok(workflow.includes("failure() && needs.refresh.result == 'failure'"));
+  assert.match(workflow, /issues: write/);
+  const script = workflow.split('          script: |\n')[1]
+    .split('\n').map(line => line.replace(/^ {12}/, '')).join('\n');
+  const AsyncFunction = Object.getPrototypeOf(async () => {}).constructor;
+  const run = new AsyncFunction('github', 'context', script);
+  for (const existing of [false, true]) {
+    const calls: Array<{ action: string; value: { body: string; issue_number?: number } }> = [];
+    const github = {
+      rest: { issues: {
+        listForRepo() {},
+        async create(value: { body: string }) { calls.push({ action: 'create', value }); },
+        async update(value: { body: string; issue_number: number }) { calls.push({ action: 'update', value }); },
+      } },
+      async paginate(_method: unknown, options: { creator: string; state: string }) {
+        assert.equal(options.creator, 'github-actions[bot]');
+        assert.equal(options.state, 'open');
+        return existing ? [{ number: 7, body: '<!-- fourth-down-lab-refresh-failure -->' }] : [];
+      },
+    };
+    await run(github, { repo: { owner: 'test', repo: 'test' }, serverUrl: 'https://github.com', runId: 123, eventName: 'schedule' });
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].action, existing ? 'update' : 'create');
+    if (existing) assert.equal(calls[0].value.issue_number, 7);
+    assert.match(calls[0].value.body, /actions\/runs\/123/);
+  }
+});
