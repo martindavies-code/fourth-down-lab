@@ -182,16 +182,29 @@
     "low_sample_warning": false
   },
   {
+    "team": "WAS",
+    "total_executed": 73,
+    "genuine_count": 62,
+    "toss_up_count": 23,
+    "non_toss_up_genuine": 39,
+    "adherent_count": 28,
+    "adherence_pct": 71.8,
+    "adherence_display": "28 / 39 (71.8%)",
+    "punted_on_clear_go": 1,
+    "total_wp_lost_pp": 25.3,
+    "low_sample_warning": false
+  },
+  {
     "team": "NYG",
-    "total_executed": 63,
-    "genuine_count": 48,
+    "total_executed": 70,
+    "genuine_count": 54,
     "toss_up_count": 24,
-    "non_toss_up_genuine": 24,
-    "adherent_count": 17,
-    "adherence_pct": 70.8,
-    "adherence_display": "17 / 24 (70.8%)",
-    "punted_on_clear_go": 0,
-    "total_wp_lost_pp": 23.1,
+    "non_toss_up_genuine": 30,
+    "adherent_count": 21,
+    "adherence_pct": 70.0,
+    "adherence_display": "21 / 30 (70.0%)",
+    "punted_on_clear_go": 1,
+    "total_wp_lost_pp": 32.3,
     "low_sample_warning": false
   },
   {
@@ -205,19 +218,6 @@
     "adherence_display": "15 / 22 (68.2%)",
     "punted_on_clear_go": 1,
     "total_wp_lost_pp": 18.7,
-    "low_sample_warning": false
-  },
-  {
-    "team": "WAS",
-    "total_executed": 66,
-    "genuine_count": 56,
-    "toss_up_count": 22,
-    "non_toss_up_genuine": 34,
-    "adherent_count": 23,
-    "adherence_pct": 67.6,
-    "adherence_display": "23 / 34 (67.6%)",
-    "punted_on_clear_go": 1,
-    "total_wp_lost_pp": 25.3,
     "low_sample_warning": false
   },
   {
