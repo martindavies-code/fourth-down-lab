@@ -10,23 +10,24 @@
     6,
     7,
     8,
-    9
+    9,
+    10
   ],
-  "data_as_of": "2026-11-10 16:30 UTC",
+  "data_as_of": "2026-11-13 15:50 UTC",
   "model_version": "sportsdataverse-nfl-0.1.4 (nfl4th port)",
   "source": "nflverse play_by_play_2026.parquet",
   "licence_data": "CC-BY 4.0 (nflverse)",
   "licence_model": "MIT (nfl4th / Ben Baldwin, sportsdataverse / Saiem Gilani)",
   "counts": {
-    "total_fourth_down_rows": 2106,
-    "cancelled_snaps": 161,
-    "cancelled_replayed": 121,
+    "total_fourth_down_rows": 2122,
+    "cancelled_snaps": 163,
+    "cancelled_replayed": 123,
     "cancelled_not_replayed": 40,
-    "executed_snaps": 1944,
+    "executed_snaps": 1958,
     "excluded_snaps": 1,
-    "decisions_scored": 1944,
+    "decisions_scored": 1958,
     "teams": 32,
-    "games": 136
+    "games": 137
   },
   "excluded_snaps": [
     {

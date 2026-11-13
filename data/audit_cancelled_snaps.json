@@ -3339,5 +3339,47 @@
       "next_desc": "(8:10) 19-T.Taylor punts 31 yards to TB 15, Center-46-S.Daly, fair catch by 15-T.Johnson. ** Injury Update: TB-44-S.Tucker has returned to the game."
     },
     "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_WAS_NYG",
+    "play_id": 237,
+    "week": 10,
+    "posteam": "NYG",
+    "defteam": "WAS",
+    "qtr": 1,
+    "ydstogo": 7.0,
+    "yardline_100": 37.0,
+    "desc": "(11:28) (Shotgun) PENALTY on NYG, Delay of Game, 5 yards, enforced at WAS 37 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 261,
+      "next_down": 4,
+      "next_ydstogo": 12.0,
+      "next_play_type": "punt",
+      "next_desc": "(11:28) 15-J.Stout punts 34 yards to WAS 8, Center-58-B.Mann, downed by NYG-28-E.Campbell."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_WAS_NYG",
+    "play_id": 3910,
+    "week": 10,
+    "posteam": "NYG",
+    "defteam": "WAS",
+    "qtr": 4,
+    "ydstogo": 1.0,
+    "yardline_100": 89.0,
+    "desc": "(3:27) (Run formation) PENALTY on NYG, Delay of Game, 4 yards, enforced at NYG 11 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3934,
+      "next_down": 4,
+      "next_ydstogo": 5.0,
+      "next_play_type": "punt",
+      "next_desc": "(3:27) 15-J.Stout punts 68 yards to WAS 25, Center-58-B.Mann. 11-L.McCaffrey ran ob at WAS 37 for 12 yards (46-Z.Barnes)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
   }
 ]
