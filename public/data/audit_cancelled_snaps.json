@@ -3341,6 +3341,193 @@
     "status_label": "Not executed (penalty or cancelled snap)"
   },
   {
+    "game_id": "2026_10_BUF_NYJ",
+    "play_id": 341,
+    "week": 10,
+    "posteam": "NYJ",
+    "defteam": "BUF",
+    "qtr": 1,
+    "ydstogo": 6.0,
+    "yardline_100": 86.0,
+    "desc": "(9:22) (Punt formation) PENALTY on BUF-55-M.Hoecht, Neutral Zone Infraction, 5 yards, enforced at NYJ 14 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 369,
+      "next_down": 4,
+      "next_ydstogo": 1.0,
+      "next_play_type": "punt",
+      "next_desc": "(9:22) 14-A.McNamara punts 44 yards to BUF 37, Center-42-T.Hennessy, out of bounds."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_BUF_NYJ",
+    "play_id": 925,
+    "week": 10,
+    "posteam": "NYJ",
+    "defteam": "BUF",
+    "qtr": 1,
+    "ydstogo": 6.0,
+    "yardline_100": 45.0,
+    "desc": "(1:07) (Shotgun) PENALTY on BUF-91-E.Oliver, Neutral Zone Infraction, 5 yards, enforced at BUF 45 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 949,
+      "next_down": 4,
+      "next_ydstogo": 1.0,
+      "next_play_type": "run",
+      "next_desc": "(1:07) Direct snap to 47-A.Beck. 47-A.Beck up the middle to BUF 38 for 2 yards (42-D.Williams)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_BUF_NYJ",
+    "play_id": 1402,
+    "week": 10,
+    "posteam": "BUF",
+    "defteam": "NYJ",
+    "qtr": 2,
+    "ydstogo": 8.0,
+    "yardline_100": 14.0,
+    "desc": "(6:58) (Field Goal formation) PENALTY on BUF-73-D.Dawkins, False Start, 5 yards, enforced at NYJ 14 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 1432,
+      "next_down": 4,
+      "next_ydstogo": 13.0,
+      "next_play_type": "field_goal",
+      "next_desc": "(6:58) 16-T.Bass 37 yard field goal is GOOD, Center-69-R.Ferguson, Holder-39-T.Doman."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_HOU_CLE",
+    "play_id": 4447,
+    "week": 10,
+    "posteam": "HOU",
+    "defteam": "CLE",
+    "qtr": 4,
+    "ydstogo": 10.0,
+    "yardline_100": 72.0,
+    "desc": "(:17) (Shotgun) 7-C.Stroud pass deep middle to 12-N.Collins to HOU 44 for 16 yards (7-T.Campbell) [5-Q.Williams]. PENALTY on HOU-64-F.Nwaiwu, Offensive Holding, 10 yards, enforced at HOU 28 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 4483,
+      "next_down": 4,
+      "next_ydstogo": 20.0,
+      "next_play_type": "pass",
+      "next_desc": "(:10) (Shotgun) 7-C.Stroud pass incomplete deep left to 19-X.Hutchinson (31-D.McMillon)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_JAX_TEN",
+    "play_id": 1727,
+    "week": 10,
+    "posteam": "JAX",
+    "defteam": "TEN",
+    "qtr": 2,
+    "ydstogo": 9.0,
+    "yardline_100": 52.0,
+    "desc": "(2:37) (Punt formation) PENALTY on JAX-36-Jay.Jones, False Start, 5 yards, enforced at JAX 48 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 1751,
+      "next_down": 4,
+      "next_ydstogo": 14.0,
+      "next_play_type": "punt",
+      "next_desc": "(2:37) 9-L.Cooke punts 43 yards to TEN 14, Center-46-R.Matiscik, fair catch by 17-C.Dike."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_KC_ATL",
+    "play_id": 977,
+    "week": 10,
+    "posteam": "KC",
+    "defteam": "ATL",
+    "qtr": 1,
+    "ydstogo": 8.0,
+    "yardline_100": 64.0,
+    "desc": "(1:39) (Punt formation) PENALTY on KC-85-A.Armstrong, False Start, 5 yards, enforced at KC 36 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 1005,
+      "next_down": 4,
+      "next_ydstogo": 13.0,
+      "next_play_type": "punt",
+      "next_desc": "(1:39) 14-M.Araiza punts 60 yards to ATL 9, Center-41-J.Winchester. 14-O.Zaccheaus ran ob at ATL 29 for 20 yards (44-C.McDonald)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_KC_ATL",
+    "play_id": 2046,
+    "week": 10,
+    "posteam": "KC",
+    "defteam": "ATL",
+    "qtr": 2,
+    "ydstogo": 2.0,
+    "yardline_100": 23.0,
+    "desc": "(:28) 7-H.Butker 41 yard field goal is GOOD, NULLIFIED by Penalty, Center-41-J.Winchester, Holder-14-M.Araiza. PENALTY on ATL-28-M.Ford, Defensive Offside, 5 yards, enforced at ATL 23 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 2058,
+      "next_down": null,
+      "next_play_type": "no_play",
+      "next_desc": "Timeout #2 by ATL at 00:28."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_LA_ARI",
+    "play_id": 503,
+    "week": 10,
+    "posteam": "LA",
+    "defteam": "ARI",
+    "qtr": 1,
+    "ydstogo": 1.0,
+    "yardline_100": 35.0,
+    "desc": "(7:23) 24-B.Corum left tackle to ARI 27 for 8 yards (3-B.Baker). PENALTY on LA, Illegal Formation, 5 yards, enforced at ARI 35 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 536,
+      "next_down": 4,
+      "next_ydstogo": 6.0,
+      "next_play_type": "pass",
+      "next_desc": "(6:56) (Shotgun) 9-M.Stafford pass deep left to 8-T.Atwell to ARI 9 for 31 yards (35-K.King)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_10_LA_ARI",
+    "play_id": 2937,
+    "week": 10,
+    "posteam": "LA",
+    "defteam": "ARI",
+    "qtr": 3,
+    "ydstogo": 1.0,
+    "yardline_100": 35.0,
+    "desc": "(1:55) (Run formation) PENALTY on ARI-56-D.Robinson, Neutral Zone Infraction, 5 yards, enforced at ARI 35 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 2966,
+      "next_down": 1.0,
+      "next_play_type": "run",
+      "next_desc": "(1:32) 23-K.Williams up the middle to ARI 32 for -2 yards (51-R.Lopez)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
     "game_id": "2026_10_WAS_NYG",
     "play_id": 237,
     "week": 10,
