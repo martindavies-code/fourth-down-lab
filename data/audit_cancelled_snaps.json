@@ -3528,6 +3528,27 @@
     "status_label": "Not executed (penalty or cancelled snap)"
   },
   {
+    "game_id": "2026_10_PIT_CIN",
+    "play_id": 3978,
+    "week": 10,
+    "posteam": "CIN",
+    "defteam": "PIT",
+    "qtr": 4,
+    "ydstogo": 3.0,
+    "yardline_100": 41.0,
+    "desc": "(5:02) (Run formation) PENALTY on CIN, Delay of Game, 5 yards, enforced at PIT 41 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 4002,
+      "next_down": 4,
+      "next_ydstogo": 8.0,
+      "next_play_type": "punt",
+      "next_desc": "(5:02) 8-R.Rehkow punts 46 yards to end zone, Center-46-W.Wagner, Touchback."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
     "game_id": "2026_10_WAS_NYG",
     "play_id": 237,
     "week": 10,
