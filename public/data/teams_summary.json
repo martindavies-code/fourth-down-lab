@@ -325,6 +325,19 @@
     "low_sample_warning": false
   },
   {
+    "team": "PIT",
+    "total_executed": 67,
+    "genuine_count": 57,
+    "toss_up_count": 32,
+    "non_toss_up_genuine": 25,
+    "adherent_count": 15,
+    "adherence_pct": 60.0,
+    "adherence_display": "15 / 25 (60.0%)",
+    "punted_on_clear_go": 1,
+    "total_wp_lost_pp": 30.2,
+    "low_sample_warning": false
+  },
+  {
     "team": "DEN",
     "total_executed": 68,
     "genuine_count": 58,
@@ -348,19 +361,6 @@
     "adherence_display": "24 / 41 (58.5%)",
     "punted_on_clear_go": 2,
     "total_wp_lost_pp": 36.2,
-    "low_sample_warning": false
-  },
-  {
-    "team": "PIT",
-    "total_executed": 59,
-    "genuine_count": 49,
-    "toss_up_count": 25,
-    "non_toss_up_genuine": 24,
-    "adherent_count": 14,
-    "adherence_pct": 58.3,
-    "adherence_display": "14 / 24 (58.3%)",
-    "punted_on_clear_go": 1,
-    "total_wp_lost_pp": 29.9,
     "low_sample_warning": false
   },
   {
@@ -404,15 +404,15 @@
   },
   {
     "team": "CIN",
-    "total_executed": 41,
-    "genuine_count": 37,
-    "toss_up_count": 21,
-    "non_toss_up_genuine": 16,
-    "adherent_count": 6,
-    "adherence_pct": 37.5,
-    "adherence_display": "6 / 16 (37.5%)",
+    "total_executed": 46,
+    "genuine_count": 42,
+    "toss_up_count": 24,
+    "non_toss_up_genuine": 18,
+    "adherent_count": 8,
+    "adherence_pct": 44.4,
+    "adherence_display": "8 / 18 (44.4%)",
     "punted_on_clear_go": 1,
-    "total_wp_lost_pp": 26.7,
+    "total_wp_lost_pp": 27.2,
     "low_sample_warning": false
   }
 ]
