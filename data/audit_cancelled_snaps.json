@@ -3487,6 +3487,26 @@
     "status_label": "Not executed (penalty or cancelled snap)"
   },
   {
+    "game_id": "2026_10_LAC_BAL",
+    "play_id": 4160,
+    "week": 10,
+    "posteam": "LAC",
+    "defteam": "BAL",
+    "qtr": 4,
+    "ydstogo": 2.0,
+    "yardline_100": 34.0,
+    "desc": "(:18) (Run formation) PENALTY on LAC, Delay of Game, 5 yards, enforced at BAL 34 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 4172,
+      "next_down": null,
+      "next_play_type": "no_play",
+      "next_desc": "Timeout #2 by LAC at 00:18."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
     "game_id": "2026_10_LA_ARI",
     "play_id": 503,
     "week": 10,
