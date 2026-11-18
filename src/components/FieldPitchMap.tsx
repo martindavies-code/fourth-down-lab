@@ -1,8 +1,7 @@
 import React, { useId } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { formatDownAndDistance } from '../utils/formatting';
 import {
-  computePitchGeometry,
+  describePitchMap,
   END_ZONE_WIDTH,
   FIELD_CENTER_Y,
   FIELD_HEIGHT,
@@ -16,10 +15,10 @@ import {
 interface FieldPitchMapProps {
   posteam: string;
   defteam: string;
-  down: number;
-  ydstogo: number;
-  yardline100: number;
-  yardlineText: string;
+  down: number | null | undefined;
+  ydstogo: number | null | undefined;
+  yardline100: number | null | undefined;
+  yardlineText?: string;
 }
 
 const TURF_BANDS = Array.from({ length: 20 }, (_, i) => i);
@@ -38,29 +37,30 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
   down,
   ydstogo,
   yardline100,
-  yardlineText,
 }) => {
   const uid = useId().replace(/:/g, '');
   const clipId = `pitch-clip-${uid}`;
 
-  const geometry = computePitchGeometry(yardline100, ydstogo);
+  const desc = describePitchMap({ posteam, defteam, down, ydstogo, yardline100 });
+  const { geometry } = desc;
   const ownEz = getEndZoneStyle(posteam);
   const oppEz = getEndZoneStyle(defteam);
-  const downDistLabel = formatDownAndDistance(down, ydstogo, yardline100);
-
-  const ariaLabel = `Field map: ${posteam} ball at ${yardlineText}, ${downDistLabel}, driving toward ${defteam} end zone (${geometry.yardsToGoal} yards away).`;
 
   const fieldBottom = FIELD_TOP + FIELD_HEIGHT;
-  const shaftStartX = geometry.losX + 8;
-  const shaftEndX = Math.max(shaftStartX + 2, geometry.arrowEndX - 8);
-  const arrowTipX = geometry.arrowEndX;
+  const hasPosition = geometry.hasValidPosition && geometry.losX !== null && geometry.arrowEndX !== null;
+  const hasCompleteTarget = geometry.status === 'valid' && geometry.losX !== null && geometry.targetX !== null;
+  const losX = geometry.losX ?? 0;
+  const targetX = geometry.targetX ?? 0;
+  const shaftStartX = losX + 8;
+  const shaftEndX = Math.max(shaftStartX + 2, (geometry.arrowEndX ?? 0) - 8);
+  const arrowTipX = geometry.arrowEndX ?? 0;
   const arrowBaseX = arrowTipX - 9.5;
 
   return (
     <div
       className="w-full rounded-lg border border-slate-700/70 bg-[#080d1a] px-2.5 py-2 shadow-inner"
       role="img"
-      aria-label={ariaLabel}
+      aria-label={desc.ariaLabel}
     >
       {/* Top direction & end-zone callout */}
       <div className="mb-1.5 flex items-center justify-between gap-2 text-[10px] sm:text-[11px] leading-none">
@@ -295,146 +295,183 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             strokeWidth={2.2}
           />
 
-          {/* Shaded Yards-to-Gain Zone */}
-          <rect
-            x={geometry.losX}
-            y={FIELD_TOP}
-            width={Math.max(2, geometry.targetX - geometry.losX)}
-            height={FIELD_HEIGHT}
-            fill="rgba(251, 191, 36, 0.2)"
-          />
-
-          {/* Target Line (First Down or Goal Line) */}
-          <line
-            x1={geometry.targetX}
-            y1={FIELD_TOP}
-            x2={geometry.targetX}
-            y2={fieldBottom}
-            stroke="rgba(251, 191, 36, 0.35)"
-            strokeWidth={5}
-          />
-          <line
-            x1={geometry.targetX}
-            y1={FIELD_TOP}
-            x2={geometry.targetX}
-            y2={fieldBottom}
-            stroke="#fbbf24"
-            strokeWidth={geometry.isGoalToGo ? 3.2 : 2.5}
-          />
-
-          {/* Line of Scrimmage (LOS) */}
-          <line
-            x1={geometry.losX}
-            y1={FIELD_TOP}
-            x2={geometry.losX}
-            y2={fieldBottom}
-            stroke="rgba(56, 189, 248, 0.38)"
-            strokeWidth={6}
-          />
-          <line
-            x1={geometry.losX}
-            y1={FIELD_TOP}
-            x2={geometry.losX}
-            y2={fieldBottom}
-            stroke="#38bdf8"
-            strokeWidth={2.5}
-          />
-
-          {/* Trailing drive momentum chevrons when close to opponent goal line */}
-          {geometry.showTrailingChevrons && (
-            <g
-              fill="none"
-              stroke="rgba(255, 255, 255, 0.78)"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline
-                points={`${geometry.losX - 27},${FIELD_CENTER_Y - 5} ${geometry.losX - 21},${FIELD_CENTER_Y} ${geometry.losX - 27},${FIELD_CENTER_Y + 5}`}
+          {/* Shaded Yards-to-Gain Zone & Target Line (only when both spot and distance are valid) */}
+          {hasCompleteTarget && (
+            <>
+              <rect
+                x={losX}
+                y={FIELD_TOP}
+                width={Math.max(2, targetX - losX)}
+                height={FIELD_HEIGHT}
+                fill="rgba(251, 191, 36, 0.2)"
               />
-              <polyline
-                points={`${geometry.losX - 18},${FIELD_CENTER_Y - 5} ${geometry.losX - 12},${FIELD_CENTER_Y} ${geometry.losX - 18},${FIELD_CENTER_Y + 5}`}
+              <line
+                x1={targetX}
+                y1={FIELD_TOP}
+                x2={targetX}
+                y2={fieldBottom}
+                stroke="rgba(251, 191, 36, 0.35)"
+                strokeWidth={5}
               />
-            </g>
+              <line
+                x1={targetX}
+                y1={FIELD_TOP}
+                x2={targetX}
+                y2={fieldBottom}
+                stroke="#fbbf24"
+                strokeWidth={geometry.isGoalToGo ? 3.2 : 2.5}
+              />
+            </>
           )}
 
-          {/* Forward Drive Direction Arrow */}
-          <line
-            x1={shaftStartX}
-            y1={FIELD_CENTER_Y}
-            x2={shaftEndX}
-            y2={FIELD_CENTER_Y}
-            stroke="rgba(2, 6, 23, 0.78)"
-            strokeWidth={5}
-            strokeLinecap="round"
-          />
-          <line
-            x1={shaftStartX}
-            y1={FIELD_CENTER_Y}
-            x2={shaftEndX}
-            y2={FIELD_CENTER_Y}
-            stroke="#ffffff"
-            strokeWidth={2.6}
-            strokeLinecap="round"
-          />
-          <polygon
-            points={`${arrowTipX},${FIELD_CENTER_Y} ${arrowBaseX},${FIELD_CENTER_Y - 6} ${arrowBaseX},${FIELD_CENTER_Y + 6}`}
-            fill="#ffffff"
-            stroke="rgba(2, 6, 23, 0.78)"
-            strokeWidth={1.2}
-            strokeLinejoin="round"
-          />
+          {/* Line of Scrimmage, Drive Direction & Football (only when spot is valid) */}
+          {hasPosition && (
+            <>
+              <line
+                x1={losX}
+                y1={FIELD_TOP}
+                x2={losX}
+                y2={fieldBottom}
+                stroke="rgba(56, 189, 248, 0.38)"
+                strokeWidth={6}
+              />
+              <line
+                x1={losX}
+                y1={FIELD_TOP}
+                x2={losX}
+                y2={fieldBottom}
+                stroke="#38bdf8"
+                strokeWidth={2.5}
+              />
 
-          {/* Football Marker on Line of Scrimmage */}
-          <ellipse
-            cx={geometry.losX}
-            cy={FIELD_CENTER_Y}
-            rx={8.5}
-            ry={5.6}
-            fill="rgba(2, 6, 23, 0.75)"
-          />
-          <ellipse
-            cx={geometry.losX}
-            cy={FIELD_CENTER_Y}
-            rx={7}
-            ry={4.5}
-            fill="#b45309"
-            stroke="#ffffff"
-            strokeWidth={1.5}
-          />
-          <line
-            x1={geometry.losX - 2.6}
-            y1={FIELD_CENTER_Y}
-            x2={geometry.losX + 2.6}
-            y2={FIELD_CENTER_Y}
-            stroke="#ffffff"
-            strokeWidth={1.1}
-            strokeLinecap="round"
-          />
-          <line
-            x1={geometry.losX - 1.5}
-            y1={FIELD_CENTER_Y - 1.4}
-            x2={geometry.losX - 1.5}
-            y2={FIELD_CENTER_Y + 1.4}
-            stroke="#ffffff"
-            strokeWidth={0.9}
-          />
-          <line
-            x1={geometry.losX}
-            y1={FIELD_CENTER_Y - 1.4}
-            x2={geometry.losX}
-            y2={FIELD_CENTER_Y + 1.4}
-            stroke="#ffffff"
-            strokeWidth={0.9}
-          />
-          <line
-            x1={geometry.losX + 1.5}
-            y1={FIELD_CENTER_Y - 1.4}
-            x2={geometry.losX + 1.5}
-            y2={FIELD_CENTER_Y + 1.4}
-            stroke="#ffffff"
-            strokeWidth={0.9}
-          />
+              {geometry.showTrailingChevrons && (
+                <g
+                  fill="none"
+                  stroke="rgba(255, 255, 255, 0.78)"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline
+                    points={`${losX - 27},${FIELD_CENTER_Y - 5} ${losX - 21},${FIELD_CENTER_Y} ${losX - 27},${FIELD_CENTER_Y + 5}`}
+                  />
+                  <polyline
+                    points={`${losX - 18},${FIELD_CENTER_Y - 5} ${losX - 12},${FIELD_CENTER_Y} ${losX - 18},${FIELD_CENTER_Y + 5}`}
+                  />
+                </g>
+              )}
+
+              <line
+                x1={shaftStartX}
+                y1={FIELD_CENTER_Y}
+                x2={shaftEndX}
+                y2={FIELD_CENTER_Y}
+                stroke="rgba(2, 6, 23, 0.78)"
+                strokeWidth={5}
+                strokeLinecap="round"
+              />
+              <line
+                x1={shaftStartX}
+                y1={FIELD_CENTER_Y}
+                x2={shaftEndX}
+                y2={FIELD_CENTER_Y}
+                stroke="#ffffff"
+                strokeWidth={2.6}
+                strokeLinecap="round"
+              />
+              <polygon
+                points={`${arrowTipX},${FIELD_CENTER_Y} ${arrowBaseX},${FIELD_CENTER_Y - 6} ${arrowBaseX},${FIELD_CENTER_Y + 6}`}
+                fill="#ffffff"
+                stroke="rgba(2, 6, 23, 0.78)"
+                strokeWidth={1.2}
+                strokeLinejoin="round"
+              />
+
+              <ellipse
+                cx={losX}
+                cy={FIELD_CENTER_Y}
+                rx={8.5}
+                ry={5.6}
+                fill="rgba(2, 6, 23, 0.75)"
+              />
+              <ellipse
+                cx={losX}
+                cy={FIELD_CENTER_Y}
+                rx={7}
+                ry={4.5}
+                fill="#b45309"
+                stroke="#ffffff"
+                strokeWidth={1.5}
+              />
+              <line
+                x1={losX - 2.6}
+                y1={FIELD_CENTER_Y}
+                x2={losX + 2.6}
+                y2={FIELD_CENTER_Y}
+                stroke="#ffffff"
+                strokeWidth={1.1}
+                strokeLinecap="round"
+              />
+              <line
+                x1={losX - 1.5}
+                y1={FIELD_CENTER_Y - 1.4}
+                x2={losX - 1.5}
+                y2={FIELD_CENTER_Y + 1.4}
+                stroke="#ffffff"
+                strokeWidth={0.9}
+              />
+              <line
+                x1={losX}
+                y1={FIELD_CENTER_Y - 1.4}
+                x2={losX}
+                y2={FIELD_CENTER_Y + 1.4}
+                stroke="#ffffff"
+                strokeWidth={0.9}
+              />
+              <line
+                x1={losX + 1.5}
+                y1={FIELD_CENTER_Y - 1.4}
+                x2={losX + 1.5}
+                y2={FIELD_CENTER_Y + 1.4}
+                stroke="#ffffff"
+                strokeWidth={0.9}
+              />
+            </>
+          )}
+
+          {/* Honest unavailable overlay when yardline_100 is missing or out of bounds */}
+          {desc.unavailableBannerText !== null && (
+            <g>
+              <rect
+                x={END_ZONE_WIDTH}
+                y={FIELD_TOP}
+                width={FIELD_PLAY_WIDTH}
+                height={FIELD_HEIGHT}
+                fill="rgba(8, 13, 26, 0.58)"
+              />
+              <rect
+                x={160}
+                y={FIELD_CENTER_Y - 17}
+                width={280}
+                height={34}
+                rx={6}
+                fill="#0b1120"
+                stroke="rgba(148, 163, 184, 0.45)"
+                strokeWidth={1.2}
+              />
+              <text
+                x={300}
+                y={FIELD_CENTER_Y}
+                fill="#e2e8f0"
+                fontSize="14"
+                fontWeight="800"
+                textAnchor="middle"
+                dominantBaseline="central"
+              >
+                {desc.unavailableBannerText}
+              </text>
+            </g>
+          )}
         </g>
 
         {/* Crisp outer sideline border */}
@@ -454,18 +491,22 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
       <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-[10px] text-slate-300 leading-none">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-2.5 w-1 rounded-full bg-sky-400" aria-hidden="true" />
-            <span>LOS ({yardlineText})</span>
+            <span
+              className={`inline-block h-2.5 w-1 rounded-full ${hasPosition ? 'bg-sky-400' : 'bg-slate-500'}`}
+              aria-hidden="true"
+            />
+            <span>{desc.losLabel}</span>
           </span>
           <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block h-2.5 w-1 rounded-full bg-amber-400" aria-hidden="true" />
-            <span>
-              {geometry.isGoalToGo ? 'Goal line' : `1st down (${Math.round(ydstogo)} yds)`}
-            </span>
+            <span
+              className={`inline-block h-2.5 w-1 rounded-full ${hasCompleteTarget ? 'bg-amber-400' : 'bg-slate-500'}`}
+              aria-hidden="true"
+            />
+            <span>{desc.targetLabel}</span>
           </span>
         </div>
         <span className="font-semibold text-slate-200 tabular-nums">
-          {geometry.yardsToGoal} yds to {defteam} EZ
+          {desc.distanceToEzLabel}
         </span>
       </div>
     </div>

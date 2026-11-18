@@ -1,3 +1,10 @@
+import {
+  formatDownAndDistance,
+  formatYardline,
+  formatYardNumber,
+  isValidYardline100,
+  isValidYardsToGo,
+} from './formatting.ts';
 import { contrastRatio } from './palette.ts';
 import { getTeamInfo } from './teamLogos.ts';
 
@@ -9,25 +16,47 @@ export const FIELD_TOP = 8;
 export const FIELD_HEIGHT = 100;
 export const FIELD_CENTER_Y = FIELD_TOP + FIELD_HEIGHT / 2;
 
+export type PitchValidityStatus = 'valid' | 'invalid_distance' | 'invalid_position';
+
 export interface PitchGeometry {
-  /** Yards from posteam's own goal line (1..99). */
-  losYard: number;
-  /** Yards from posteam's own goal line to the target line (first down or goal line, <= 100). */
-  targetYard: number;
-  /** True when ydstogo >= yardline_100 (4th & Goal). */
+  /** Explicit validity state distinguishing complete play geometry, known spot only, and invalid spot. */
+  status: PitchValidityStatus;
+  /** True only when both yardline_100 and ydstogo are valid. */
+  isValid: boolean;
+  /** True when yardline_100 is within valid field-of-play bounds (1..99). */
+  hasValidPosition: boolean;
+  /** True when ydstogo is strictly positive and within bounds (> 0 and <= 99). */
+  hasValidDistance: boolean;
+  /** Yards from posteam's own goal line (1..99), or null when position is invalid. */
+  losYard: number | null;
+  /** Yards from posteam's own goal line to the target line (<= 100), or null when incomplete. */
+  targetYard: number | null;
+  /** True when ydstogo >= yardline_100 (4th & Goal) on valid geometry. */
   isGoalToGo: boolean;
-  /** True when inside opponent's 20-yard line (yardline_100 <= 20). */
+  /** True when inside opponent's 20-yard line (yardline_100 <= 20) on a valid spot. */
   isRedZone: boolean;
-  /** Yards remaining to opponent's goal line (1..99). */
-  yardsToGoal: number;
-  /** SVG X coordinate of the Line of Scrimmage (55..545). */
-  losX: number;
-  /** SVG X coordinate of the first-down or goal line (<= 550). */
-  targetX: number;
+  /** Yards remaining to opponent's goal line (1..99), or null when position is invalid. */
+  yardsToGoal: number | null;
+  /** Valid yards needed for a first down, or null when distance is invalid. */
+  yardsToGain: number | null;
+  /** SVG X coordinate of the Line of Scrimmage (55..545), or null when position is invalid. */
+  losX: number | null;
+  /** SVG X coordinate of the first-down or goal line (<= 550), or null when incomplete. */
+  targetX: number | null;
   /** SVG X coordinate for the tip of the forward drive arrow pointing toward defteam end zone. */
-  arrowEndX: number;
+  arrowEndX: number | null;
   /** True when near goal line so trailing chevrons help visualize forward momentum into the end zone. */
   showTrailingChevrons: boolean;
+}
+
+export interface PitchMapDescription {
+  geometry: PitchGeometry;
+  spotLabel: string;
+  losLabel: string;
+  targetLabel: string;
+  distanceToEzLabel: string;
+  unavailableBannerText: string | null;
+  ariaLabel: string;
 }
 
 export interface EndZoneStyle {
@@ -39,35 +68,142 @@ export interface EndZoneStyle {
 
 /**
  * Computes normalized field coordinates (posteam driving left-to-right toward defteam end zone)
- * from nflverse yardline_100 (yards to opponent goal line) and ydstogo.
+ * from nflverse yardline_100 (1..99 yards to opponent goal line) and ydstogo (> 0..99).
+ * Missing, non-finite, or out-of-range inputs produce explicit invalid states without fabrication.
  */
-export function computePitchGeometry(yardline100: number, ydstogo: number): PitchGeometry {
-  const safeYardline100 = Number.isFinite(yardline100)
-    ? Math.min(99, Math.max(1, yardline100))
-    : 50;
-  const safeYdsToGo = Number.isFinite(ydstogo) ? Math.max(0.5, ydstogo) : 10;
+export function computePitchGeometry(
+  yardline100: number | null | undefined,
+  ydstogo: number | null | undefined
+): PitchGeometry {
+  const hasValidPosition = isValidYardline100(yardline100);
+  const hasValidDistance = isValidYardsToGo(ydstogo);
 
-  const losYard = 100 - safeYardline100;
-  const isGoalToGo = safeYdsToGo >= safeYardline100;
-  const targetYard = isGoalToGo ? 100 : Math.min(100, losYard + safeYdsToGo);
-  const isRedZone = safeYardline100 <= 20;
+  if (!hasValidPosition) {
+    return {
+      status: 'invalid_position',
+      isValid: false,
+      hasValidPosition: false,
+      hasValidDistance,
+      losYard: null,
+      targetYard: null,
+      isGoalToGo: false,
+      isRedZone: false,
+      yardsToGoal: null,
+      yardsToGain: hasValidDistance ? Math.round(ydstogo * 10) / 10 : null,
+      losX: null,
+      targetX: null,
+      arrowEndX: null,
+      showTrailingChevrons: false,
+    };
+  }
 
-  const losX = END_ZONE_WIDTH + losYard * 5;
-  const targetX = END_ZONE_WIDTH + targetYard * 5;
-  // Clamp tip before the rotated opponent end-zone label centered around x = 578
+  const rawLosYard = 100 - yardline100;
+  const losYard = Math.round(rawLosYard * 10) / 10;
+  const yardsToGoal = Math.round(yardline100 * 10) / 10;
+  const isRedZone = yardline100 <= 20;
+  const losX = END_ZONE_WIDTH + rawLosYard * 5;
+  // Clamp tip before the rotated opponent end-zone label centered around x = 577
   const arrowEndX = Math.min(564, losX + 44);
   const showTrailingChevrons = losX > 522;
 
+  if (!hasValidDistance) {
+    return {
+      status: 'invalid_distance',
+      isValid: false,
+      hasValidPosition: true,
+      hasValidDistance: false,
+      losYard,
+      targetYard: null,
+      isGoalToGo: false,
+      isRedZone,
+      yardsToGoal,
+      yardsToGain: null,
+      losX,
+      targetX: null,
+      arrowEndX,
+      showTrailingChevrons,
+    };
+  }
+
+  const isGoalToGo = ydstogo >= yardline100;
+  const rawTargetYard = isGoalToGo ? 100 : Math.min(100, rawLosYard + ydstogo);
+  const targetYard = Math.round(rawTargetYard * 10) / 10;
+  const yardsToGain = Math.round(ydstogo * 10) / 10;
+  const targetX = END_ZONE_WIDTH + rawTargetYard * 5;
+
   return {
+    status: 'valid',
+    isValid: true,
+    hasValidPosition: true,
+    hasValidDistance: true,
     losYard,
     targetYard,
     isGoalToGo,
     isRedZone,
-    yardsToGoal: Math.round(safeYardline100),
+    yardsToGoal,
+    yardsToGain,
     losX,
     targetX,
     arrowEndX,
     showTrailingChevrons,
+  };
+}
+
+/**
+ * Derives consistent geometry, visible labels, and accessible label for FieldPitchMap.
+ */
+export function describePitchMap(params: {
+  posteam: string;
+  defteam: string;
+  down: number | null | undefined;
+  ydstogo: number | null | undefined;
+  yardline100: number | null | undefined;
+}): PitchMapDescription {
+  const { posteam, defteam, down, ydstogo, yardline100 } = params;
+  const geometry = computePitchGeometry(yardline100, ydstogo);
+
+  if (geometry.status === 'invalid_position') {
+    return {
+      geometry,
+      spotLabel: 'Position unavailable',
+      losLabel: 'LOS unavailable',
+      targetLabel: 'Target unavailable',
+      distanceToEzLabel: `Distance to ${defteam} EZ unavailable`,
+      unavailableBannerText: 'Field position unavailable',
+      ariaLabel: `Field map unavailable: field position unavailable for ${posteam} vs ${defteam}.`,
+    };
+  }
+
+  const spotLabel = formatYardline(yardline100, posteam, defteam);
+  const losLabel = `LOS (${spotLabel})`;
+  const ydsOut = formatYardNumber(yardline100 as number);
+  const distanceToEzLabel = `${ydsOut} yds to ${defteam} EZ`;
+
+  if (geometry.status === 'invalid_distance') {
+    return {
+      geometry,
+      spotLabel,
+      losLabel,
+      targetLabel: '1st down target unavailable',
+      distanceToEzLabel,
+      unavailableBannerText: null,
+      ariaLabel: `Field map: ${posteam} ball at ${spotLabel}, distance to gain unavailable, driving toward ${defteam} end zone (${ydsOut} yards away).`,
+    };
+  }
+
+  const targetLabel = geometry.isGoalToGo
+    ? 'Goal line'
+    : `1st down (${formatYardNumber(ydstogo as number)} yds)`;
+  const downDistLabel = formatDownAndDistance(down, ydstogo, yardline100);
+
+  return {
+    geometry,
+    spotLabel,
+    losLabel,
+    targetLabel,
+    distanceToEzLabel,
+    unavailableBannerText: null,
+    ariaLabel: `Field map: ${posteam} ball at ${spotLabel}, ${downDistLabel}, driving toward ${defteam} end zone (${ydsOut} yards away).`,
   };
 }
 

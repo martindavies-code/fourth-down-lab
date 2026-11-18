@@ -172,8 +172,8 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
             <div className="mt-1 flex items-center justify-end gap-3 text-sm text-slate-300">
               <span className="inline-flex items-center gap-1 font-bold text-white">
                 <MapPin className="h-4 w-4 text-amber-400" aria-hidden="true" />
-                at {fieldPos.yardlineText}
-                {fieldPos.isRedZone && <span className="ml-1 text-rose-300">Red zone</span>}
+                {fieldPos.isValid ? `at ${fieldPos.yardlineText}` : fieldPos.yardlineText}
+                {fieldPos.isValid && fieldPos.isRedZone && <span className="ml-1 text-rose-300">Red zone</span>}
               </span>
               {isTwoMinDrill && (
                 <span className="inline-flex items-center gap-1 text-amber-300 font-bold">
