@@ -43,6 +43,19 @@ export const NFL_TEAMS: Record<string, TeamInfo> = {
 
 const DARK_LOGOS = new Set(['NYJ', 'NYG', 'LAR', 'LA', 'PIT', 'CHI']);
 
+const TEAM_ALIASES: Record<string, string> = {
+  LA: 'LAR',
+  WSH: 'WAS',
+  JAC: 'JAX',
+};
+
+export function getTeamInfo(abbr: string): TeamInfo | undefined {
+  const clean = abbr?.toUpperCase().trim();
+  if (!clean) return undefined;
+  const canonical = TEAM_ALIASES[clean] ?? clean;
+  return NFL_TEAMS[canonical];
+}
+
 export function getTeamLogoUrl(abbr: string): string {
   const clean = abbr?.toUpperCase().trim() || 'NFL';
   if (clean === 'NFL') {
@@ -55,7 +68,7 @@ export function getTeamLogoUrl(abbr: string): string {
 
 export function getTeamFallbackSvg(abbr: string): string {
   const clean = abbr?.toUpperCase().trim() || 'NFL';
-  const team = NFL_TEAMS[clean] || { primaryColor: '#1e293b', secondaryColor: '#94a3b8' };
+  const team = getTeamInfo(clean) || { primaryColor: '#1e293b', secondaryColor: '#94a3b8' };
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
     <circle cx="50" cy="50" r="46" fill="${team.primaryColor}" stroke="${team.secondaryColor}" stroke-width="4"/>
     <text x="50" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="${clean.length > 3 ? '22' : '28'}" font-weight="900" fill="#ffffff" text-anchor="middle">${clean}</text>
@@ -68,7 +81,7 @@ export function isDarkLogo(abbr: string): boolean {
 }
 
 export function getTeamName(abbr: string): string {
-  const team = NFL_TEAMS[abbr?.toUpperCase().trim()];
+  const team = getTeamInfo(abbr);
   if (team) {
     return `${team.city} ${team.name}`;
   }
