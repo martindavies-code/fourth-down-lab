@@ -17,12 +17,14 @@ import {
   getScoreDifferentialBadge,
 } from '../utils/formatting.ts';
 import {
+  getTeamInfo,
   getTeamLogoUrl,
   getTeamFallbackSvg,
   getTeamName,
   isDarkLogo,
   NFL_TEAMS,
 } from '../utils/teamLogos.ts';
+import { computePitchGeometry, getEndZoneStyle } from '../utils/pitch.ts';
 
 test('Frontend Unit Tests: Filter Logic', () => {
   const all = MOCK_DECISIONS_FIXTURE;
@@ -399,5 +401,76 @@ test('Refresh failure alert creates or updates one issue and links the failed ru
     assert.equal(calls[0].action, existing ? 'update' : 'create');
     if (existing) assert.equal(calls[0].value.issue_number, 7);
     assert.match(calls[0].value.body, /actions\/runs\/123/);
+  }
+});
+
+test('Pitch geometry computes LOS, first down, goal-to-go, and arrow bounds accurately', () => {
+  // Screenshot play: LA ball at ARI 47, 4th & 3
+  const mid = computePitchGeometry(47, 3);
+  assert.equal(mid.losYard, 53);
+  assert.equal(mid.targetYard, 56);
+  assert.equal(mid.isGoalToGo, false);
+  assert.equal(mid.isRedZone, false);
+  assert.equal(mid.yardsToGoal, 47);
+  assert.equal(mid.losX, 315);
+  assert.equal(mid.targetX, 330);
+  assert.equal(mid.arrowEndX, 359);
+  assert.equal(mid.showTrailingChevrons, false);
+
+  // Own territory: own 5-yard line, 4th & 10
+  const deep = computePitchGeometry(95, 10);
+  assert.equal(deep.losYard, 5);
+  assert.equal(deep.targetYard, 15);
+  assert.equal(deep.isGoalToGo, false);
+  assert.equal(deep.isRedZone, false);
+  assert.equal(deep.losX, 75);
+  assert.equal(deep.targetX, 125);
+
+  // Red zone & 4th & Goal from opponent 8
+  const rzGoal = computePitchGeometry(8, 8);
+  assert.equal(rzGoal.losYard, 92);
+  assert.equal(rzGoal.targetYard, 100);
+  assert.equal(rzGoal.isGoalToGo, true);
+  assert.equal(rzGoal.isRedZone, true);
+  assert.equal(rzGoal.targetX, 550);
+  assert.equal(rzGoal.showTrailingChevrons, false);
+
+  // 1-yard line: arrow stops well before opponent end-zone text (x = 577)
+  const oneYard = computePitchGeometry(1, 1);
+  assert.equal(oneYard.losYard, 99);
+  assert.equal(oneYard.targetYard, 100);
+  assert.equal(oneYard.isGoalToGo, true);
+  assert.equal(oneYard.losX, 545);
+  assert.ok(oneYard.arrowEndX <= 564);
+  assert.equal(oneYard.showTrailingChevrons, true);
+
+  // Defensive clamping for invalid inputs
+  const clamped = computePitchGeometry(Number.NaN, -5);
+  assert.equal(clamped.losYard, 50);
+  assert.equal(clamped.yardsToGoal, 50);
+});
+
+test('End zone styles resolve LA alias and enforce readable contrast for all 32 teams', () => {
+  const laInfo = getTeamInfo('LA');
+  assert.ok(laInfo);
+  assert.equal(laInfo.name, 'Rams');
+
+  const laEz = getEndZoneStyle('LA');
+  assert.equal(laEz.label, 'LA');
+  assert.equal(laEz.background, '#003594');
+  assert.equal(laEz.textColor, '#ffffff');
+
+  const noEz = getEndZoneStyle('NO');
+  assert.equal(noEz.textColor, '#020617');
+
+  const pitEz = getEndZoneStyle('PIT');
+  assert.equal(pitEz.textColor, '#020617');
+
+  for (const abbr of [...Object.keys(NFL_TEAMS), 'LA']) {
+    const ez = getEndZoneStyle(abbr);
+    assert.ok(
+      contrastRatio(ez.textColor, ez.background) >= 4.5,
+      `${abbr} end-zone text ${ez.textColor} on ${ez.background} must meet WCAG AA (4.5:1)`
+    );
   }
 });

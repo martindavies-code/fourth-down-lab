@@ -9,6 +9,7 @@ import {
 } from '../utils/formatting';
 import { buildStory, verdictTone, OPTION_LABELS } from '../utils/story';
 import { TimeoutPips } from './TimeoutPips';
+import { FieldPitchMap } from './FieldPitchMap';
 import { ChevronDown, ChevronUp, MapPin, Timer } from 'lucide-react';
 
 interface DecisionCardProps {
@@ -143,15 +144,27 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
           </div>
         </div>
 
-        {/* Hero: down and distance, clock and period, field position */}
-        <div className="mt-4 flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-          <div>
+        {/* Hero: down and distance, field pitch visualization, clock and field position */}
+        <div className="mt-4 flex flex-wrap items-end lg:items-center justify-between gap-x-5 gap-y-3">
+          <div className="order-1 shrink-0">
             <div className="text-[11px] font-extrabold uppercase tracking-widest text-sky-300">Fourth down</div>
             <div className="text-5xl sm:text-6xl font-black uppercase leading-none tracking-tight text-white tabular-nums">
               {formatDownAndDistance(down, ydstogo, yardline_100)}
             </div>
           </div>
-          <div className="text-right">
+
+          <div className="order-3 w-full lg:order-2 lg:w-auto lg:flex-1 lg:max-w-[520px] lg:mx-auto">
+            <FieldPitchMap
+              posteam={posteam}
+              defteam={defteam}
+              down={down}
+              ydstogo={ydstogo}
+              yardline100={yardline_100}
+              yardlineText={fieldPos.yardlineText}
+            />
+          </div>
+
+          <div className="order-2 ml-auto text-right lg:order-3 lg:ml-0 shrink-0">
             <div className="flex items-baseline justify-end gap-2">
               <span className="text-2xl sm:text-3xl font-black text-sky-300">{periodLabel}</span>
               <span className="text-3xl sm:text-4xl font-black text-white tabular-nums">{clock}</span>
