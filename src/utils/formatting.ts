@@ -13,12 +13,16 @@ export function formatTimeRemaining(qtr: number, qtrSeconds: number): string {
   return `OT ${timeStr}`;
 }
 
+export function cleanYardFloat(value: number): number {
+  return Number(value.toPrecision(12));
+}
+
 export function isValidYardline100(yardline100: unknown): yardline100 is number {
   return (
     typeof yardline100 === 'number' &&
     Number.isFinite(yardline100) &&
-    yardline100 >= 1 &&
-    yardline100 <= 99
+    yardline100 > 0 &&
+    yardline100 < 100
   );
 }
 
@@ -27,19 +31,26 @@ export function isValidYardsToGo(ydstogo: unknown): ydstogo is number {
     typeof ydstogo === 'number' &&
     Number.isFinite(ydstogo) &&
     ydstogo > 0 &&
-    ydstogo <= 99
+    ydstogo < 100
   );
 }
 
 export function formatYardNumber(yards: number): string {
-  if (Number.isInteger(yards)) {
-    return String(yards);
+  const clean = cleanYardFloat(yards);
+  if (Number.isInteger(clean)) {
+    return String(clean);
   }
-  const rounded1 = Math.round(yards * 10) / 10;
-  if (rounded1 > 0) {
-    return Number.isInteger(rounded1) ? String(rounded1) : rounded1.toFixed(1);
+  if (clean > 0 && clean < 0.1) {
+    return '<0.1';
   }
-  return String(Number(yards.toFixed(2)));
+  if (clean > 99.9 && clean < 100) {
+    return '99.9';
+  }
+  if (clean > 49.9 && clean < 50) {
+    return '49.9';
+  }
+  const rounded1 = Math.round(clean * 10) / 10;
+  return Number.isInteger(rounded1) ? String(rounded1) : rounded1.toFixed(1);
 }
 
 export function formatYardline(
@@ -50,12 +61,12 @@ export function formatYardline(
   if (!isValidYardline100(yardline100)) {
     return 'Position unavailable';
   }
-  const y100 = Math.round(yardline100 * 10) / 10;
+  const y100 = cleanYardFloat(yardline100);
   if (y100 === 50) return '50';
   if (y100 < 50) {
     return `${defteam} ${formatYardNumber(y100)}`;
   }
-  return `${posteam} ${formatYardNumber(100 - y100)}`;
+  return `${posteam} ${formatYardNumber(cleanYardFloat(100 - y100))}`;
 }
 
 export function formatDownAndDistance(
@@ -141,7 +152,7 @@ export function getFieldPositionInfo(
     };
   }
 
-  const y100 = Math.round(yardline100 * 10) / 10;
+  const y100 = cleanYardFloat(yardline100);
   const isRedZone = yardline100 <= 20;
 
   if (y100 === 50) {
@@ -165,7 +176,8 @@ export function getFieldPositionInfo(
     };
   }
 
-  const ownYardText = formatYardNumber(100 - y100);
+  const ownYard = cleanYardFloat(100 - y100);
+  const ownYardText = formatYardNumber(ownYard);
   return {
     yardlineText: `${posteam} ${ownYardText}`,
     territoryText: `Own ${ownYardText}`,

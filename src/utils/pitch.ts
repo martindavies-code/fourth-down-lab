@@ -1,4 +1,5 @@
 import {
+  cleanYardFloat,
   formatDownAndDistance,
   formatYardline,
   formatYardNumber,
@@ -23,11 +24,11 @@ export interface PitchGeometry {
   status: PitchValidityStatus;
   /** True only when both yardline_100 and ydstogo are valid. */
   isValid: boolean;
-  /** True when yardline_100 is within valid field-of-play bounds (1..99). */
+  /** True when yardline_100 is strictly inside the field of play (0 < yardline_100 < 100). */
   hasValidPosition: boolean;
-  /** True when ydstogo is strictly positive and within bounds (> 0 and <= 99). */
+  /** True when ydstogo is strictly positive and within bounds (0 < ydstogo < 100). */
   hasValidDistance: boolean;
-  /** Yards from posteam's own goal line (1..99), or null when position is invalid. */
+  /** Yards from posteam's own goal line (0 < losYard < 100), or null when position is invalid. */
   losYard: number | null;
   /** Yards from posteam's own goal line to the target line (<= 100), or null when incomplete. */
   targetYard: number | null;
@@ -35,11 +36,11 @@ export interface PitchGeometry {
   isGoalToGo: boolean;
   /** True when inside opponent's 20-yard line (yardline_100 <= 20) on a valid spot. */
   isRedZone: boolean;
-  /** Yards remaining to opponent's goal line (1..99), or null when position is invalid. */
+  /** Yards remaining to opponent's goal line (0 < yardsToGoal < 100), or null when position is invalid. */
   yardsToGoal: number | null;
-  /** Valid yards needed for a first down, or null when distance is invalid. */
+  /** Valid yards needed for a first down (0 < yardsToGain < 100), or null when distance is invalid. */
   yardsToGain: number | null;
-  /** SVG X coordinate of the Line of Scrimmage (55..545), or null when position is invalid. */
+  /** SVG X coordinate of the Line of Scrimmage (strictly inside 50..550), or null when position is invalid. */
   losX: number | null;
   /** SVG X coordinate of the first-down or goal line (<= 550), or null when incomplete. */
   targetX: number | null;
@@ -68,8 +69,8 @@ export interface EndZoneStyle {
 
 /**
  * Computes normalized field coordinates (posteam driving left-to-right toward defteam end zone)
- * from nflverse yardline_100 (1..99 yards to opponent goal line) and ydstogo (> 0..99).
- * Missing, non-finite, or out-of-range inputs produce explicit invalid states without fabrication.
+ * from nflverse yardline_100 (0 < yardline_100 < 100) and ydstogo (0 < ydstogo < 100).
+ * Missing, non-finite, or out-of-field inputs (including exact 0 and 100) produce explicit invalid states without fabrication.
  */
 export function computePitchGeometry(
   yardline100: number | null | undefined,
@@ -89,7 +90,7 @@ export function computePitchGeometry(
       isGoalToGo: false,
       isRedZone: false,
       yardsToGoal: null,
-      yardsToGain: hasValidDistance ? Math.round(ydstogo * 10) / 10 : null,
+      yardsToGain: hasValidDistance ? cleanYardFloat(ydstogo) : null,
       losX: null,
       targetX: null,
       arrowEndX: null,
@@ -98,12 +99,12 @@ export function computePitchGeometry(
   }
 
   const rawLosYard = 100 - yardline100;
-  const losYard = Math.round(rawLosYard * 10) / 10;
-  const yardsToGoal = Math.round(yardline100 * 10) / 10;
+  const losYard = cleanYardFloat(rawLosYard);
+  const yardsToGoal = cleanYardFloat(yardline100);
   const isRedZone = yardline100 <= 20;
-  const losX = END_ZONE_WIDTH + rawLosYard * 5;
-  // Clamp tip before the rotated opponent end-zone label centered around x = 577
-  const arrowEndX = Math.min(564, losX + 44);
+  const losX = cleanYardFloat(END_ZONE_WIDTH + losYard * 5);
+  // Clamp tip cleanly before the rotated opponent end-zone label centered at x = 581
+  const arrowEndX = Math.min(570, cleanYardFloat(losX + 44));
   const showTrailingChevrons = losX > 522;
 
   if (!hasValidDistance) {
@@ -126,10 +127,10 @@ export function computePitchGeometry(
   }
 
   const isGoalToGo = ydstogo >= yardline100;
-  const rawTargetYard = isGoalToGo ? 100 : Math.min(100, rawLosYard + ydstogo);
-  const targetYard = Math.round(rawTargetYard * 10) / 10;
-  const yardsToGain = Math.round(ydstogo * 10) / 10;
-  const targetX = END_ZONE_WIDTH + rawTargetYard * 5;
+  const rawTargetYard = isGoalToGo ? 100 : Math.min(100, losYard + ydstogo);
+  const targetYard = cleanYardFloat(rawTargetYard);
+  const yardsToGain = cleanYardFloat(ydstogo);
+  const targetX = cleanYardFloat(END_ZONE_WIDTH + targetYard * 5);
 
   return {
     status: 'valid',

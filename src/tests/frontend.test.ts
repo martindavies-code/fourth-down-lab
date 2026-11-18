@@ -478,17 +478,53 @@ test('Pitch geometry computes valid positions, goal-to-go, fractional yards, and
   assert.equal(rzGoal.targetX, 550);
   assert.equal(rzGoal.showTrailingChevrons, false);
 
-  // 1-yard line: arrow stops well before opponent end-zone text (x = 577)
+  // 1-yard line: arrow stops well before opponent end-zone text (centered at x = 581)
   const oneYard = computePitchGeometry(1, 1);
   assert.equal(oneYard.status, 'valid');
   assert.equal(oneYard.losYard, 99);
   assert.equal(oneYard.targetYard, 100);
   assert.equal(oneYard.isGoalToGo, true);
   assert.equal(oneYard.losX, 545);
-  assert.ok(oneYard.arrowEndX !== null && oneYard.arrowEndX <= 564);
+  assert.ok(oneYard.arrowEndX !== null && oneYard.arrowEndX <= 570);
   assert.equal(oneYard.showTrailingChevrons, true);
 
-  // Supported fractional yards preserve precision without rounding to 0
+  // Near-goal fractional in-field positions throughout 0 < yardline_100 < 100
+  const halfYardToOppGoal = computePitchGeometry(0.5, 0.5);
+  assert.equal(halfYardToOppGoal.status, 'valid');
+  assert.equal(halfYardToOppGoal.losYard, 99.5);
+  assert.equal(halfYardToOppGoal.losX, 547.5);
+  assert.equal(halfYardToOppGoal.targetYard, 100);
+  assert.equal(halfYardToOppGoal.isGoalToGo, true);
+  assert.equal(formatYardline(0.5, 'NYJ', 'BUF'), 'BUF 0.5');
+  assert.equal(formatDownAndDistance(4, 0.5, 0.5), '4th & Goal');
+
+  const tenthYardToOppGoal = computePitchGeometry(0.1, 0.1);
+  assert.equal(tenthYardToOppGoal.status, 'valid');
+  assert.equal(tenthYardToOppGoal.losYard, 99.9);
+  assert.equal(tenthYardToOppGoal.losX, 549.5);
+  assert.equal(tenthYardToOppGoal.arrowEndX, 570);
+  // Football front edge (losX + 7 = 556.5) < arrow shaft start (losX + 8.5 = 558.0) < arrow tip (570) < right EZ text edge (575.5)
+  assert.ok(tenthYardToOppGoal.losX + 7 < tenthYardToOppGoal.losX + 8.5);
+  assert.ok(tenthYardToOppGoal.losX + 8.5 < tenthYardToOppGoal.arrowEndX);
+  assert.ok(tenthYardToOppGoal.arrowEndX < 575.5);
+  assert.equal(formatYardline(0.1, 'NYJ', 'BUF'), 'BUF 0.1');
+
+  const halfYardFromOwnGoal = computePitchGeometry(99.5, 10);
+  assert.equal(halfYardFromOwnGoal.status, 'valid');
+  assert.equal(halfYardFromOwnGoal.losYard, 0.5);
+  assert.equal(halfYardFromOwnGoal.losX, 52.5);
+  assert.equal(halfYardFromOwnGoal.targetYard, 10.5);
+  assert.equal(formatYardline(99.5, 'NYJ', 'BUF'), 'NYJ 0.5');
+
+  const tenthYardFromOwnGoal = computePitchGeometry(99.9, 10);
+  assert.equal(tenthYardFromOwnGoal.status, 'valid');
+  assert.equal(tenthYardFromOwnGoal.losYard, 0.1);
+  assert.equal(tenthYardFromOwnGoal.losX, 50.5);
+  // Football left halo (50.5 - 8.5 = 42.0) clears left rotated EZ text right edge (30.5)
+  assert.ok(tenthYardFromOwnGoal.losX - 8.5 > 30.5);
+  assert.equal(formatYardline(99.9, 'NYJ', 'BUF'), 'NYJ 0.1');
+
+  // Supported mid-field fractional yards preserve precision
   const fractional = computePitchGeometry(47.5, 2.5);
   assert.equal(fractional.status, 'valid');
   assert.equal(fractional.losYard, 52.5);
@@ -500,8 +536,34 @@ test('Pitch geometry computes valid positions, goal-to-go, fractional yards, and
   assert.equal(formatDownAndDistance(4, 2.5, 47.5), '4th & 2.5');
   assert.equal(formatDownAndDistance(4, 0.5, 1.5), '4th & 0.5');
 
-  // Invalid / missing / non-finite / out-of-range positions must NEVER fabricate midfield or clamp
-  for (const badPos of [null, undefined, Number.NaN, Infinity, -Infinity, 0, 100, -5, 150, 0.5, 99.5]) {
+  // Sub-tenth accepted positives never display or round to 0 (nor cross 50 / 100 boundaries)
+  const tinyDist = computePitchGeometry(47, 0.001);
+  assert.equal(tinyDist.status, 'valid');
+  assert.ok(tinyDist.yardsToGain !== null && tinyDist.yardsToGain > 0);
+  assert.equal(tinyDist.yardsToGain, 0.001);
+  assert.equal(formatDownAndDistance(4, 0.001, 47), '4th & <0.1');
+  const tinyDesc = describePitchMap({
+    posteam: 'LA',
+    defteam: 'ARI',
+    down: 4,
+    ydstogo: 0.001,
+    yardline100: 47,
+  });
+  assert.equal(tinyDesc.targetLabel, '1st down (<0.1 yds)');
+  assert.match(tinyDesc.ariaLabel, /4th & <0\.1/);
+
+  const tinyOpp = computePitchGeometry(0.05, 5);
+  assert.equal(tinyOpp.status, 'valid');
+  assert.ok(tinyOpp.yardsToGoal !== null && tinyOpp.yardsToGoal > 0);
+  assert.equal(formatYardline(0.05, 'NYJ', 'BUF'), 'BUF <0.1');
+  const tinyOwn = computePitchGeometry(99.99, 10);
+  assert.equal(tinyOwn.status, 'valid');
+  assert.ok(tinyOwn.losYard !== null && tinyOwn.losYard > 0);
+  assert.equal(formatYardline(99.99, 'NYJ', 'BUF'), 'NYJ <0.1');
+  assert.equal(formatYardline(49.99, 'NYJ', 'BUF'), 'BUF 49.9');
+
+  // Exact goal lines (0 and 100), outside-field (< 0 or > 100), missing and non-finite positions remain unavailable
+  for (const badPos of [null, undefined, Number.NaN, Infinity, -Infinity, 0, 100, -0.5, -5, 100.5, 150]) {
     const geom = computePitchGeometry(badPos, 3);
     assert.equal(geom.status, 'invalid_position');
     assert.equal(geom.isValid, false);
@@ -521,7 +583,7 @@ test('Pitch geometry computes valid positions, goal-to-go, fractional yards, and
   }
 
   // Valid spot with missing / non-positive / out-of-range distance keeps known spot but invalidates target
-  for (const badDist of [null, undefined, Number.NaN, Infinity, 0, -3, 100]) {
+  for (const badDist of [null, undefined, Number.NaN, Infinity, 0, -3, 100, 105]) {
     const geom = computePitchGeometry(47, badDist);
     assert.equal(geom.status, 'invalid_distance');
     assert.equal(geom.isValid, false);
@@ -700,6 +762,29 @@ test('Rendered DecisionCard and FieldPitchMap handle null, out-of-range, partial
   assert.match(twoCardsHtml, /1st down \(3 yds\)/);
   assert.match(twoCardsHtml, /LOS \(BUF 4\)/);
   assert.match(twoCardsHtml, /Goal line/);
+
+  // 5. Near-goal fractional positions & sub-tenth positive distances render honestly without rounding to 0
+  const nearOppFrac = { ...base, posteam: 'NYJ', defteam: 'BUF', yardline_100: 0.5, ydstogo: 0.5 };
+  const nearOppHtml = renderToStaticMarkup(React.createElement(DecisionCard, { decision: nearOppFrac }));
+  assert.match(nearOppHtml, /at BUF 0\.5/);
+  assert.match(nearOppHtml, /LOS \(BUF 0\.5\)/);
+  assert.match(nearOppHtml, /0\.5 yds to BUF EZ/);
+  assert.match(nearOppHtml, /4th &amp; Goal/);
+  assert.doesNotMatch(nearOppHtml, /Field position unavailable/);
+
+  const nearOwnFrac = { ...base, posteam: 'NYJ', defteam: 'BUF', yardline_100: 99.5, ydstogo: 10 };
+  const nearOwnHtml = renderToStaticMarkup(React.createElement(DecisionCard, { decision: nearOwnFrac }));
+  assert.match(nearOwnHtml, /at NYJ 0\.5/);
+  assert.match(nearOwnHtml, /LOS \(NYJ 0\.5\)/);
+  assert.match(nearOwnHtml, /99\.5 yds to BUF EZ/);
+  assert.doesNotMatch(nearOwnHtml, /Field position unavailable/);
+
+  const subTenthDist = { ...base, posteam: 'LA', defteam: 'ARI', yardline_100: 47, ydstogo: 0.001 };
+  const subTenthHtml = renderToStaticMarkup(React.createElement(DecisionCard, { decision: subTenthDist }));
+  assert.match(subTenthHtml, /4th &amp; &lt;0\.1/);
+  assert.match(subTenthHtml, /1st down \(&lt;0\.1 yds\)/);
+  assert.doesNotMatch(subTenthHtml, /4th &amp; 0</);
+  assert.doesNotMatch(subTenthHtml, /1st down \(0 yds\)/);
 });
 
 test('End zone styles resolve LA alias and enforce readable contrast for all 32 teams', () => {

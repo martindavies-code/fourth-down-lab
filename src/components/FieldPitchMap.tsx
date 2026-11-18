@@ -51,10 +51,12 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
   const hasCompleteTarget = geometry.status === 'valid' && geometry.losX !== null && geometry.targetX !== null;
   const losX = geometry.losX ?? 0;
   const targetX = geometry.targetX ?? 0;
-  const shaftStartX = losX + 8;
-  const shaftEndX = Math.max(shaftStartX + 2, (geometry.arrowEndX ?? 0) - 8);
+  const shaftStartX = losX + 8.5;
   const arrowTipX = geometry.arrowEndX ?? 0;
-  const arrowBaseX = arrowTipX - 9.5;
+  const headLength = Math.min(9.5, Math.max(6, (arrowTipX - shaftStartX) * 0.55));
+  const headHalfHeight = Math.min(6, Math.max(4.2, headLength * 0.62));
+  const arrowBaseX = arrowTipX - headLength;
+  const shaftEndX = Math.max(shaftStartX + 1, arrowBaseX + 1);
 
   return (
     <div
@@ -153,7 +155,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             opacity={0.85}
           />
           <text
-            x={27}
+            x={25}
             y={FIELD_CENTER_Y}
             fill={ownEz.textColor}
             fontSize="15"
@@ -161,7 +163,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             letterSpacing="2"
             textAnchor="middle"
             dominantBaseline="central"
-            transform={`rotate(-90 27 ${FIELD_CENTER_Y})`}
+            transform={`rotate(-90 25 ${FIELD_CENTER_Y})`}
           >
             {ownEz.label}
           </text>
@@ -183,7 +185,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             opacity={0.85}
           />
           <text
-            x={577}
+            x={581}
             y={FIELD_CENTER_Y}
             fill={oppEz.textColor}
             fontSize="15"
@@ -191,7 +193,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             letterSpacing="2"
             textAnchor="middle"
             dominantBaseline="central"
-            transform={`rotate(90 577 ${FIELD_CENTER_Y})`}
+            transform={`rotate(90 581 ${FIELD_CENTER_Y})`}
           >
             {oppEz.label}
           </text>
@@ -380,7 +382,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
                 strokeLinecap="round"
               />
               <polygon
-                points={`${arrowTipX},${FIELD_CENTER_Y} ${arrowBaseX},${FIELD_CENTER_Y - 6} ${arrowBaseX},${FIELD_CENTER_Y + 6}`}
+                points={`${arrowTipX},${FIELD_CENTER_Y} ${arrowBaseX},${FIELD_CENTER_Y - headHalfHeight} ${arrowBaseX},${FIELD_CENTER_Y + headHalfHeight}`}
                 fill="#ffffff"
                 stroke="rgba(2, 6, 23, 0.78)"
                 strokeWidth={1.2}
