@@ -163,6 +163,8 @@ interface StampProps {
   subtext: string;
   variant?: 'hissho' | 'kekkoh' | 'teki' | 'haran' | 'teppeki';
   className?: string;
+  title?: string;
+  ariaHidden?: boolean;
 }
 
 export const MangaStamp: React.FC<StampProps> = ({
@@ -170,6 +172,8 @@ export const MangaStamp: React.FC<StampProps> = ({
   subtext,
   variant = 'hissho',
   className = '',
+  title,
+  ariaHidden,
 }) => {
   const colorMap = {
     hissho: 'border-amber-400 bg-amber-500/10 text-amber-300 shadow-amber-500/20',
@@ -185,6 +189,8 @@ export const MangaStamp: React.FC<StampProps> = ({
       style={{
         textShadow: '0 0 8px currentColor',
       }}
+      title={title}
+      aria-hidden={ariaHidden}
     >
       <span className="text-[13px] leading-tight font-extrabold">{kanji}</span>
       <span className="text-[8px] font-bold tracking-widest">{subtext}</span>

@@ -40,6 +40,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
 }) => {
   const uid = useId().replace(/:/g, '');
   const clipId = `pitch-clip-${uid}`;
+  const rzHatchId = `pitch-rz-hatch-${uid}`;
 
   const desc = describePitchMap({ posteam, defteam, down, ydstogo, yardline100 });
   const { geometry } = desc;
@@ -57,6 +58,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
   const headHalfHeight = Math.min(6, Math.max(4.2, headLength * 0.62));
   const arrowBaseX = arrowTipX - headLength;
   const shaftEndX = Math.max(shaftStartX + 1, arrowBaseX + 1);
+  const showSpeedLines = hasPosition && !geometry.showTrailingChevrons && losX >= 74;
 
   return (
     <div
@@ -76,6 +78,12 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
         </span>
 
         <span className="inline-flex items-center gap-1 font-bold text-sky-300">
+          <span
+            className="hidden sm:inline-flex items-center justify-center rounded bg-sky-500/20 border border-sky-400/40 px-1 py-0.5 text-[9px] font-black text-sky-200 leading-none"
+            aria-hidden="true"
+          >
+            攻
+          </span>
           <span>
             {posteam}
             <span className="hidden min-[380px]:inline"> driving</span>
@@ -114,6 +122,22 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
               rx={6}
             />
           </clipPath>
+          <pattern
+            id={rzHatchId}
+            width="10"
+            height="10"
+            patternTransform="rotate(45 0 0)"
+            patternUnits="userSpaceOnUse"
+          >
+            <line
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="10"
+              stroke="rgba(251, 113, 133, 0.14)"
+              strokeWidth="2"
+            />
+          </pattern>
         </defs>
 
         <g clipPath={`url(#${clipId})`}>
@@ -129,14 +153,34 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             />
           ))}
 
-          {/* Subtle Red Zone shading (last 20 yards before defteam goal line) */}
+          {/* Red Zone shading (last 20 yards before defteam goal line) */}
           <rect
             x={END_ZONE_WIDTH + 400}
             y={FIELD_TOP}
             width={100}
             height={FIELD_HEIGHT}
-            fill={geometry.isRedZone ? 'rgba(244, 63, 94, 0.10)' : 'rgba(244, 63, 94, 0.03)'}
+            fill={geometry.isRedZone ? 'rgba(244, 63, 94, 0.12)' : 'rgba(244, 63, 94, 0.03)'}
           />
+          {geometry.isRedZone && (
+            <>
+              <rect
+                x={END_ZONE_WIDTH + 400}
+                y={FIELD_TOP}
+                width={100}
+                height={FIELD_HEIGHT}
+                fill={`url(#${rzHatchId})`}
+              />
+              <line
+                x1={END_ZONE_WIDTH + 400}
+                y1={FIELD_TOP}
+                x2={END_ZONE_WIDTH + 400}
+                y2={fieldBottom}
+                stroke="rgba(251, 113, 133, 0.55)"
+                strokeWidth={1.6}
+                strokeDasharray="4 3"
+              />
+            </>
+          )}
 
           {/* Left End Zone (posteam own) */}
           <rect
@@ -254,7 +298,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             );
           })}
 
-          {/* 1-yard sideline hash ticks */}
+          {/* 1-yard sideline & NFL mid-field hash ticks */}
           {SIDELINE_TICKS.map((y) => {
             const x = END_ZONE_WIDTH + y * 5;
             return (
@@ -269,6 +313,22 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
                 />
                 <line
                   x1={x}
+                  y1={FIELD_TOP + 34}
+                  x2={x}
+                  y2={FIELD_TOP + 37}
+                  stroke="rgba(255, 255, 255, 0.2)"
+                  strokeWidth={0.85}
+                />
+                <line
+                  x1={x}
+                  y1={fieldBottom - 37}
+                  x2={x}
+                  y2={fieldBottom - 34}
+                  stroke="rgba(255, 255, 255, 0.2)"
+                  strokeWidth={0.85}
+                />
+                <line
+                  x1={x}
                   y1={fieldBottom - 3.5}
                   x2={x}
                   y2={fieldBottom}
@@ -279,7 +339,7 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             );
           })}
 
-          {/* Own & Opponent Goal Lines */}
+          {/* Own & Opponent Goal Lines + Orange NFL Pylons */}
           <line
             x1={END_ZONE_WIDTH}
             y1={FIELD_TOP}
@@ -296,8 +356,14 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
             stroke="rgba(255, 255, 255, 0.8)"
             strokeWidth={2.2}
           />
+          <g fill="#f97316" stroke="rgba(2, 6, 23, 0.7)" strokeWidth={0.6}>
+            <rect x={END_ZONE_WIDTH - 1.75} y={FIELD_TOP + 1} width={3.5} height={3.5} rx={0.6} />
+            <rect x={END_ZONE_WIDTH - 1.75} y={fieldBottom - 4.5} width={3.5} height={3.5} rx={0.6} />
+            <rect x={END_ZONE_WIDTH + FIELD_PLAY_WIDTH - 1.75} y={FIELD_TOP + 1} width={3.5} height={3.5} rx={0.6} />
+            <rect x={END_ZONE_WIDTH + FIELD_PLAY_WIDTH - 1.75} y={fieldBottom - 4.5} width={3.5} height={3.5} rx={0.6} />
+          </g>
 
-          {/* Shaded Yards-to-Gain Zone & Target Line (only when both spot and distance are valid) */}
+          {/* Shaded Yards-to-Gain Zone, Target Line & Chain-Crew Sideline Markers */}
           {hasCompleteTarget && (
             <>
               <rect
@@ -323,6 +389,18 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
                 stroke="#fbbf24"
                 strokeWidth={geometry.isGoalToGo ? 3.2 : 2.5}
               />
+              <polygon
+                points={`${targetX - 4.5},${FIELD_TOP + 0.5} ${targetX + 4.5},${FIELD_TOP + 0.5} ${targetX},${FIELD_TOP + 6.5}`}
+                fill="#fbbf24"
+                stroke="rgba(2, 6, 23, 0.8)"
+                strokeWidth={0.8}
+              />
+              <polygon
+                points={`${targetX - 4.5},${fieldBottom - 0.5} ${targetX + 4.5},${fieldBottom - 0.5} ${targetX},${fieldBottom - 6.5}`}
+                fill="#fbbf24"
+                stroke="rgba(2, 6, 23, 0.8)"
+                strokeWidth={0.8}
+              />
             </>
           )}
 
@@ -345,6 +423,13 @@ export const FieldPitchMap: React.FC<FieldPitchMapProps> = ({
                 stroke="#38bdf8"
                 strokeWidth={2.5}
               />
+
+              {showSpeedLines && (
+                <g stroke="rgba(186, 230, 253, 0.55)" strokeWidth={1.5} strokeLinecap="round">
+                  <line x1={losX - 21} y1={FIELD_CENTER_Y - 3.5} x2={losX - 11.5} y2={FIELD_CENTER_Y - 3.5} />
+                  <line x1={losX - 17} y1={FIELD_CENTER_Y + 3.5} x2={losX - 11.5} y2={FIELD_CENTER_Y + 3.5} />
+                </g>
+              )}
 
               {geometry.showTrailingChevrons && (
                 <g
