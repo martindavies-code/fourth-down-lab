@@ -30,6 +30,14 @@ import {
   NFL_TEAMS,
 } from '../utils/teamLogos.ts';
 import { computePitchGeometry, describePitchMap, getEndZoneStyle } from '../utils/pitch.ts';
+import {
+  computeWpaSwing,
+  getChoiceVisual,
+  getCounterfactualForks,
+  getExecutionVisual,
+  getOptionMicroStat,
+  getVerdictStamp,
+} from '../utils/cardVisuals.ts';
 
 test('Frontend Unit Tests: Filter Logic', () => {
   const all = MOCK_DECISIONS_FIXTURE;
@@ -810,4 +818,140 @@ test('End zone styles resolve LA alias and enforce readable contrast for all 32 
       `${abbr} end-zone text ${ez.textColor} on ${ez.background} must meet WCAG AA (4.5:1)`
     );
   }
+});
+
+test('Card visual storytelling helpers preserve 2x2 honesty and authentic Japanese labels', () => {
+  // 1. Choice visuals
+  assert.equal(getChoiceVisual('go').ja, 'ギャンブル');
+  assert.equal(getChoiceVisual('field_goal').ja, 'FGトライ');
+  assert.equal(getChoiceVisual('punt').ja, 'パント');
+
+  // 2. Verdict stamps strictly reflect pre-snap state (never outcome, never mistake/blunder)
+  const stamps = [
+    getVerdictStamp({ showVerdict: false, isTossUp: false, tone: 'ok', actualChoice: 'go', tier: 'genuine', verdictLabel: 'Reasonable' }),
+    getVerdictStamp({ showVerdict: true, isTossUp: true, tone: 'ok', actualChoice: 'go', tier: 'genuine', verdictLabel: 'Reasonable' }),
+    getVerdictStamp({ showVerdict: true, isTossUp: false, tone: 'ok', actualChoice: 'go', tier: 'clear_go', verdictLabel: 'Reasonable' }),
+    getVerdictStamp({ showVerdict: true, isTossUp: false, tone: 'ok', actualChoice: 'field_goal', tier: 'genuine', verdictLabel: 'Reasonable' }),
+    getVerdictStamp({ showVerdict: true, isTossUp: false, tone: 'lean', actualChoice: 'punt', tier: 'genuine', verdictLabel: 'Model leaned the other way' }),
+    getVerdictStamp({ showVerdict: true, isTossUp: false, tone: 'strong', actualChoice: 'punt', tier: 'clear_go', verdictLabel: 'Model strongly preferred another option' }),
+  ];
+  assert.deepEqual(
+    stamps.map((s) => s.kanji),
+    ['延長', '伯仲', '決行', '的確', '審議', '波乱']
+  );
+  for (const s of stamps) {
+    assert.doesNotMatch(`${s.subtext} ${s.title}`.toLowerCase(), /mistake|blunder|wrong|best choice/);
+  }
+
+  // 3. Execution visuals cover TD, convert, fail, turnover, made/missed/blocked FG, and punt gross yards
+  const tdGo = getExecutionVisual(variant({ actual_choice: 'go', outcome: { ...base.outcome, touchdown: true, converted: true, yards_gained: 2 } }));
+  assert.equal(tdGo.sfx, 'ドカーン！');
+  assert.equal(tdGo.text, 'Touchdown! (+2 yds)');
+  assert.equal(tdGo.highlightTag, 'TOUCHDOWN • タッチダウン');
+
+  const convGo = getExecutionVisual(variant({ actual_choice: 'go', outcome: { ...base.outcome, touchdown: false, converted: true, yards_gained: 4 } }));
+  assert.equal(convGo.sfx, '突破！');
+  assert.equal(convGo.text, 'Converted (+4 yds)');
+
+  const failGo = getExecutionVisual(variant({ actual_choice: 'go', outcome: { ...base.outcome, touchdown: false, converted: false, yards_gained: 0 } }));
+  assert.equal(failGo.sfx, '阻止！');
+  assert.equal(failGo.text, 'Failed (0 yds), turnover on downs');
+
+  const intGo = getExecutionVisual(variant({ actual_choice: 'go', outcome: { ...base.outcome, touchdown: false, converted: false, interception: true, yards_gained: 0 } }));
+  assert.equal(intGo.sfx, 'ガシッ！');
+  assert.equal(intGo.highlightTag, 'TURNOVER • 攻守交代');
+
+  const madeFg = getExecutionVisual(variant({ actual_choice: 'field_goal', outcome: { ...base.outcome, field_goal_result: 'made', kick_distance: 48 } }));
+  assert.equal(madeFg.sfx, 'スパッ！');
+  assert.equal(madeFg.text, '48-yd kick good');
+
+  const missFg = getExecutionVisual(variant({ actual_choice: 'field_goal', outcome: { ...base.outcome, field_goal_result: 'missed', kick_distance: 48 } }));
+  assert.equal(missFg.sfx, 'ヒュン…');
+  assert.equal(missFg.text, '48-yd kick missed');
+
+  const blkFg = getExecutionVisual(variant({ actual_choice: 'field_goal', outcome: { ...base.outcome, field_goal_result: 'blocked', blocked: true, kick_distance: 42 } }));
+  assert.equal(blkFg.sfx, 'バシッ！');
+  assert.equal(blkFg.highlightTag, 'BLOCKED • ブロック');
+
+  const puntGross = getExecutionVisual(variant({ actual_choice: 'punt', outcome: { ...base.outcome, gross_yards: 54, blocked: false } }));
+  assert.equal(puntGross.sfx, 'ドーン！');
+  assert.equal(puntGross.text, '54-yd punt');
+
+  const puntNoGross = getExecutionVisual(variant({ actual_choice: 'punt', outcome: { ...base.outcome, gross_yards: undefined, blocked: false } }));
+  assert.equal(puntNoGross.text, 'Punt executed');
+
+  // 4. WPA swing gauge math
+  const posSwing = computeWpaSwing(0.083);
+  assert.equal(posSwing.direction, 'pos');
+  assert.ok(posSwing.fillPct > 30 && posSwing.fillPct < 35);
+  assert.equal(posSwing.isCapped, false);
+
+  const bigNeg = computeWpaSwing(-0.32);
+  assert.equal(bigNeg.direction, 'neg');
+  assert.equal(bigNeg.fillPct, 100);
+  assert.equal(bigNeg.isCapped, true);
+
+  const flat = computeWpaSwing(-0.0001);
+  assert.equal(flat.direction, 'flat');
+  assert.equal(flat.fillPct, 0);
+
+  const safeNan = computeWpaSwing(Number.NaN);
+  assert.equal(safeNan.direction, 'flat');
+  assert.equal(safeNan.fillPct, 0);
+
+  // 5. Option micro-stats and counterfactual forks
+  assert.equal(getOptionMicroStat(otPartial, 'field_goal'), 'Make 87.0%');
+  assert.equal(getOptionMicroStat(otPartial, 'punt'), null);
+  const forks = getCounterfactualForks(base);
+  assert.ok(Array.isArray(forks));
+});
+
+test('Rendered DecisionCard displays Japanese stamps, execution SFX, model-top gap, OT neutrality, and unique SVG pattern IDs', () => {
+  const { DecisionCard } = loadTsxModule<{ DecisionCard: React.ComponentType<{ decision: Decision }> }>(
+    'src/components/DecisionCard.tsx'
+  );
+
+  // 1. Strong model divergence (punt when model strongly preferred Go)
+  const strongSplit = variant({
+    play_id: 301,
+    actual_choice: 'punt',
+    tier: 'clear_go',
+    verdict_label: 'Model strongly preferred another option',
+    display_cost_pp: 10.0,
+    is_toss_up: false,
+    outcome: { ...base.outcome, gross_yards: 54, blocked: false },
+  });
+  const strongHtml = renderToStaticMarkup(React.createElement(DecisionCard, { decision: strongSplit }));
+  assert.match(strongHtml, /パント/);
+  assert.match(strongHtml, /波乱/);
+  assert.match(strongHtml, /BOLD SPLIT/);
+  assert.match(strongHtml, /Model top/);
+  assert.match(strongHtml, /54-yd punt/);
+  assert.match(strongHtml, /ドーン！/);
+  assert.doesNotMatch(strongHtml.toLowerCase(), /mistake|blunder/);
+
+  // 2. Overtime play stays context-only (延長 stamp, no verdict judgment stamp or Model top bar legend)
+  const otHtml = renderToStaticMarkup(React.createElement(DecisionCard, { decision: otPartial }));
+  assert.match(otHtml, /延長/);
+  assert.match(otHtml, /OVERTIME/);
+  assert.match(otHtml, /outside the model&#x27;s validated regular-season domain/);
+  assert.doesNotMatch(otHtml, /的確|決行|審議|波乱/);
+  assert.doesNotMatch(otHtml, /Model top/);
+
+  // 3. Two red-zone cards render unique hatch pattern IDs as well as unique clipPath IDs
+  const rz1 = variant({ play_id: 401, yardline_100: 8, ydstogo: 8, outcome: { ...base.outcome, touchdown: true, converted: true, yards_gained: 8 } });
+  const rz2 = variant({ play_id: 402, yardline_100: 5, ydstogo: 5 });
+  const twoRzHtml = renderToStaticMarkup(
+    React.createElement(
+      React.Fragment,
+      null,
+      React.createElement(DecisionCard, { decision: rz1 }),
+      React.createElement(DecisionCard, { decision: rz2 })
+    )
+  );
+  const hatchIds = Array.from(twoRzHtml.matchAll(/id="(pitch-rz-hatch-[^"]+)"/g), (m) => m[1]);
+  assert.equal(hatchIds.length, 2);
+  assert.notEqual(hatchIds[0], hatchIds[1]);
+  assert.match(twoRzHtml, /TOUCHDOWN • タッチダウン/);
+  assert.match(twoRzHtml, /ドカーン！/);
 });
