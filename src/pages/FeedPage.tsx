@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import type { CancelledSnap, Decision, MetaData } from '../types/decision';
+import type { CancelledSnap, Decision, MetaData, ModelComparison } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
 import { NFL_TEAMS } from '../utils/teamLogos';
 import { formatWeekRangeJa, formatCount } from '../utils/formatting';
 import { Filter, RotateCcw, Eye, EyeOff, Search, ChevronDown, ChevronUp, ShieldAlert, ArrowUpDown } from 'lucide-react';
 import { FEED_SORT_OPTIONS, sortDecisions, sortSnaps, type DecisionSortKey } from '../utils/sort';
+import { buildComparisonIndex, comparisonKey } from '../utils/comparison';
 import { BlitzMascot, RefereeMascot } from '../components/AnimeMascots';
 
 interface FeedPageProps {
@@ -16,6 +17,7 @@ interface FeedPageProps {
   /** Set when another page asks the feed to open one team's decisions. */
   teamDrilldown?: { team: string; nonce: number } | null;
   onTeamDrilldownConsumed?: () => void;
+  modelComparison?: ModelComparison | null;
 }
 
 export const FeedPage: React.FC<FeedPageProps> = ({
@@ -26,6 +28,7 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   error,
   teamDrilldown = null,
   onTeamDrilldownConsumed,
+  modelComparison = null,
 }) => {
   const [selectedWeek, setSelectedWeek] = useState<string>('ALL');
   const [selectedTeam, setSelectedTeam] = useState<string>('ALL');
@@ -38,6 +41,8 @@ export const FeedPage: React.FC<FeedPageProps> = ({
   const [page, setPage] = useState<number>(1);
   const [mobileFilterOpen, setMobileFilterOpen] = useState<boolean>(false);
   const PAGE_SIZE = 25;
+
+  const comparisonIndex = useMemo(() => buildComparisonIndex(modelComparison), [modelComparison]);
 
   // Cross-page drill-down (e.g. Teams table -> this feed): reset every filter
   // to its default, then apply the team, so no stale filter can strand the
@@ -547,7 +552,11 @@ export const FeedPage: React.FC<FeedPageProps> = ({
       <main className="space-y-4">
         {/* Normal Executed Decisions Feed */}
         {selectedTier !== 'incomplete' && displayedDecisions.map((decision) => (
-          <DecisionCard key={`${decision.game_id}_${decision.play_id}`} decision={decision} />
+          <DecisionCard
+            key={`${decision.game_id}_${decision.play_id}`}
+            decision={decision}
+            comparison={comparisonIndex.get(comparisonKey(decision.game_id, decision.play_id)) ?? null}
+          />
         ))}
 
         {/* Incomplete Tier Feed (P1-10: Cancelled & Excluded Snaps) */}
