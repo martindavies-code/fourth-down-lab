@@ -4,7 +4,7 @@ import { FeedPage } from './pages/FeedPage';
 import { TeamsPage } from './pages/TeamsPage';
 import { GamesPage } from './pages/GamesPage';
 import { MethodPage } from './pages/MethodPage';
-import type { CancelledSnap, Decision, GameSummary, MetaData, TeamSummary } from './types/decision';
+import type { CancelledSnap, Decision, GameSummary, MetaData, ModelComparison, TeamSummary } from './types/decision';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<NavTab>('feed');
@@ -24,6 +24,7 @@ export const App: React.FC = () => {
   const [games, setGames] = useState<GameSummary[]>([]);
   const [cancelledSnaps, setCancelledSnaps] = useState<CancelledSnap[]>([]);
   const [meta, setMeta] = useState<MetaData | null>(null);
+  const [modelComparison, setModelComparison] = useState<ModelComparison | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,12 +35,13 @@ export const App: React.FC = () => {
         setError(null);
 
         // Fetch decisions, teams, games, meta, and cancelled snaps audit
-        const [decisionsRes, teamsRes, gamesRes, metaRes, auditRes] = await Promise.all([
+        const [decisionsRes, teamsRes, gamesRes, metaRes, auditRes, comparisonRes] = await Promise.all([
           fetch('./data/decisions.json'),
           fetch('./data/teams_summary.json'),
           fetch('./data/games_summary.json'),
           fetch('./data/meta.json'),
           fetch('./data/audit_cancelled_snaps.json'),
+          fetch('./data/model_comparison.json'),
         ]);
 
         if (!decisionsRes.ok) throw new Error(`Failed to load decisions: HTTP ${decisionsRes.status}`);
@@ -51,12 +53,15 @@ export const App: React.FC = () => {
         const gamesData = await gamesRes.json();
         const metaData = metaRes.ok ? await metaRes.json() : null;
         const auditData = auditRes.ok ? await auditRes.json() : [];
+        // Optional comparison layer: absence or staleness must never break the app.
+        const comparisonData = comparisonRes.ok ? await comparisonRes.json() : null;
 
         setDecisions(decisionsData);
         setTeams(teamsData);
         setGames(gamesData);
         setMeta(metaData);
         setCancelledSnaps(auditData);
+        setModelComparison(comparisonData);
       } catch (err: unknown) {
         console.error('Data load error:', err);
         setError(err instanceof Error ? err.message : 'Unknown data loading error');
@@ -97,6 +102,7 @@ export const App: React.FC = () => {
             error={error}
             teamDrilldown={feedTeamDrilldown}
             onTeamDrilldownConsumed={clearFeedTeamDrilldown}
+            modelComparison={modelComparison}
           />
         )}
         {activeTab === 'teams' && (
@@ -115,10 +121,11 @@ export const App: React.FC = () => {
             cancelledSnaps={cancelledSnaps}
             meta={meta}
             loading={loading}
+            modelComparison={modelComparison}
           />
         )}
         {activeTab === 'method' && (
-          <MethodPage meta={meta} />
+          <MethodPage meta={meta} modelComparison={modelComparison} />
         )}
       </main>
 
