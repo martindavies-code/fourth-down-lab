@@ -955,3 +955,64 @@ test('Rendered DecisionCard displays Japanese stamps, execution SFX, model-top g
   assert.match(twoRzHtml, /TOUCHDOWN • タッチダウン/);
   assert.match(twoRzHtml, /ドカーン！/);
 });
+
+test('Rendered DecisionCard dev-rebuild comparison strip: agrees, differs, and hidden without data', () => {
+  const { DecisionCard } = loadTsxModule<{ DecisionCard: React.ComponentType<{ decision: Decision; comparison?: unknown }> }>(
+    'src/components/DecisionCard.tsx'
+  );
+
+  const refPlay = (over: Record<string, unknown>) => ({
+    game_id: base.game_id,
+    play_id: base.play_id,
+    ref_go_boost_pp: 2.4,
+    ref_go_wp: 0.5,
+    ref_punt_wp: 0.45,
+    ref_fg_wp: 0.4,
+    boot_pct: 96.0,
+    ref_verdict: 'Reasonable',
+    ref_cost_pp: 0.0,
+    ref_preferred: ['go'],
+    ...over,
+  });
+
+  // 1. Agreement: subtle strip, clearly experimental, site verdict untouched
+  const agreeDecision = variant({ play_id: 501, verdict_label: 'Reasonable' });
+  const agreeHtml = renderToStaticMarkup(
+    React.createElement(DecisionCard, { decision: agreeDecision, comparison: refPlay({}) })
+  );
+  assert.match(agreeHtml, /Dev rebuild/);
+  assert.match(agreeHtml, /Agrees with this verdict/);
+  assert.match(agreeHtml, /comparison only/);
+  assert.doesNotMatch(agreeHtml, /Differs:/);
+
+  // 2. Divergence: labelled as differing, with the dev model's verdict band and go boost
+  const differDecision = variant({ play_id: 502, verdict_label: 'Reasonable' });
+  const differHtml = renderToStaticMarkup(
+    React.createElement(DecisionCard, {
+      decision: differDecision,
+      comparison: refPlay({
+        ref_verdict: 'Model strongly preferred another option',
+        ref_go_boost_pp: 5.5,
+        ref_cost_pp: 5.5,
+      }),
+    })
+  );
+  assert.match(differHtml, /Dev rebuild/);
+  assert.match(differHtml, /Differs: Strongly preferred another option/);
+  assert.match(differHtml, /go \+5\.5 pp/);
+
+  // 3. No comparison data (e.g. end-of-game plays the reference does not score): no strip at all
+  const noDataHtml = renderToStaticMarkup(
+    React.createElement(DecisionCard, { decision: variant({ play_id: 503, verdict_label: 'Reasonable' }) })
+  );
+  assert.doesNotMatch(noDataHtml, /Dev rebuild/);
+
+  // 4. Null reference verdict (actual choice unmodelled in reference): no strip
+  const nullVerdictHtml = renderToStaticMarkup(
+    React.createElement(DecisionCard, {
+      decision: variant({ play_id: 504, verdict_label: 'Reasonable' }),
+      comparison: refPlay({ ref_verdict: null }),
+    })
+  );
+  assert.doesNotMatch(nullVerdictHtml, /Dev rebuild/);
+});
