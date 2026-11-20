@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
-import type { CancelledSnap, Decision, GameSummary, MetaData } from '../types/decision';
+import type { CancelledSnap, Decision, GameSummary, MetaData, ModelComparison } from '../types/decision';
 import { DecisionCard } from '../components/DecisionCard';
 import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
 import { Compass, Calendar, Zap, ArrowRight, ShieldAlert, ArrowUpDown } from 'lucide-react';
 import { GAME_SORT_OPTIONS, sortDecisions, sortLabel, type DecisionSortKey } from '../utils/sort';
+import { buildComparisonIndex, comparisonKey } from '../utils/comparison';
 import { BlitzMascot, MangaStamp, MangaSoundEffect } from '../components/AnimeMascots';
 
 interface GamesPageProps {
@@ -12,6 +13,7 @@ interface GamesPageProps {
   cancelledSnaps?: CancelledSnap[];
   meta?: MetaData | null;
   loading: boolean;
+  modelComparison?: ModelComparison | null;
 }
 
 const formatChoiceName = (opt?: string | null) => {
@@ -27,7 +29,9 @@ export const GamesPage: React.FC<GamesPageProps> = ({
   cancelledSnaps = [],
   meta = null,
   loading,
+  modelComparison = null,
 }) => {
+  const comparisonIndex = useMemo(() => buildComparisonIndex(modelComparison), [modelComparison]);
   const weeks = useMemo(() => {
     const set = new Set(games.map((g) => g.week));
     return Array.from(set).sort((a, b) => b - a);
@@ -489,7 +493,11 @@ export const GamesPage: React.FC<GamesPageProps> = ({
               </div>
             </div>
             {sortedGameDecisions.map((decision) => (
-              <DecisionCard key={`${decision.game_id}_${decision.play_id}`} decision={decision} />
+              <DecisionCard
+                key={`${decision.game_id}_${decision.play_id}`}
+                decision={decision}
+                comparison={comparisonIndex.get(comparisonKey(decision.game_id, decision.play_id)) ?? null}
+              />
             ))}
           </div>
         </div>

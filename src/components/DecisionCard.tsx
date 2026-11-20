@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Decision, OptionName } from '../types/decision';
+import type { Decision, ModelComparisonPlay, OptionName } from '../types/decision';
 import { getTeamLogoUrl, isDarkLogo, getTeamName, getTeamFallbackSvg } from '../utils/teamLogos';
 import {
   formatDownAndDistance,
@@ -19,6 +19,7 @@ import {
   getVerdictStamp,
 } from '../utils/cardVisuals';
 import { TimeoutPips } from './TimeoutPips';
+import { ModelComparisonBadge } from './ModelComparisonBadge';
 import { FieldPitchMap } from './FieldPitchMap';
 import { MangaStamp } from './AnimeMascots';
 import {
@@ -33,6 +34,8 @@ import {
 
 interface DecisionCardProps {
   decision: Decision;
+  /** Reference output from the nfl4th development rebuild for this play, when covered. */
+  comparison?: ModelComparisonPlay | null;
 }
 
 const TONE_CLASSES = {
@@ -65,7 +68,7 @@ const OptionIcon: React.FC<{ option: OptionName | string; className?: string }> 
   return <CornerUpRight className={className} aria-hidden="true" />;
 };
 
-export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
+export const DecisionCard: React.FC<DecisionCardProps> = ({ decision, comparison = null }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const {
@@ -676,6 +679,11 @@ export const DecisionCard: React.FC<DecisionCardProps> = ({ decision }) => {
             </div>
           </div>
         </section>
+
+        {/* ===== Development-model comparison strip (never replaces the site verdict) ===== */}
+        {story.showVerdict && (
+          <ModelComparisonBadge siteVerdict={verdict_label} comparison={comparison} />
+        )}
 
         {/* ===== 4. THE DETAIL: everything else, one layer down ===== */}
         <div>

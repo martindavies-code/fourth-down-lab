@@ -1,14 +1,15 @@
 import React from 'react';
-import type { MetaData } from '../types/decision';
+import type { MetaData, ModelComparison } from '../types/decision';
 import { formatWeekRange, formatCount } from '../utils/formatting';
-import { BookOpen, ShieldAlert, CheckCircle, Scale, Database, Cpu } from 'lucide-react';
+import { BookOpen, ShieldAlert, CheckCircle, Scale, Database, Cpu, FlaskConical } from 'lucide-react';
 import { BlitzMascot, RefereeMascot, MangaStamp } from '../components/AnimeMascots';
 
 interface MethodPageProps {
   meta: MetaData | null;
+  modelComparison?: ModelComparison | null;
 }
 
-export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
+export const MethodPage: React.FC<MethodPageProps> = ({ meta, modelComparison = null }) => {
   const weekRange = formatWeekRange(meta?.weeks, null, 'Weeks 1 to ');
   const maxWeek = meta?.weeks?.length ? Math.max(...meta.weeks) : null;
   const totalRowsDisplay = formatCount(meta?.counts?.total_fourth_down_rows);
@@ -194,6 +195,64 @@ export const MethodPage: React.FC<MethodPageProps> = ({ meta }) => {
             </div>
           </div>
         </section>
+
+        {/* Development Model Comparison Layer */}
+        {modelComparison && (
+          <section className="rounded-xl border border-violet-500/40 bg-violet-950/10 p-5 shadow-lg anime-card-glow">
+            <div className="flex items-center gap-2 text-violet-400 mb-3">
+              <FlaskConical className="h-5 w-5" />
+              <h2 className="text-base font-black text-white">
+                【比較レイヤー】Development Model Comparison (Experimental)
+              </h2>
+            </div>
+            <p>
+              The nflverse project has <strong>rebuilt the nfl4th models on its development branch</strong> (new win probability, go, punt and field-goal models, plus overtime modelling). That rebuild is <strong>not yet released</strong>: CRAN's stable nfl4th remains v{modelComparison.reference.cran_released_version}, which is the lineage this site's verdicts use via the sportsdataverse port.
+            </p>
+            <p className="mt-2">
+              As an experimental layer, every decision card also shows what the <strong>development rebuild</strong> says for the identical pre-snap situation, classified with <em>this site's own verdict rules</em> (same 1.0 pp toss-up band, same cost thresholds, same punt-domain rule). Differences therefore come from the models themselves, never from classification drift. The site's published verdicts are unchanged and remain the primary surface.
+            </p>
+            <div className="mt-3 rounded-lg border border-violet-500/30 bg-[#0b0a1a] p-3 text-xs">
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 tabular-nums">
+                <div>
+                  <span className="text-slate-400 block text-[11px]">Plays Compared:</span>
+                  <span className="font-bold text-white">
+                    {formatCount(modelComparison.summary.matched)} of {formatCount(modelComparison.summary.decisions_total)}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[11px]">Verdict Changes:</span>
+                  <span className="font-bold text-white">
+                    {formatCount(modelComparison.summary.verdict_changes_regulation)} of {formatCount(modelComparison.summary.matched_regulation)} regulation
+                    {modelComparison.summary.verdict_change_pct_regulation !== null && (
+                      <span> ({modelComparison.summary.verdict_change_pct_regulation}%)</span>
+                    )}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[11px]">Go Recommendation Rate:</span>
+                  <span className="font-bold text-white">
+                    {modelComparison.summary.go_recommendation_pct_primary}% released → {modelComparison.summary.go_recommendation_pct_reference}% dev
+                  </span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[11px]">Reference Snapshot:</span>
+                  <span className="font-bold text-white">{modelComparison.reference.snapshot}</span>
+                </div>
+              </div>
+              <div className="mt-3 border-t border-violet-500/20 pt-2 text-[11px] text-slate-300 space-y-1.5">
+                <p>
+                  <strong className="text-violet-300">Coverage honesty:</strong>{' '}
+                  {modelComparison.summary.fdl_only_not_scored_by_reference} final-seconds decisions are deliberately not scored by nfl4th (its end-of-game cutoff) and show no comparison; {modelComparison.summary.reference_only_rows} reference rows (cancelled snaps and one victory kneel) are excluded here by design. Overtime plays ({modelComparison.summary.matched_overtime}) remain outside the validated regular-season domain on both sides; {modelComparison.summary.verdict_changes_overtime} OT verdict changed.
+                </p>
+                <p>
+                  <strong className="text-violet-300">Not ground truth:</strong> the rebuild is development-stage and unaudited by this site; neither model's output is treated as definitively correct. When the rebuild lands in a released package, a full reviewed migration can be considered. Reference provenance: nfl4th master precompute (sha256 <code className="text-[10px]">{modelComparison.reference.sha256.slice(0, 12)}…</code>), daily nflverse build — see{' '}
+                  <a href={modelComparison.reference.source_url} target="_blank" rel="noopener noreferrer" className="text-violet-300 hover:underline">release</a> and{' '}
+                  <a href={modelComparison.reference.news_url} target="_blank" rel="noopener noreferrer" className="text-violet-300 hover:underline">NEWS</a>.
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Option Status Rules & Punt Domain Grounding (P0-3) */}
         <section className="rounded-xl border border-slate-800 bg-[#0c1220] p-5 shadow-lg anime-card-glow">

@@ -2,6 +2,7 @@ polars
 pandas
 pyarrow
 sportsdataverse
+pyreadr
 xgboost
 pytest
 pytest-cov
