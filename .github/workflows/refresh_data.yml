@@ -43,6 +43,14 @@ jobs:
         env:
           ALLOW_MONOTONICITY_DECREASE: ${{ inputs.allow_monotonicity_decrease && '1' || '0' }}
 
+      - name: Build model comparison layer (nfl4th dev rebuild reference)
+        # Comparison depends on nfl4th's development precompute release; a failure
+        # there must not block the primary decisions refresh. The committed
+        # comparison JSON records its own snapshot timestamp for staleness honesty.
+        continue-on-error: true
+        run: |
+          python pipeline/build_model_comparison.py
+
       - name: Validate generated data invariants
         run: |
           python -m pytest pipeline/tests/test_pipeline.py -v -s
