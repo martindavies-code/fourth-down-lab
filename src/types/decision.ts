@@ -107,6 +107,53 @@ export interface Decision {
   quadrant_slug: string;
 }
 
+/** One play's reference output from the nfl4th development rebuild. */
+export interface ModelComparisonPlay {
+  game_id: string;
+  play_id: number;
+  /** nfl4th go_boost, already expressed in percentage points. */
+  ref_go_boost_pp: number | null;
+  ref_go_wp: number | null;
+  ref_punt_wp: number | null;
+  ref_fg_wp: number | null;
+  /** Bootstrap confidence percentage from the reference precompute. */
+  boot_pct: number | null;
+  /** Verdict produced by applying THIS site's verdict rules to reference WPs. */
+  ref_verdict: VerdictLabel | null;
+  ref_cost_pp: number | null;
+  ref_preferred: OptionName[];
+}
+
+export interface ModelComparisonSummary {
+  decisions_total: number;
+  matched: number;
+  matched_regulation: number;
+  matched_overtime: number;
+  fdl_only_not_scored_by_reference: number;
+  reference_only_rows: number;
+  verdict_changes_regulation: number;
+  verdict_changes_overtime: number;
+  verdict_change_pct_regulation: number | null;
+  go_recommendation_pct_primary: number | null;
+  go_recommendation_pct_reference: number | null;
+}
+
+export interface ModelComparison {
+  generated_at_utc: string;
+  primary_model: string;
+  reference: {
+    name: string;
+    stage: string;
+    snapshot: string;
+    source_url: string;
+    news_url: string;
+    sha256: string;
+    cran_released_version: string;
+  };
+  summary: ModelComparisonSummary;
+  plays: ModelComparisonPlay[];
+}
+
 export interface TeamSummary {
   team: string;
   total_executed: number;
