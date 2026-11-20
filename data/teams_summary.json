@@ -287,9 +287,9 @@
   },
   {
     "team": "HOU",
-    "total_executed": 68,
-    "genuine_count": 57,
-    "toss_up_count": 20,
+    "total_executed": 73,
+    "genuine_count": 62,
+    "toss_up_count": 25,
     "non_toss_up_genuine": 37,
     "adherent_count": 23,
     "adherence_pct": 62.2,
@@ -313,15 +313,15 @@
   },
   {
     "team": "IND",
-    "total_executed": 79,
-    "genuine_count": 67,
-    "toss_up_count": 28,
+    "total_executed": 87,
+    "genuine_count": 74,
+    "toss_up_count": 35,
     "non_toss_up_genuine": 39,
     "adherent_count": 24,
     "adherence_pct": 61.5,
     "adherence_display": "24 / 39 (61.5%)",
     "punted_on_clear_go": 3,
-    "total_wp_lost_pp": 42.5,
+    "total_wp_lost_pp": 42.6,
     "low_sample_warning": false
   },
   {
