@@ -3609,5 +3609,170 @@
       "next_desc": "(3:27) 15-J.Stout punts 68 yards to WAS 25, Center-58-B.Mann. 11-L.McCaffrey ran ob at WAS 37 for 12 yards (46-Z.Barnes)."
     },
     "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_BAL_CAR",
+    "play_id": 2201,
+    "week": 11,
+    "posteam": "CAR",
+    "defteam": "BAL",
+    "qtr": 2,
+    "ydstogo": 3.0,
+    "yardline_100": 53.0,
+    "desc": "(1:15) (Shotgun) PENALTY on CAR, Delay of Game, 5 yards, enforced at CAR 47 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 2213,
+      "next_down": null,
+      "next_play_type": "no_play",
+      "next_desc": "Timeout #1 by BAL at 01:15."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_MIA_BUF",
+    "play_id": 3517,
+    "week": 11,
+    "posteam": "MIA",
+    "defteam": "BUF",
+    "qtr": 4,
+    "ydstogo": 5.0,
+    "yardline_100": 53.0,
+    "desc": "(12:05) (Shotgun) 14-K.McCord pass incomplete short right to 7-C.Douglas. PENALTY on BUF-21-D.Igbinosun, Defensive Pass Interference, 3 yards, enforced at MIA 47 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 3551,
+      "next_down": 1.0,
+      "next_play_type": "run",
+      "next_desc": "(12:01) 5-J.Wright up the middle to 50 for no gain (94-L.Jackson)."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_NO_CHI",
+    "play_id": 720,
+    "week": 11,
+    "posteam": "CHI",
+    "defteam": "NO",
+    "qtr": 1,
+    "ydstogo": 5.0,
+    "yardline_100": 42.0,
+    "desc": "(3:42) (Shotgun) 18-C.Williams sacked at 50 for -8 yards (99-C.Young). PENALTY on NO-7-J.Sanker, Illegal Contact, 5 yards, enforced at NO 42 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 751,
+      "next_down": 1.0,
+      "next_play_type": "no_play",
+      "next_desc": "(3:16) PENALTY on CHI-14-K.Raymond, False Start, 5 yards, enforced at NO 37 - No Play."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_NYJ_LAC",
+    "play_id": 1206,
+    "week": 11,
+    "posteam": "LAC",
+    "defteam": "NYJ",
+    "qtr": 2,
+    "ydstogo": 12.0,
+    "yardline_100": 62.0,
+    "desc": "(10:02) (Punt formation) PENALTY on LAC, Delay of Game, 5 yards, enforced at LAC 38 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 1230,
+      "next_down": 4,
+      "next_ydstogo": 17.0,
+      "next_play_type": "punt",
+      "next_desc": "(9:47) 16-J.Scott punts 53 yards to NYJ 14, Center-47-J.Harris. 32-I.Davis to NYJ 25 for 11 yards (43-T.Dye). PENALTY on LAC-36-J.Armour-Davis, Player Out of Bounds on Kick, 5 yards, enforced at NYJ 25."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_PIT_PHI",
+    "play_id": 2105,
+    "week": 11,
+    "posteam": "PHI",
+    "defteam": "PIT",
+    "qtr": 3,
+    "ydstogo": 11.0,
+    "yardline_100": 69.0,
+    "desc": "(13:00) (Punt formation) PENALTY on PHI-80-D.Cooper, False Start, 5 yards, enforced at PHI 31 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 2129,
+      "next_down": 4,
+      "next_ydstogo": 16.0,
+      "next_play_type": "punt",
+      "next_desc": "(13:00) 10-B.Mann punts 70 yards to PIT 4, Center-41-R.Underwood, out of bounds."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_TB_DET",
+    "play_id": 1346,
+    "week": 11,
+    "posteam": "TB",
+    "defteam": "DET",
+    "qtr": 2,
+    "ydstogo": 21.0,
+    "yardline_100": 64.0,
+    "desc": "(5:40) (Punt formation) ** Injury Update: DET-30-K.Dorsey has returned to the game. PENALTY on TB-51-D.Walker, False Start, 5 yards, enforced at TB 36 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 1374,
+      "next_down": 4,
+      "next_ydstogo": 26.0,
+      "next_play_type": "punt",
+      "next_desc": "(5:36) 9-R.Dixon punts 45 yards to DET 24, Center-86-E.Deckers. 86-D.Carter to DET 32 for 8 yards (41-K.Kieft; 51-D.Walker). PENALTY on DET-38-N.Whiteside, Offensive Holding, 10 yards, enforced at DET 24."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_TB_DET",
+    "play_id": 2056,
+    "week": 11,
+    "posteam": "DET",
+    "defteam": "TB",
+    "qtr": 3,
+    "ydstogo": 1.0,
+    "yardline_100": 61.0,
+    "desc": "(13:30) (Run formation) PENALTY on DET-69-T.Ratledge, False Start, 4 yards, enforced at DET 39 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 2080,
+      "next_down": 4,
+      "next_ydstogo": 5.0,
+      "next_play_type": "punt",
+      "next_desc": "(13:30) 3-J.Fox punts 65 yards to end zone, Center-49-H.Hatten, Touchback."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_11_TEN_DAL",
+    "play_id": 3258,
+    "week": 11,
+    "posteam": "TEN",
+    "defteam": "DAL",
+    "qtr": 3,
+    "ydstogo": 14.0,
+    "yardline_100": 55.0,
+    "desc": "(2:17) (Punt formation) PENALTY on TEN, Delay of Game, 5 yards, enforced at TEN 45 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3282,
+      "next_down": 4,
+      "next_ydstogo": 19.0,
+      "next_play_type": "punt",
+      "next_desc": "(2:10) 13-T.Morstead punts 50 yards to DAL 10, Center-46-M.Cox, fair catch by 9-K.Turpin."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
   }
 ]
