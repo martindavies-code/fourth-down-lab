@@ -3774,5 +3774,88 @@
       "next_desc": "(2:10) 13-T.Morstead punts 50 yards to DAL 10, Center-46-M.Cox, fair catch by 9-K.Turpin."
     },
     "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_12_GB_LA",
+    "play_id": 1849,
+    "week": 12,
+    "posteam": "GB",
+    "defteam": "LA",
+    "qtr": 2,
+    "ydstogo": 1.0,
+    "yardline_100": 30.0,
+    "desc": "(2:00) (Shotgun) 10-J.Love pass incomplete short right to 9-C.Watson (5-K.Kinchens). GB-9-C.Watson was injured during the play. Penalty on LA-5-K.Kinchens, Disqualification, offsetting, enforced at LA 30 - No Play. Penalty on GB-0-M.Golden, Offensive Pass Interference, offsetting.",
+    "penalty": false,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 1916,
+      "next_down": 4,
+      "next_ydstogo": 1.0,
+      "next_play_type": "field_goal",
+      "next_desc": "(1:54) 28-T.Smack 48 yard field goal is GOOD, Center-42-M.Orzech, Holder-19-D.Whelan."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_12_GB_LA",
+    "play_id": 2047,
+    "week": 12,
+    "posteam": "LA",
+    "defteam": "GB",
+    "qtr": 2,
+    "ydstogo": 7.0,
+    "yardline_100": 67.0,
+    "desc": "(:12) (Punt formation) PENALTY on GB-99-B.Sorrell, Neutral Zone Infraction, 5 yards, enforced at LA 33 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": false,
+    "replayed_details": {
+      "next_play_id": 2071,
+      "next_down": null,
+      "next_play_type": "None",
+      "next_desc": "END QUARTER 2"
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_12_GB_LA",
+    "play_id": 4139,
+    "week": 12,
+    "posteam": "LA",
+    "defteam": "GB",
+    "qtr": 4,
+    "ydstogo": 2.0,
+    "yardline_100": 7.0,
+    "desc": "(:30) (Run formation) PENALTY on LA, Delay of Game, 5 yards, enforced at GB 7 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 4163,
+      "next_down": 4,
+      "next_ydstogo": 7.0,
+      "next_play_type": "field_goal",
+      "next_desc": "(:30) 19-B.McManus 30 yard field goal is GOOD, Center-49-J.Cardona, Holder-42-E.Evans."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
+  },
+  {
+    "game_id": "2026_12_PHI_DAL",
+    "play_id": 3312,
+    "week": 12,
+    "posteam": "DAL",
+    "defteam": "PHI",
+    "qtr": 4,
+    "ydstogo": 1.0,
+    "yardline_100": 65.0,
+    "desc": "(13:53) (Shotgun) PENALTY on DAL, Delay of Game, 5 yards, enforced at DAL 35 - No Play.",
+    "penalty": true,
+    "replayed_on_fourth_down": true,
+    "replayed_details": {
+      "next_play_id": 3336,
+      "next_down": 4,
+      "next_ydstogo": 6.0,
+      "next_play_type": "punt",
+      "next_desc": "(13:53) 5-B.Anger punt is BLOCKED by 95-T.Robinson, Center-44-T.Sieg, RECOVERED by PHI-23-K.Moore at DAL 3. 23-K.Moore for 3 yards, TOUCHDOWN."
+    },
+    "status_label": "Not executed (penalty or cancelled snap)"
   }
 ]
